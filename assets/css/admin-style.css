@@ -63,6 +63,31 @@ p.form-row-last[class*="_wc_deposits_payment_plans"] select {
 .wcdp.nav-tab {
   cursor: pointer;
 }
+
+/* Sticky Save bar — the Deposits settings screen only.
+   The screen runs about two viewports tall, so "Save changes" sat off-screen and every
+   save meant scrolling to the bottom to find it. It now holds at the bottom of the
+   viewport while there is more form below, then settles into place at the end.
+
+   SCOPING IS LOAD-BEARING. This stylesheet is enqueued on EVERY admin page, so an
+   unscoped `p.submit` rule would restyle the Save button across the whole admin. The
+   body class is WordPress's own for this exact tab — page + section, not just wc-settings.
+
+   position:sticky rather than fixed: it stays in the document flow, so it cannot overlap
+   the admin footer or cover the last field, and needs no compensating padding. Sticky is
+   silently disabled by `overflow` on any ancestor — none of #mainform's have it. */
+body.woocommerce_page_wc-settings-wc-deposits #mainform p.submit {
+  position: sticky;
+  bottom: 0;
+  z-index: 10;
+  margin: 20px 0 0;
+  padding: 12px 0;
+  text-align: right;
+  /* Opaque: the form scrolls behind this. #f0f0f1 is the admin content background it
+     sits on, so the bar reads as part of the page rather than a panel. */
+  background-color: #f0f0f1;
+  border-top: 1px solid #c3c4c7;
+}
 .type-wc_booking .column-booking_status span.status-wc-partial-payment:before {
   content: "";
   color: #ffba00;
