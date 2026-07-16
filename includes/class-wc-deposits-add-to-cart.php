@@ -74,7 +74,7 @@ class WC_Deposits_Add_To_Cart
      */
     public function enqueue_scripts()
     {
-        wp_enqueue_script('wc-deposits-add-to-cart', WC_DEPOSITS_PLUGIN_URL . '/assets/js/add-to-cart.prod.js', array(), WC_DEPOSITS_VERSION);
+        wp_enqueue_script('wc-deposits-add-to-cart', WC_DEPOSITS_PLUGIN_URL . '/assets/js/add-to-cart.js', array(), WC_DEPOSITS_VERSION);
         $message_deposit = get_option('wc_deposits_message_deposit');
         $message_full_amount = get_option('wc_deposits_message_full_amount');
 

@@ -459,7 +459,7 @@ if (wc_deposits_woocommerce_is_active()):
 
 
 
-                    wp_register_script('wc-deposits-checkout', WC_DEPOSITS_PLUGIN_URL . '/assets/js/wc-deposits-checkout.prod.js', array('jquery', 'wc-checkout'), WC_DEPOSITS_VERSION, true);
+                    wp_register_script('wc-deposits-checkout', WC_DEPOSITS_PLUGIN_URL . '/assets/js/wc-deposits-checkout.js', array('jquery', 'wc-checkout'), WC_DEPOSITS_VERSION, true);
                 }
             }
         }

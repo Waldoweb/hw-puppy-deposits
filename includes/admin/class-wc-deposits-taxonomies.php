@@ -49,7 +49,7 @@ class WC_Deposits_Taxonomies
         if ($wc_ip_taxonomy) {
 
             wp_enqueue_script('wcdp_pb_jquery_repeater', WC_DEPOSITS_PLUGIN_URL . '/assets/js/admin/jquery.repeater.prod.js', array('jquery'), WC_DEPOSITS_VERSION);
-            wp_enqueue_script('wcdp_pb_taxonomy_manager', WC_DEPOSITS_PLUGIN_URL . '/assets/js/admin/taxonomy-manager.prod.js', array('accounting'), WC_DEPOSITS_VERSION);
+            wp_enqueue_script('wcdp_pb_taxonomy_manager', WC_DEPOSITS_PLUGIN_URL . '/assets/js/admin/taxonomy-manager.js', array('accounting'), WC_DEPOSITS_VERSION);
             wp_localize_script('wcdp_pb_taxonomy_manager', 'wcip_data', array(
                 'ajax_url' => admin_url('admin-ajax.php'),
                 'currency_format_num_decimals' => 0,

@@ -62,7 +62,7 @@ class WC_Deposits_Admin_Product
         }
 
         if ($is_product_editor) {
-            wp_enqueue_script('wc-deposits-admin-products', WC_DEPOSITS_PLUGIN_URL . '/assets/js/admin/admin-product.prod.js', array('jquery'), WC_DEPOSITS_VERSION, true);
+            wp_enqueue_script('wc-deposits-admin-products', WC_DEPOSITS_PLUGIN_URL . '/assets/js/admin/admin-product.js', array('jquery'), WC_DEPOSITS_VERSION, true);
 
         }
 

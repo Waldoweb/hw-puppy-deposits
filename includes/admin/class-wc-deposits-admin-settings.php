@@ -57,7 +57,7 @@ class WC_Deposits_Admin_Settings
                 // 'no', so disabling them would silently reset every one to "no" on save.
                 wp_add_inline_style('wp-color-picker', '.wcdp-settings-off{opacity:.45;pointer-events:none;}');
 
-                wp_enqueue_script('wc-deposits-admin-settings', WC_DEPOSITS_PLUGIN_URL . '/assets/js/admin/admin-settings.prod.js', array('jquery', 'wp-color-picker'), WC_DEPOSITS_VERSION);
+                wp_enqueue_script('wc-deposits-admin-settings', WC_DEPOSITS_PLUGIN_URL . '/assets/js/admin/admin-settings.js', array('jquery', 'wp-color-picker'), WC_DEPOSITS_VERSION);
                 wp_localize_script('wc-deposits-admin-settings', 'wc_deposits', array(
                     'ajax_url' => admin_url('admin-ajax.php'),
                     'strings' => array(

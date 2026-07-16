@@ -469,7 +469,7 @@
   display: none !important;
 }
 /* KEPT — live. wc-deposits-functions.php renders #deposit-help-tip and
-   wc-deposits-checkout.prod.js runs WooCommerce's tipTip plugin on it, styled by the
+   wc-deposits-checkout.js runs WooCommerce's tipTip plugin on it, styled by the
    #tiptip_* rules above. Do not remove either without removing that help tip. */
 #deposit-help-tip {
   background: rgba(80, 80, 80, 0.92);

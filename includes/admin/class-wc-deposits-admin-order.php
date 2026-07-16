@@ -1873,7 +1873,7 @@ class WC_Deposits_Admin_Order
 
 
             wp_enqueue_script('jquery.bind-first', WC_DEPOSITS_PLUGIN_URL . '/assets/js/jquery.bind-first-0.2.3.prod.js', array(), WC_DEPOSITS_VERSION);
-            wp_enqueue_script('wc-deposits-admin-orders', WC_DEPOSITS_PLUGIN_URL . '/assets/js/admin/admin-orders.prod.js', array('jquery', 'wc-admin-order-meta-boxes'), WC_DEPOSITS_VERSION, true);
+            wp_enqueue_script('wc-deposits-admin-orders', WC_DEPOSITS_PLUGIN_URL . '/assets/js/admin/admin-orders.js', array('jquery', 'wc-admin-order-meta-boxes'), WC_DEPOSITS_VERSION, true);
             wp_localize_script('wc-deposits-admin-orders', 'wc_deposits_data',
                 array('decimal_separator' => wc_get_price_decimal_separator(),
                     'thousand_separator' => wc_get_price_thousand_separator(),
@@ -1907,7 +1907,7 @@ class WC_Deposits_Admin_Order
             wp_enqueue_script('jquery.bind-first', WC_DEPOSITS_PLUGIN_URL . '/assets/js/jquery.bind-first-0.2.3.prod.js', array(), WC_DEPOSITS_VERSION);
             //check if hpos is enabled
 
-            wp_enqueue_script('wc-deposits-admin-orders', WC_DEPOSITS_PLUGIN_URL . '/assets/js/admin/admin-orders.prod.js', array('jquery', 'wc-admin-order-meta-boxes'), WC_DEPOSITS_VERSION, true);
+            wp_enqueue_script('wc-deposits-admin-orders', WC_DEPOSITS_PLUGIN_URL . '/assets/js/admin/admin-orders.js', array('jquery', 'wc-admin-order-meta-boxes'), WC_DEPOSITS_VERSION, true);
             wp_localize_script('wc-deposits-admin-orders', 'wc_deposits_data',
                 array('decimal_separator' => wc_get_price_decimal_separator(),
                     'thousand_separator' => wc_get_price_thousand_separator(),
