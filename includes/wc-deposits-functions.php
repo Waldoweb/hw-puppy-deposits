@@ -830,7 +830,11 @@ function wcdp_get_deposit_slider_custom_styles(){
     if ('' !== ($v = $opt('wc_deposits_style_card_border_width')))  { $card_vars[] = "--wcdp-card-border-width:" . $wcdp_len($v); }
     if ('' !== ($v = $opt('wc_deposits_style_card_radius')))        { $card_vars[] = "--wcdp-card-radius:" . $wcdp_len($v); }
     if ('' !== ($v = $opt('wc_deposits_style_card_padding')))       { $card_vars[] = "--wcdp-card-padding:" . $wcdp_len($v); }
+    if ('' !== ($v = $opt('wc_deposits_style_heading_bg')))         { $card_vars[] = "--wcdp-heading-bg:{$v}"; }
     if ('' !== ($v = $opt('wc_deposits_style_heading_color')))      { $card_vars[] = "--wcdp-heading-color:{$v}"; }
+    if ('' !== ($v = $opt('wc_deposits_style_option_divider')))     { $card_vars[] = "--wcdp-option-divider:{$v}"; }
+    if ('' !== ($v = $opt('wc_deposits_style_option_selected_bg'))) { $card_vars[] = "--wcdp-option-selected-bg:{$v}"; }
+    if ('' !== ($v = $opt('wc_deposits_style_option_hover_bg')))    { $card_vars[] = "--wcdp-option-hover-bg:{$v}"; }
     if ('' !== ($v = $opt('wc_deposits_style_heading_size')))       { $card_vars[] = "--wcdp-heading-size:" . $wcdp_len($v); }
     if ('' !== ($v = $opt('wc_deposits_style_heading_weight')))     { $card_vars[] = "--wcdp-heading-weight:{$v}"; }
     if ('' !== ($v = $opt('wc_deposits_style_radio_accent')))       { $card_vars[] = "--wcdp-radio-accent:{$v}"; }

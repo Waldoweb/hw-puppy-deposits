@@ -79,11 +79,19 @@
 .basic-wc-deposits-options-form .wc-deposits-reserve-card {
   padding: 0;
   overflow: hidden;
+  /* No gap: the heading band and the rows tile the card. A gap would show as a stripe
+     of card background between the band and the first option. */
+  gap: 0;
 }
-/* The heading keeps the card's padding, since it is no longer inset by the card. */
+
+/* The heading is a header band across the top of the card, set apart from the options
+   by its own fill and a rule beneath it. Subtle by default — a faint tint of whatever
+   the card sits on. For a strong band (solid colour, light text), set Heading
+   Background and Heading Color together on the Styling tab. */
 .basic-wc-deposits-options-form .wc-deposits-reserve-heading {
-  padding: var(--wcdp-card-padding, 1em 1.25em);
-  padding-bottom: 0;
+  padding: var(--wcdp-heading-padding, 0.9em 1.25em);
+  background-color: var(--wcdp-heading-bg, rgba(0, 0, 0, 0.04));
+  border-bottom: 1px solid var(--wcdp-option-divider, rgba(0, 0, 0, 0.1));
 }
 .wc-deposits-options {
   display: flex;

@@ -719,6 +719,15 @@ JS;
                 'class' => 'wcdp-style-size',
                 'id' => 'wc_deposits_style_card_padding',                'placeholder' => 'e.g. 16px, 16px 20px, var(--…)',
             ),
+            'heading_bg' => array(
+                'name' => __('Heading Background', 'woocommerce-deposits'),
+                'type' => 'text',
+                'class' => 'wcdp-style-color',
+                'placeholder' => 'e.g. var(--action) or #711919',
+                'id' => 'wc_deposits_style_heading_bg',
+                'desc' => __('Fill behind the Card Heading, which renders as a band across the top of the card. Blank uses a faint tint of whatever is behind it. For a strong band, set this to a solid colour and set Heading Color to a light one. Radio Buttons style only.', 'woocommerce-deposits'),
+                'desc_tip' => true,
+            ),
             'heading_color' => array(
                 'name' => __('Heading Color', 'woocommerce-deposits'),
                 'type' => 'text',
@@ -736,7 +745,34 @@ JS;
                 'type' => 'text',
                 'class' => 'wcdp-style-size',
                 'id' => 'wc_deposits_style_heading_weight',                'placeholder' => 'e.g. 700, bold, var(--…)',
-                'desc' => __('Applied with <code>!important</code> so it holds against themes that reset the weight. Default 700 (bold).', 'woocommerce-deposits'),
+                'desc' => __('Injected as a CSS rule rather than an inline style, so it survives themes and page builders that strip inline font-weight from paragraphs. Default 700 (bold).', 'woocommerce-deposits'),
+                'desc_tip' => true,
+            ),
+            'option_divider' => array(
+                'name' => __('Divider Color', 'woocommerce-deposits'),
+                'type' => 'text',
+                'class' => 'wcdp-style-color',
+                'placeholder' => 'e.g. var(--action) or rgba(0,0,0,.1)',
+                'id' => 'wc_deposits_style_option_divider',
+                'desc' => __('The rule under the heading band and between the payment options. Radio Buttons style only.', 'woocommerce-deposits'),
+                'desc_tip' => true,
+            ),
+            'option_selected_bg' => array(
+                'name' => __('Selected Option Background', 'woocommerce-deposits'),
+                'type' => 'text',
+                'class' => 'wcdp-style-color',
+                'placeholder' => 'e.g. var(--action-ultra-light)',
+                'id' => 'wc_deposits_style_option_selected_bg',
+                'desc' => __('Fill behind the option the customer has selected. Blank uses a faint tint. Radio Buttons style only.', 'woocommerce-deposits'),
+                'desc_tip' => true,
+            ),
+            'option_hover_bg' => array(
+                'name' => __('Option Hover Background', 'woocommerce-deposits'),
+                'type' => 'text',
+                'class' => 'wcdp-style-color',
+                'placeholder' => 'e.g. rgba(0,0,0,.03)',
+                'id' => 'wc_deposits_style_option_hover_bg',
+                'desc' => __('Fill shown while hovering an option. Keep it lighter than the selected background so the selection stays the more prominent of the two. Radio Buttons style only.', 'woocommerce-deposits'),
                 'desc_tip' => true,
             ),
             'style_end' => array(
@@ -1455,7 +1491,11 @@ JS;
         $settings['wc_deposits_style_card_border_width'] = $this->wcdp_sanitize_style_size('wc_deposits_style_card_border_width');
         $settings['wc_deposits_style_card_radius']       = $this->wcdp_sanitize_style_size('wc_deposits_style_card_radius');
         $settings['wc_deposits_style_card_padding']      = $this->wcdp_sanitize_style_size('wc_deposits_style_card_padding');
+        $settings['wc_deposits_style_heading_bg']        = $this->wcdp_sanitize_style_color('wc_deposits_style_heading_bg');
         $settings['wc_deposits_style_heading_color']     = $this->wcdp_sanitize_style_color('wc_deposits_style_heading_color');
+        $settings['wc_deposits_style_option_divider']    = $this->wcdp_sanitize_style_color('wc_deposits_style_option_divider');
+        $settings['wc_deposits_style_option_selected_bg'] = $this->wcdp_sanitize_style_color('wc_deposits_style_option_selected_bg');
+        $settings['wc_deposits_style_option_hover_bg']   = $this->wcdp_sanitize_style_color('wc_deposits_style_option_hover_bg');
         $settings['wc_deposits_style_heading_size']      = $this->wcdp_sanitize_style_size('wc_deposits_style_heading_size');
         $settings['wc_deposits_style_heading_weight']    = $this->wcdp_sanitize_style_weight('wc_deposits_style_heading_weight');
         // Toggle-switch button refinements.
