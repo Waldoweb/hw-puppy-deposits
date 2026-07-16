@@ -112,21 +112,21 @@ class WC_Deposits_Add_To_Cart
         $tip_js = <<<'JS'
 ( function () {
     function closeAll( except ) {
-        document.querySelectorAll( '.wcdp-fulltip.wcdp-tip-show' ).forEach( function ( t ) {
-            if ( t !== except ) { t.classList.remove( 'wcdp-tip-show' ); }
+        document.querySelectorAll( '.wcdp-toggle__tip--visible' ).forEach( function ( t ) {
+            if ( t !== except ) { t.classList.remove( 'wcdp-toggle__tip--visible' ); }
         } );
     }
     document.addEventListener( 'click', function ( e ) {
-        var lbl = e.target.closest ? e.target.closest( '.deposit-options.switch-candy .pay-full-amount-label' ) : null;
+        var lbl = e.target.closest ? e.target.closest( '.wcdp-toggle__option--full' ) : null;
         if ( ! lbl ) { closeAll( null ); return; }
-        var cont = lbl.closest( '.deposit-options' );
+        var cont = lbl.closest( '.wcdp-toggle' );
         var input = cont && cont.querySelector( '.pay-full-amount' );
-        var tip = cont && cont.querySelector( '.wcdp-fulltip' );
+        var tip = cont && cont.querySelector( '.wcdp-toggle__tip' );
         if ( ! input || ! input.disabled || ! tip ) { closeAll( null ); return; }
         e.preventDefault();
-        var showing = tip.classList.contains( 'wcdp-tip-show' );
+        var showing = tip.classList.contains( 'wcdp-toggle__tip--visible' );
         closeAll( tip );
-        tip.classList.toggle( 'wcdp-tip-show', ! showing );
+        tip.classList.toggle( 'wcdp-toggle__tip--visible', ! showing );
     } );
 } )();
 JS;

@@ -19,132 +19,142 @@
  * rule here over adding another override there.
  */
 
-.switch-toggle * {
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-}
-.switch-toggle a {
-  display: none;
-}
-.switch-toggle {
-  display: block;
-  height: 1.875em;
-  position: relative;
-  padding: 0 !important;
-}
-.switch-toggle * {
-  box-sizing: border-box;
-  font-size: 1em;
-}
-.switch-toggle label,
-.switch-toggle > span {
-  line-height: 1.875em;
-  vertical-align: middle;
-}
-.switch-toggle input:focus + label,
-.switch-toggle input:focus ~ a {
-  outline: #888 dotted 1px;
-}
-.switch-toggle input {
-  position: absolute;
-  opacity: 0;
-  left: 0;
-}
-.switch-toggle input + label {
-  cursor: pointer;
-  position: relative;
-  z-index: 2;
-  float: left;
-  width: 50%;
-  height: 100%;
+/* ─────────────────────────────────────────────────────────────────────────────
+   Deposit toggle — a two-option segmented control.
+
+   Replaces the vendored "candy" switch that used to live here: a 2013-era
+   third-party toggle library that pinned itself to a single 1.875em line, floated
+   its labels, hard-coded an embossed text-shadow and bevel, and ran an infinite
+   `webkitSiblingBugfix` animation on every page. Because it could not be edited,
+   every design decision had to be fought with !important overrides generated in
+   wcdp_get_deposit_slider_custom_styles(). Owning the markup means the design
+   lives here, and PHP only publishes the custom properties below.
+
+   Every configurable value is a --wcdp-toggle-* custom property carrying the old
+   default as its fallback, so an unset setting renders the original look and no
+   override is needed to express a default.
+
+   CONTRACT — do not rename: .pay-deposit, .pay-full-amount and .input-radio on the
+   inputs, and the sibling .wc-deposits-notice, are queried by add-to-cart.js, which
+   re-renders this markup over AJAX. The .wcdp-toggle* classes are ours and free.
+   ───────────────────────────────────────────────────────────────────────────── */
+.wcdp-toggle {
+  display: flex;
+  position: relative; /* anchors __tip */
+  border-radius: var(--wcdp-toggle-radius, 3px);
+  background: var(--wcdp-toggle-track, #2d3035);
   text-align: center;
 }
-.switch-toggle a {
-  display: block;
-  -webkit-transition: all 0.2s ease-out;
-  -moz-transition: all 0.2s ease-out;
-  transition: all 0.2s ease-out;
+
+/* Visually hidden, but still focusable and still in the accessibility tree. The
+   candy switch used `display: none`, which drops the radios out of the tab order
+   entirely — keyboard users could not choose a payment option at all. */
+.wcdp-toggle__input {
   position: absolute;
-  top: 0;
-  left: 0;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
   padding: 0;
-  z-index: 1;
-  width: 50%;
-  height: 100%;
+  border: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
-.switch-toggle input:last-of-type:checked ~ a {
-  left: 50%;
+
+.wcdp-toggle__option {
+  flex: 1 1 0;
+  margin: 0;
+  padding: var(--wcdp-toggle-padding, 12px 24px);
+  border-radius: inherit;
+  cursor: pointer;
+  color: var(--wcdp-toggle-text, #fff);
+  font-size: var(--wcdp-toggle-label-size, 1em);
+  font-weight: var(--wcdp-toggle-weight, 700);
+  line-height: normal;
+  transition:
+    background-color 0.2s ease-out,
+    color 0.2s ease-out;
 }
-.switch-candy {
-  background-color: #2d3035;
-  border-radius: 3px;
+
+/* The price always takes its own line under the label — deterministic, rather than
+   relying on width-based wrapping being consistent across prices and screens. */
+.wcdp-toggle__price {
+  display: block;
+  font-size: var(--wcdp-toggle-price-size, 1em);
+}
+
+/* wc_price() wraps the amount and its currency symbol in spans that themes colour
+   independently; without this the symbol can stay a different colour to the number. */
+.wcdp-toggle__price .amount,
+.wcdp-toggle__price .amount * {
+  color: inherit;
+}
+
+.wcdp-toggle__input:checked + .wcdp-toggle__option {
+  background: var(--wcdp-toggle-selected, #ad74a2);
+}
+
+.wcdp-toggle__input:focus-visible + .wcdp-toggle__option {
+  outline: 2px solid var(--wcdp-toggle-selected, #ad74a2);
+  outline-offset: 2px;
+}
+
+/* Forced deposit: "Pay in Full" renders disabled. Read as clearly unavailable while
+   keeping the full price legible for reference. */
+.wcdp-toggle__input:disabled + .wcdp-toggle__option {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* Tooltip explaining why "Pay in Full" is unavailable. A sibling of the labels, not a
+   child, so the dimming above does not fade the explanation. Hover is pure CSS; tap
+   adds --visible from the delegated handler in class-wc-deposits-add-to-cart.php. */
+.wcdp-toggle__tip {
+  position: absolute;
+  right: 0;
+  bottom: 100%;
+  margin-bottom: 10px;
+  width: max-content;
+  max-width: min(260px, 80vw);
+  padding: 8px 11px;
+  border-radius: 6px;
+  background: #1a1a1a;
   color: #fff;
-  font-weight: 700;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.4;
   text-align: center;
-  text-shadow: 1px 1px 1px #191b1e;
-  box-shadow:
-    inset 0 2px 6px rgba(0, 0, 0, 0.3),
-    0 1px 0 rgba(255, 255, 255, 0.2);
+  white-space: normal;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(4px);
+  transition:
+    opacity 0.15s ease,
+    transform 0.15s ease;
+  pointer-events: none;
+  z-index: 20;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.28);
 }
-.switch-candy label {
-  color: #fff;
-  -webkit-transition: color 0.2s ease-out;
-  -moz-transition: color 0.2s ease-out;
-  transition: color 0.2s ease-out;
+.wcdp-toggle__tip::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  right: 24px;
+  border: 6px solid transparent;
+  border-top-color: #1a1a1a;
 }
-.switch-candy input:checked + label {
-  color: #333;
-  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+.wcdp-toggle__option--full:hover ~ .wcdp-toggle__tip,
+.wcdp-toggle__tip--visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
 }
-.switch-candy a {
-  border: 1px solid #333;
-  background-color: #ad74a2;
-  border-radius: 3px;
-  box-shadow:
-    0 1px 1px rgba(0, 0, 0, 0.2),
-    inset 0 1px 1px rgba(255, 255, 255, 0.45);
-}
-.switch-candy > span {
-  color: #333;
-}
-.switch-candy span {
-  color: #fff;
-}
-@media only screen and (-webkit-max-device-pixel-ratio: 2) and (max-device-width: 80em) {
-  .switch-toggle {
-    -webkit-animation: webkitSiblingBugfix infinite 1s;
-    animation: webkitSiblingBugfix infinite 1s;
-  }
-}
+
 .wc-deposits-options-form {
   margin-bottom: 12px;
 }
-.wc-deposits-options-form .deposit-options {
-  overflow: hidden;
-}
 .wc-deposits-options-form hr.separator {
   margin: 4px;
-}
-.wc-deposits-options-form .input-radio {
-  display: none;
-}
-@media only screen {
-  .wc-deposits-options-form input.input-radio:enabled ~ label {
-    margin: 0;
-    text-shadow: rgba(0, 0, 0, 0.6) 0 -1px 0;
-    box-shadow:
-      rgba(0, 0, 0, 0.0745098) 0 -1px 0 0 inset,
-      rgba(255, 255, 255, 0.298039) 0 1px 0 0 inset,
-      rgba(0, 0, 0, 0.0980392) 0 1px 2px 0;
-  }
-  .wc-deposits-options-form input.input-radio:disabled ~ label {
-    color: #797979;
-    background-color: #555;
-    box-shadow:
-      rgba(0, 0, 0, 0.0745098) 0 -1px 0 0 inset,
-      rgba(255, 255, 255, 0.298039) 0 1px 0 0 inset,
-      rgba(0, 0, 0, 0.0980392) 0 1px 2px 0;
-  }
 }
 #tiptip_holder {
   display: none;

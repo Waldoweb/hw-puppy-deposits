@@ -3,21 +3,26 @@
  * The Template for displaying single product deposit options.
  *
  * Two presentations, chosen by the "Use basic radio buttons" setting:
- *   - Basic radios ON  → Puppy Deposits flex layout: "{Pay Deposit} ($deposit)" with a
- *     smaller "balance of $X due …" subline, and "{Pay in Full} ($full)".
- *   - Basic radios OFF → the original candy toggle switch (styled by assets/css/style.css).
+ *   - Basic radios ON  → flex layout: "{Pay Deposit} ($deposit)" with a smaller
+ *     "balance of $X due …" subline, and "{Pay in Full} ($full)".
+ *   - Basic radios OFF → the .wcdp-toggle segmented control (styled in assets/css/style.css).
  *
  * Engine/JS hooks are preserved verbatim in both so the add-to-cart engine and
  * add-to-cart.js keep working: the root `.depositwp_single_deposit_form` with
  * data-ajax-refresh / data-product_id, the `{product_id}-deposit-radio` inputs with
- * classes `pay-deposit` / `pay-full-amount`, and (toggle mode) `.wc-deposits-switcher`
- * + `.deposit-message.wc-deposits-notice`. The AJAX handler re-renders this whole
- * template on variation change, so the computed amounts stay in sync.
+ * classes `pay-deposit` / `pay-full-amount`, and `.deposit-message.wc-deposits-notice`.
+ * The AJAX handler re-renders this whole template on variation change, so the computed
+ * amounts stay in sync.
+ *
+ * 5.1.0 replaced the vendored "candy" toggle switch here with .wcdp-toggle. The
+ * switch-toggle / switch-candy / wc-deposits-switcher classes are gone — nothing in JS
+ * ever referenced them; they were purely presentational. The radios are no longer
+ * display:none but visually hidden, so they are keyboard-focusable.
  *
  * This template can be overridden by copying it to yourtheme/woocommerce/single-product/wc-deposits-product-slider.php.
  *
  * @package DepositWP\Templates
- * @version 5.5.0
+ * @version 5.6.0
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -149,14 +154,13 @@ $full_title_style = $title_style . ( $full_disabled ? 'opacity:0.55;' : '' );
 
         <?php else : ?>
 
-            <div class="deposit-options switch-toggle switch-candy switch-woocommerce-deposits">
-                <input id="<?php echo esc_attr( $pid ); ?>-pay-deposit" class="pay-deposit input-radio" name="<?php echo esc_attr( $pid ); ?>-deposit-radio" type="radio" <?php checked( $default_checked, 'deposit' ); ?> value="deposit">
-                <label class="pay-deposit-label" for="<?php echo esc_attr( $pid ); ?>-pay-deposit"><?php echo esc_html( $deposit_text ); ?><?php if ( $has_amounts ) : ?> <span class="wcdp-price">(<?php echo wp_kses_post( wc_price( $deposit_value ) ); ?>)</span><?php endif; ?></label>
-                <input id="<?php echo esc_attr( $pid ); ?>-pay-full-amount" class="pay-full-amount input-radio" name="<?php echo esc_attr( $pid ); ?>-deposit-radio" type="radio" <?php checked( $default_checked, 'full' ); ?> <?php echo ( isset( $force_deposit ) && $force_deposit === 'yes' ) ? 'disabled' : ''; ?> value="full">
-                <label class="pay-full-amount-label" for="<?php echo esc_attr( $pid ); ?>-pay-full-amount"><?php echo esc_html( $full_text ); ?><?php if ( $full > 0 ) : ?> <span class="wcdp-price">(<?php echo wp_kses_post( wc_price( $full ) ); ?>)</span><?php endif; ?></label>
-                <a class="wc-deposits-switcher"></a>
-                <?php if ( isset( $force_deposit ) && $force_deposit === 'yes' && '' !== $full_unavailable_text ) : ?>
-                    <span class="wcdp-fulltip" role="tooltip"><?php echo esc_html( $full_unavailable_text ); ?></span>
+            <div class="wcdp-toggle">
+                <input id="<?php echo esc_attr( $pid ); ?>-pay-deposit" class="pay-deposit input-radio wcdp-toggle__input" name="<?php echo esc_attr( $pid ); ?>-deposit-radio" type="radio" <?php checked( $default_checked, 'deposit' ); ?> value="deposit">
+                <label class="pay-deposit-label wcdp-toggle__option wcdp-toggle__option--deposit" for="<?php echo esc_attr( $pid ); ?>-pay-deposit"><?php echo esc_html( $deposit_text ); ?><?php if ( $has_amounts ) : ?> <span class="wcdp-toggle__price">(<?php echo wp_kses_post( wc_price( $deposit_value ) ); ?>)</span><?php endif; ?></label>
+                <input id="<?php echo esc_attr( $pid ); ?>-pay-full-amount" class="pay-full-amount input-radio wcdp-toggle__input" name="<?php echo esc_attr( $pid ); ?>-deposit-radio" type="radio" <?php checked( $default_checked, 'full' ); ?> <?php disabled( $full_disabled ); ?> value="full">
+                <label class="pay-full-amount-label wcdp-toggle__option wcdp-toggle__option--full" for="<?php echo esc_attr( $pid ); ?>-pay-full-amount"><?php echo esc_html( $full_text ); ?><?php if ( $full > 0 ) : ?> <span class="wcdp-toggle__price">(<?php echo wp_kses_post( wc_price( $full ) ); ?>)</span><?php endif; ?></label>
+                <?php if ( $full_disabled && '' !== $full_unavailable_text ) : ?>
+                    <span class="wcdp-toggle__tip" role="tooltip"><?php echo esc_html( $full_unavailable_text ); ?></span>
                 <?php endif; ?>
             </div>
             <span class="deposit-message wc-deposits-notice"></span>

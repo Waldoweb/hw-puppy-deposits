@@ -807,12 +807,6 @@ function wcdp_get_deposit_slider_custom_styles(){
     $fallback_colors = wc_deposits_woocommerce_frontend_colors();
     $gstart = $colors['primary'] ? $colors['primary'] : $fallback_colors['primary'];
     $secondary = $colors['secondary'] ? $colors['secondary'] : $fallback_colors['secondary'];
-    // Darken the selected-button colour for the gradient's end stop. Only hex values can
-    // be adjusted; a CSS variable / rgb() / named colour is used flat (single-stop gradient).
-    $gend = wc_deposits_adjust_colour($gstart, 15);
-    if (is_wp_error($gend) || !is_string($gend)) {
-        $gend = $gstart;
-    }
 
     $basic_buttons = get_option('wc_deposits_use_basic_radio_buttons', true) === 'yes';
 
@@ -827,10 +821,9 @@ function wcdp_get_deposit_slider_custom_styles(){
     }
     $heading_rule = ".wc-deposits-reserve-heading{font-weight:{$heading_weight} !important;}\n";
 
-    // Toggle-switch button refinements (only meaningful in toggle mode). `.deposit-options`
-    // is unique to the toggle container. The candy-switch base CSS forces text-shadow, a
-    // fixed height and `.switch-toggle *{font-size:1em}`, so these overrides use !important.
-    // The text-shadow is always removed; the rest apply only when a value is set.
+    // Toggle settings (only meaningful in toggle mode). A blank value means "keep the
+    // default", which is expressed as the fallback in .wcdp-toggle's custom properties in
+    // style.css — so a blank option simply emits nothing here.
     $t_label_size   = trim((string) get_option('wc_deposits_style_toggle_label_size', ''));
     $t_price_size   = trim((string) get_option('wc_deposits_style_toggle_price_size', ''));
     $t_weight       = trim((string) get_option('wc_deposits_style_toggle_weight', ''));
@@ -841,53 +834,24 @@ function wcdp_get_deposit_slider_custom_styles(){
     $t_message_color = trim((string) get_option('wc_deposits_style_toggle_message_color', ''));
     $t_align         = trim((string) get_option('wc_deposits_style_toggle_align', 'left'));
 
-    $toggle_extra  = ".deposit-options.switch-candy,.deposit-options.switch-candy label,.deposit-options.switch-candy input:checked+label{text-shadow:none !important;}\n";
-    // Also strip the candy switch's beveled box-shadow on the option labels
-    // (rule `.wc-deposits-options-form input.input-radio:enabled ~ label`) for a flat look.
-    $toggle_extra .= ".deposit-options.switch-candy label{box-shadow:none !important;}\n";
-    // Always drop the price onto its own line under the label (deterministic, instead of
-    // relying on width-based wrapping which is inconsistent across prices / widths / screens).
-    $toggle_extra .= ".deposit-options.switch-candy label .wcdp-price{display:block !important;}\n";
-    // Forced-deposit state: the "Pay in Full" radio is rendered `disabled`. A theme rule
-    // paints disabled-adjacent labels grey (#555) — override that and instead present the
-    // option as clearly unavailable (flat, dimmed, not-allowed cursor) rather than a stray box.
-    $toggle_extra .= ".deposit-options.switch-candy input:disabled + label{background:transparent !important;opacity:0.4 !important;cursor:not-allowed !important;}\n";
-    // Tooltip explaining why "Pay in Full" is unavailable. Lives as a sibling of the labels
-    // (NOT inside the dimmed label, so it isn't faded). The container is position:relative.
-    // Shows on hover of the disabled full label, or when JS adds .wcdp-tip-show (tap/mobile).
-    $toggle_extra .= ".deposit-options.switch-candy .wcdp-fulltip{position:absolute;right:0;left:auto;bottom:100%;margin-bottom:10px;width:max-content;max-width:min(260px,80vw);padding:8px 11px;border-radius:6px;background:#1a1a1a;color:#fff;font-size:12px;line-height:1.4;font-weight:400;text-align:center;text-shadow:none;opacity:0;visibility:hidden;transform:translateY(4px);transition:opacity .15s ease,transform .15s ease;pointer-events:none;z-index:20;box-shadow:0 6px 18px rgba(0,0,0,.28);white-space:normal;}\n";
-    $toggle_extra .= ".deposit-options.switch-candy .wcdp-fulltip::after{content:'';position:absolute;top:100%;right:24px;border:6px solid transparent;border-top-color:#1a1a1a;}\n";
-    $toggle_extra .= ".deposit-options.switch-candy .pay-full-amount-label:hover ~ .wcdp-fulltip,.deposit-options.switch-candy .wcdp-fulltip.wcdp-tip-show{opacity:1 !important;visibility:visible !important;transform:translateY(0);}\n";
-    // Lay the two option labels out with flexbox instead of the candy switch's original
-    // float:left. Flex sizes them 50/50 AND contains them (the container keeps its height),
-    // so we can use overflow:visible for the tooltip without the float-collapse that
-    // float+overflow:hidden hid. The sliding switcher (.wc-deposits-switcher) and the hidden
-    // radios are position:absolute, so they stay out of flex flow and keep working — the
-    // slide is pure CSS (input:last-of-type:checked ~ a{left:50%}), unaffected by display.
-    $toggle_extra .= ".deposit-options.switch-candy{display:flex !important;overflow:visible !important;}\n";
-    $toggle_extra .= ".deposit-options.switch-candy > label{float:none !important;flex:1 1 0 !important;width:auto !important;}\n";
-    if ('' !== $t_label_size) {
-        $toggle_extra .= ".deposit-options.switch-candy label{font-size:{$t_label_size} !important;}\n";
-    }
-    if ('' !== $t_price_size) {
-        // Target the whole price group — the .wcdp-price wrapper holds the parentheses AND
-        // the .amount span — so the parens scale with the amount, not the label text.
-        $toggle_extra .= ".deposit-options.switch-candy label .wcdp-price,.deposit-options.switch-candy label .wcdp-price *{font-size:{$t_price_size} !important;}\n";
-    }
-    if ('' !== $t_weight) {
-        $toggle_extra .= ".deposit-options.switch-candy label{font-weight:{$t_weight} !important;}\n";
-    }
-    // The button sizes itself from its padding, always. The vendored candy CSS pins it to a
-    // single line — `.switch-toggle{height:1.875em}`, `line-height:1.875em` on the labels,
-    // `height:100%` on `input+label` — but the .wcdp-price rule above always puts the price on
-    // a second line, so those three have to be overridden or the price spills out of the box.
-    // Padding is then the only source of vertical spacing, defaulting to 12px 24px. The
-    // sliding switcher stays at 100% so its background follows the container's height.
-    $t_padding = '' !== $t_padding ? $t_padding : '12px 24px';
-    $toggle_extra .= ".deposit-options.switch-toggle{height:auto !important;}.deposit-options.switch-candy label{height:auto !important;line-height:normal !important;padding:{$t_padding} !important;}.deposit-options.switch-candy a{height:100% !important;}\n";
-    if ('' !== $t_radius) {
-        $toggle_extra .= ".deposit-options.switch-candy,.deposit-options.switch-candy a{border-radius:{$t_radius} !important;}\n";
-    }
+    // The toggle's presentation now lives in assets/css/style.css (.wcdp-toggle). PHP's only
+    // job is to publish the merchant's settings as custom properties, which that CSS consumes
+    // with the original defaults as fallbacks — so a blank setting emits no rule at all, and
+    // nothing here needs !important. Until 5.1.0 this block generated ~15 override rules to
+    // fight the vendored candy switch's fixed height, floats, text-shadow and bevel. The
+    // switch is gone; so are they.
+    $toggle_vars = array(
+        // $gstart/$secondary always resolve — option value, else WooCommerce's frontend colours.
+        "--wcdp-toggle-selected:{$gstart}",
+        "--wcdp-toggle-text:{$secondary}",
+    );
+    if ('' !== $t_label_size) { $toggle_vars[] = "--wcdp-toggle-label-size:{$t_label_size}"; }
+    if ('' !== $t_price_size) { $toggle_vars[] = "--wcdp-toggle-price-size:{$t_price_size}"; }
+    if ('' !== $t_weight)     { $toggle_vars[] = "--wcdp-toggle-weight:{$t_weight}"; }
+    if ('' !== $t_padding)    { $toggle_vars[] = "--wcdp-toggle-padding:{$t_padding}"; }
+    if ('' !== $t_radius)     { $toggle_vars[] = "--wcdp-toggle-radius:{$t_radius}"; }
+
+    $toggle_extra = ".wcdp-toggle{" . implode(';', $toggle_vars) . ";}\n";
     if ('' !== $t_gap) {
         // Uniform vertical spacing between the heading, the toggle and the message below it:
         // lay the reserve card out as a flex column with a gap and drop the elements' own
@@ -914,23 +878,13 @@ function wcdp_get_deposit_slider_custom_styles(){
         $toggle_extra .= ".wc-deposits-reserve-card{text-align:{$t_align} !important;}\n";
     }
 
-    // Selected-option label colour + the sliding switcher's gradient background.
-    // (The old `#wc-deposits-options-form` ID-selector duplicate and a `.deposit-option`
-    //  rule were removed — neither the ID nor that class exists in the markup.)
-    $styles = $heading_rule . ( $basic_buttons ? "":
-    $toggle_extra .
-    "
-    .wc-deposits-options-form input.input-radio:enabled ~ label {  color: {$secondary}; }
-    .wc-deposits-options-form div a.wc-deposits-switcher {
-        background-color: {$gstart};
-        background: -moz-linear-gradient(center top, {$gstart} 0%, {$gend} 100%);
-        background: -webkit-gradient(linear, left top, left bottom, from({$gstart}), to({$gend}));
-        background: -webkit-linear-gradient({$gstart}, {$gend});
-        background: -o-linear-gradient({$gstart}, {$gend});
-        background: linear-gradient({$gstart}, {$gend});
-    }
-    .wc-deposits-options-form .amount, .wc-deposits-options-form .amount * { color: inherit !important; }
-    " );
+    // Label colour, the selected-option background and the price inheriting the label colour
+    // are all handled by .wcdp-toggle in style.css, driven by the custom properties above.
+    // The sliding switcher's multi-vendor gradient went with the candy switch: the selected
+    // option is now a flat --wcdp-toggle-selected. That also retires this function's use of
+    // wc_deposits_adjust_colour(), which only existed to darken the gradient's second stop
+    // and returned a WP_Error for any non-hex value (var(), rgb()), needing a guard.
+    $styles = $heading_rule . ( $basic_buttons ? "" : $toggle_extra );
 
     return apply_filters('wc_deposits_deposit_slider_custom_styles', $styles);
 
