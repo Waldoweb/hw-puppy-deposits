@@ -499,36 +499,6 @@ JS;
 
             $strings_settings = array(
 
-                'display_title' => array(
-                    'name' => __('Display & Text', 'woocommerce-deposits'),
-                    'type' => 'title',
-                    'id' => 'wc_deposits_display_text_title'
-                ),
-                'override_payment_form' => array(
-                    'name' => __('Show order details on balance payments', 'woocommerce-deposits'),
-                    'type' => 'checkbox',
-                    'desc' => __('When a customer pays a remaining balance from a payment link, show the original order\'s products instead of WooCommerce\'s bare "pay for order" page. Leave off if your theme or a checkout plugin heavily customises the payment page.', 'woocommerce-deposits'),
-                    'id' => 'wc_deposits_override_payment_form',
-                    'default' => 'no',
-                ),
-                'deposits_tax' => array(
-                    'name' => __('Show tax in product-page deposit amount', 'woocommerce-deposits'),
-                    'type' => 'checkbox',
-                    'desc' => __('Include tax in the deposit and balance figures shown on the product page. Changes the displayed amounts only — not what the customer is actually charged.', 'woocommerce-deposits'),
-                    'id' => 'wc_deposits_tax_display',
-                ),
-                'deposits_breakdown_cart_tooltip' => array(
-                    'name' => __('Display Deposit-breakdown Tooltip in cart', 'woocommerce-deposits'),
-                    'type' => 'checkbox',
-                    'desc' => __('Check to display tooltip in cart totals detailing deposit breakdown', 'woocommerce-deposits'),
-                    'id' => 'wc_deposits_breakdown_cart_tooltip',
-                ),
-                'display_end' => array(
-                    'type' => 'sectionend',
-                    'id' => 'wc_deposits_display_text_end'
-                ),
-
-
                 /*
                  * Section for buttons — the presentation toggle and color controls now
                  * live in the dedicated Styling tab (tab_styling_output). Only the button
@@ -539,9 +509,17 @@ JS;
                     'name' => __('Deposit choice text', 'woocommerce-deposits'),
                     'type' => 'title',
                     'desc' => __('No HTML allowed. Text will be translated to the user if a translation is available.', 'woocommerce-deposits'),
-                    'id' => 'wc_deposits_strings_title'
+                    'id' => 'wc_deposits_deposit_choice_strings_title'
                 )
             ,
+                'deposits_deposit_option_text' => array(
+                    'name' => __('Card Heading', 'woocommerce-deposits'),
+                    'type' => 'text',
+                    'desc' => __('Heading shown at the top of the deposit card on the product page, above the payment choices — e.g. "Reserve this puppy". Style it on the Styling tab under Card Style.', 'woocommerce-deposits'),
+                    'id' => 'wc_deposits_deposit_option_text',
+                    'default' => 'Deposit Option',
+                    'css' => 'width:400px;'
+                ),
                 'deposits_button_deposit' => array(
                     'name' => __('Deposit Button Text', 'woocommerce-deposits'),
                     'type' => 'text',
@@ -604,14 +582,6 @@ JS;
                     'id' => 'wc_deposits_second_payment_text',
                     'default' => 'Future Payments'
                 ),
-                'deposits_deposit_option_text' => array(
-                    'name' => __('Deposit Option', 'woocommerce-deposits'),
-                    'type' => 'text',
-                    'desc' => $text_to_replace . '<b>' . __('Deposit Option', 'woocommerce-deposits') . '</b>',
-                    'id' => 'wc_deposits_deposit_option_text',
-                    'default' => 'Deposit Option'
-                ),
-
                 'deposits_payment_link_text' => array(
                     'name' => __('Payment Link', 'woocommerce-deposits'),
                     'type' => 'text',
@@ -651,6 +621,40 @@ JS;
                     'id' => 'wc_deposits_messages_end'
                 ),
 
+                /*
+                 * The only non-text section on this tab: three switches for how much detail
+                 * to surface, rather than what wording to use. Sits last because the tab is
+                 * primarily about wording, and these are set once and rarely revisited.
+                 */
+                'display_title' => array(
+                    'name' => __('Additional Details', 'woocommerce-deposits'),
+                    'type' => 'title',
+                    'desc' => __('Control how much extra detail is shown alongside deposits.', 'woocommerce-deposits'),
+                    'id' => 'wc_deposits_display_text_title'
+                ),
+                'override_payment_form' => array(
+                    'name' => __('Show order details on balance payments', 'woocommerce-deposits'),
+                    'type' => 'checkbox',
+                    'desc' => __('When a customer pays a remaining balance from a payment link, show the original order\'s products instead of WooCommerce\'s bare "pay for order" page. Leave off if your theme or a checkout plugin heavily customises the payment page.', 'woocommerce-deposits'),
+                    'id' => 'wc_deposits_override_payment_form',
+                    'default' => 'no',
+                ),
+                'deposits_tax' => array(
+                    'name' => __('Show tax in product-page deposit amount', 'woocommerce-deposits'),
+                    'type' => 'checkbox',
+                    'desc' => __('Include tax in the deposit and balance figures shown on the product page. Changes the displayed amounts only — not what the customer is actually charged.', 'woocommerce-deposits'),
+                    'id' => 'wc_deposits_tax_display',
+                ),
+                'deposits_breakdown_cart_tooltip' => array(
+                    'name' => __('Display Deposit-breakdown Tooltip in cart', 'woocommerce-deposits'),
+                    'type' => 'checkbox',
+                    'desc' => __('Check to display tooltip in cart totals detailing deposit breakdown', 'woocommerce-deposits'),
+                    'id' => 'wc_deposits_breakdown_cart_tooltip',
+                ),
+                'display_end' => array(
+                    'type' => 'sectionend',
+                    'id' => 'wc_deposits_display_text_end'
+                ),
 
             );
             woocommerce_admin_fields($strings_settings);
