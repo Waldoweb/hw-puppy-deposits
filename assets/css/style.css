@@ -67,10 +67,11 @@
 }
 
 /* ── Radio presentation (the "Use basic radio buttons" mode) ────────────────── */
+/* The options read as one grouped control: no gap between them, separated by rules
+   instead, each row filling on hover and when selected. */
 .wc-deposits-options {
   display: flex;
   flex-direction: column;
-  gap: 0.75em;
 }
 
 /* Grid: [radio | text]. align-items:center centres the radio on the FIRST (title)
@@ -83,8 +84,30 @@
   column-gap: 0.6em;
   align-items: center;
   margin: 0;
+  padding: var(--wcdp-option-padding, 0.7em 0.75em);
+  border-radius: var(--wcdp-option-radius, 4px);
   cursor: pointer;
   color: var(--wcdp-option-text, inherit);
+  transition: background-color 0.15s ease-out;
+}
+
+/* A rule between rows, not around them — the row's own padding keeps the text off it. */
+.wc-deposits-option + .wc-deposits-option {
+  border-top: 1px solid var(--wcdp-option-divider, rgba(0, 0, 0, 0.1));
+}
+
+/* Selected wins over hover, so the two never fight when hovering the selected row.
+   :has() lets the checked input tint its own label — the input is nested inside it. */
+.wc-deposits-option:hover {
+  background-color: var(--wcdp-option-hover-bg, rgba(0, 0, 0, 0.025));
+}
+.wc-deposits-option:has(.input-radio:checked) {
+  background-color: var(--wcdp-option-selected-bg, rgba(0, 0, 0, 0.05));
+}
+
+/* A disabled option is not selectable, so it must not offer a hover affordance. */
+.wc-deposits-option--disabled:hover {
+  background-color: transparent;
 }
 .wc-deposits-option .input-radio {
   grid-column: 1;
