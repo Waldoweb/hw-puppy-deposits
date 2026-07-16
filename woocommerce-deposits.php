@@ -636,7 +636,11 @@ if (wc_deposits_woocommerce_is_active()):
         public function enqueue_admin_scripts_and_styles()
         {
             wp_enqueue_script('jquery');
-            wp_enqueue_style('wc-deposits-admin-style', plugins_url('assets/css/admin-style.min.css', __FILE__), WC_DEPOSITS_VERSION);
+            // WC_DEPOSITS_VERSION was being passed as the THIRD argument, which is $deps —
+            // so $ver stayed false and WordPress used ITS OWN version as the cache-buster
+            // (?ver=7.0.1). Admin CSS changes therefore did not reach browsers until
+            // WordPress itself updated. Third argument is deps (none), fourth is the version.
+            wp_enqueue_style('wc-deposits-admin-style', plugins_url('assets/css/admin-style.css', __FILE__), array(), WC_DEPOSITS_VERSION);
         }
 
         /**
