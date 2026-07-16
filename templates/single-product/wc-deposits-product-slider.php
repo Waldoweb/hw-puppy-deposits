@@ -22,7 +22,7 @@
  * This template can be overridden by copying it to yourtheme/woocommerce/single-product/wc-deposits-product-slider.php.
  *
  * @package DepositWP\Templates
- * @version 5.6.0
+ * @version 5.7.0
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -68,8 +68,14 @@ $full_disabled = ( isset( $force_deposit ) && $force_deposit === 'yes' );
 <div data-ajax-refresh="<?php echo esc_attr( $ajax_refresh ); ?>" data-product_id="<?php echo esc_attr( $pid ); ?>" class="depositwp_single_deposit_form <?php echo $basic_buttons ? 'basic-wc-deposits-options-form' : 'wc-deposits-options-form'; ?>">
     <div class="wc-deposits-reserve-card">
 
-        <?php if ( $product->get_type() !== 'grouped' ) : ?>
-            <p class="wc-deposits-reserve-heading"><?php echo esc_html( $deposit_option_text ); ?></p>
+        <?php
+        // Blank Card Heading = omit the element entirely rather than render an empty <p>.
+        // The card is a flex column with a gap, so an empty heading would cost both its own
+        // line-height and a gap above the options.
+        $wcdp_heading = isset( $deposit_option_text ) ? trim( (string) $deposit_option_text ) : '';
+        ?>
+        <?php if ( $product->get_type() !== 'grouped' && '' !== $wcdp_heading ) : ?>
+            <p class="wc-deposits-reserve-heading"><?php echo esc_html( $wcdp_heading ); ?></p>
         <?php endif; ?>
 
         <?php if ( $basic_buttons ) : ?>
