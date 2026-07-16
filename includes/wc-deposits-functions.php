@@ -871,15 +871,20 @@ function wcdp_get_deposit_slider_custom_styles(){
     if ('' !== $t_padding)    { $toggle_vars[] = "--wcdp-toggle-padding:{$t_padding}"; }
     if ('' !== $t_radius)     { $toggle_vars[] = "--wcdp-toggle-radius:{$t_radius}"; }
 
-    // Toggle-mode card settings. These describe the card, not the switch, so they join the
-    // card variables — but they only apply in toggle mode, matching the previous behaviour.
-    if ('' !== $t_gap)           { $card_vars[] = "--wcdp-card-gap:{$t_gap}"; }
-    if ('' !== $t_message_size)  { $card_vars[] = "--wcdp-message-size:{$t_message_size}"; }
-    if ('' !== $t_message_color) { $card_vars[] = "--wcdp-message-color:{$t_message_color}"; }
-    if ('center' === $t_align || 'right' === $t_align) {
-        // text-align inherits, so this reaches the heading and message. The toggle labels are
-        // centred by their own rule and the full-width toggle itself is unaffected.
-        $card_vars[] = "--wcdp-card-align:{$t_align}";
+    // Card settings that belong to TOGGLE MODE ONLY. They describe the card, but they are
+    // configured in the Styling tab's "Toggle Switch Style" section (note the option names:
+    // wc_deposits_style_toggle_*), and radio mode has never honoured them. Keep them gated:
+    // leaking the toggle's centre alignment into radio mode centres the whole option list,
+    // which reads wrong next to left-aligned radios and has no setting to turn it off.
+    if (!$basic_buttons) {
+        if ('' !== $t_gap)           { $card_vars[] = "--wcdp-card-gap:{$t_gap}"; }
+        if ('' !== $t_message_size)  { $card_vars[] = "--wcdp-message-size:{$t_message_size}"; }
+        if ('' !== $t_message_color) { $card_vars[] = "--wcdp-message-color:{$t_message_color}"; }
+        if ('center' === $t_align || 'right' === $t_align) {
+            // text-align inherits, so this reaches the heading and message. The toggle labels
+            // are centred by their own rule and the full-width toggle itself is unaffected.
+            $card_vars[] = "--wcdp-card-align:{$t_align}";
+        }
     }
 
     // One variable block per element that needs one. The card is the ancestor of the toggle,
