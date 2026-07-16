@@ -243,7 +243,7 @@
    relying on width-based wrapping being consistent across prices and screens. */
 .wcdp-toggle__price {
   display: block;
-  font-size: var(--wcdp-toggle-price-size, 1em);
+  font-size: var(--wcdp-toggle-price-size, 0.85em);
 }
 
 /* wc_price() wraps the amount and its currency symbol in spans that themes colour

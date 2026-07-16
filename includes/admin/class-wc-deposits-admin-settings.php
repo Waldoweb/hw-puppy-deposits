@@ -863,8 +863,8 @@ JS;
                 'name' => __('Price Text Size', 'woocommerce-deposits'),
                 'type' => 'text',
                 'class' => 'wcdp-style-size',
-                'id' => 'wc_deposits_style_toggle_price_size',                'placeholder' => 'e.g. 14px, var(--…)',
-                'desc' => __('Size of the amount, e.g. ($200.00), shown in each button.', 'woocommerce-deposits'),
+                'id' => 'wc_deposits_style_toggle_price_size',                'placeholder' => 'e.g. .85em, 1.5rem, 14px, var(--…)',
+                'desc' => __('Size of the amount, e.g. ($200.00), shown in each button. Accepts em, rem, px, % or a var(). Relative units scale with the button label, so <code>.85em</code> keeps the price proportional if the label size changes. Blank uses <code>.85em</code>.', 'woocommerce-deposits'),
                 'desc_tip' => true,
             ),
             'toggle_weight' => array(
@@ -1388,9 +1388,11 @@ JS;
         if (preg_match('/^calc\([a-z0-9\s%.+*\/()-]+\)$/i', $val)) {
             return $val;
         }
-        // A number or a space-separated list of numbers/lengths (e.g. 16, 8px, 16px 20px).
-        // Must start with a digit, then only digits, unit letters, %, dot and spaces.
-        if (preg_match('/^[0-9][0-9a-z%.\s]*$/i', $val)) {
+        // A number or a space-separated list of numbers/lengths (e.g. 16, 8px, 1.5rem,
+        // .85em, 16px 20px). The leading dot is optional-but-allowed: CSS accepts `.85em`,
+        // and requiring a digit first silently rejected it (saving blank instead), which is
+        // a perfectly natural way to type a fractional em.
+        if (preg_match('/^\.?[0-9][0-9a-z%.\s]*$/i', $val)) {
             return $val;
         }
 
