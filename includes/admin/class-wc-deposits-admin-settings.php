@@ -278,6 +278,21 @@ JS;
                     ),
                     'default' => 'no'
                 ),
+                'deposit_mode' => array(
+                    'name' => __('Deposit Mode', 'woocommerce-deposits'),
+                    'type' => 'select',
+                    'desc_tip' => true,
+                    'options' => array(
+                        // Values are unchanged from the old "Enable checkout mode" select
+                        // ('no'/'yes'), so wcdp_checkout_mode() and every stored setting keep
+                        // working — only the label and the wording changed.
+                        'no'  => __('Product Deposits', 'woocommerce-deposits'),
+                        'yes' => __('Checkout Mode', 'woocommerce-deposits'),
+                    ),
+                    'desc' => __('Product Deposits: each product carries its own deposit, chosen on the product page. Checkout Mode: one deposit calculated from the cart total, chosen at checkout. The settings below change to match.', 'woocommerce-deposits'),
+                    'id' => 'wc_deposits_checkout_mode_enabled',
+                    'default' => 'no'
+                ),
                 'deposits_stock' => array(
                     'name' => __('Reduce Product Inventory On', 'woocommerce-deposits'),
                     'type' => 'select',
@@ -320,21 +335,6 @@ JS;
                     'type' => 'checkbox',
                     'desc' => __('Check this to disable all deposit functionality for guests', 'woocommerce-deposits'),
                     'id' => 'wc_deposits_restrict_deposits_for_logged_in_users_only',
-                ),
-                'deposit_mode' => array(
-                    'name' => __('Deposit Mode', 'woocommerce-deposits'),
-                    'type' => 'select',
-                    'desc_tip' => true,
-                    'options' => array(
-                        // Values are unchanged from the old "Enable checkout mode" select
-                        // ('no'/'yes'), so wcdp_checkout_mode() and every stored setting keep
-                        // working — only the label and the wording changed.
-                        'no'  => __('Product Deposits', 'woocommerce-deposits'),
-                        'yes' => __('Checkout Mode', 'woocommerce-deposits'),
-                    ),
-                    'desc' => __('Product Deposits: each product carries its own deposit, chosen on the product page. Checkout Mode: one deposit calculated from the cart total, chosen at checkout. The settings below change to match.', 'woocommerce-deposits'),
-                    'id' => 'wc_deposits_checkout_mode_enabled',
-                    'default' => 'no'
                 ),
                 'sitewide_end' => array(
                     'type' => 'sectionend',
