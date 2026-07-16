@@ -286,10 +286,10 @@ JS;
                         // Values are unchanged from the old "Enable checkout mode" select
                         // ('no'/'yes'), so wcdp_checkout_mode() and every stored setting keep
                         // working — only the label and the wording changed.
-                        'no'  => __('Product Deposits', 'woocommerce-deposits'),
+                        'no'  => __('Products Mode', 'woocommerce-deposits'),
                         'yes' => __('Checkout Mode', 'woocommerce-deposits'),
                     ),
-                    'desc' => __('Product Deposits: each product carries its own deposit, chosen on the product page. Checkout Mode: one deposit calculated from the cart total, chosen at checkout. The settings below change to match.', 'woocommerce-deposits'),
+                    'desc' => __('Products Mode: each product carries its own deposit, chosen on the product page. Checkout Mode: one deposit calculated from the cart total, chosen at checkout. The settings below change to match.', 'woocommerce-deposits'),
                     'id' => 'wc_deposits_checkout_mode_enabled',
                     'default' => 'no'
                 ),
@@ -343,7 +343,7 @@ JS;
             );
 
             /*
-             * Product Deposits mode. Shown only when Deposit Mode = Product Deposits;
+             * Products Mode. Shown only when Deposit Mode = Products Mode;
              * wcdpSyncDepositMode() toggles #wcdp-mode-product against #wcdp-mode-checkout.
              */
             $product_deposit_settings = array(
