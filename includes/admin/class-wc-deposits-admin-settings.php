@@ -926,9 +926,11 @@ JS;
         );
         ?>
         <div id="styling" class="wcdp-tab-content wrap <?php echo $class; ?>">
-            <div id="wcdp-style-card">
-                <?php woocommerce_admin_fields($card_settings); ?>
-            </div>
+            <?php // Selection Style leads: it holds the presentation dropdown, which decides
+                  // which of the two mode groups below it is shown. Card Style comes last —
+                  // it is the frame around the control rather than the control itself.
+                  // Only the render order changes here; #wcdp-style-radio / #wcdp-style-toggle
+                  // are still the ids wcdpSyncStyleMode() shows and hides. ?>
             <div id="wcdp-style-selection">
                 <?php woocommerce_admin_fields($selection_settings); ?>
             </div>
@@ -937,6 +939,9 @@ JS;
             </div>
             <div id="wcdp-style-toggle" class="wcdp-style-mode-group">
                 <?php woocommerce_admin_fields($toggle_settings); ?>
+            </div>
+            <div id="wcdp-style-card">
+                <?php woocommerce_admin_fields($card_settings); ?>
             </div>
             <?php do_action('wc_deposits_settings_tabs_styling_tab'); ?>
         </div>
