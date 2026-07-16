@@ -853,7 +853,6 @@ function wcdp_get_deposit_slider_custom_styles(){
     $t_weight       = trim((string) get_option('wc_deposits_style_toggle_weight', ''));
     $t_padding      = trim((string) get_option('wc_deposits_style_toggle_padding', ''));
     $t_radius       = trim((string) get_option('wc_deposits_style_toggle_radius', ''));
-    $t_gap          = trim((string) get_option('wc_deposits_style_toggle_gap', ''));
     $t_message_size  = trim((string) get_option('wc_deposits_style_toggle_message_size', ''));
     $t_message_color = trim((string) get_option('wc_deposits_style_toggle_message_color', ''));
     $t_align         = trim((string) get_option('wc_deposits_style_toggle_align', 'left'));
@@ -881,7 +880,6 @@ function wcdp_get_deposit_slider_custom_styles(){
     // leaking the toggle's centre alignment into radio mode centres the whole option list,
     // which reads wrong next to left-aligned radios and has no setting to turn it off.
     if (!$basic_buttons) {
-        if ('' !== $t_gap)           { $card_vars[] = "--wcdp-card-gap:{$t_gap}"; }
         if ('' !== $t_message_size)  { $card_vars[] = "--wcdp-message-size:{$t_message_size}"; }
         if ('' !== $t_message_color) { $card_vars[] = "--wcdp-message-color:{$t_message_color}"; }
         if ('center' === $t_align || 'right' === $t_align) {

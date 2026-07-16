@@ -47,12 +47,11 @@
   margin-bottom: 0;
 }
 
-/* Toggle mode's padded region under the band. `gap` is the single source of vertical
-   rhythm between the toggle and the message. */
+/* Toggle mode's padded region under the band. No gap: the only thing needing separation
+   is the message, which carries its own margin-top. */
 .wcdp-card-body {
   display: flex;
   flex-direction: column;
-  gap: var(--wcdp-card-gap, 0.75em);
   padding: var(--wcdp-card-padding, 1em 1.25em);
 }
 
@@ -79,10 +78,13 @@
 
 /* The message under the controls. It is a <span>, so display:block is required for
    width/margin to apply at all. Centred with explicit left/right margins rather than
-   the shorthand — an auto vertical margin on a flex item absorbs free space. */
+   the shorthand — an auto vertical margin on a flex item absorbs free space, and the
+   top margin here is doing real work. It sets the message off from the toggle above
+   (this is the only pair in the body needing separation, so it replaces the body gap). */
 .wc-deposits-reserve-card .wc-deposits-notice {
   display: block;
   width: 90%;
+  margin-top: 0.85em;
   margin-left: auto;
   margin-right: auto;
   font-size: var(--wcdp-message-size, inherit);

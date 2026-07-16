@@ -888,15 +888,6 @@ JS;
                 'id' => 'wc_deposits_style_toggle_radius',
                 'placeholder' => 'e.g. 8px, var(--radius)',
             ),
-            'toggle_gap' => array(
-                'name' => __('Vertical Gap', 'woocommerce-deposits'),
-                'type' => 'text',
-                'class' => 'wcdp-style-size',
-                'id' => 'wc_deposits_style_toggle_gap',
-                'placeholder' => 'e.g. 16px, 1rem, var(--…)',
-                'desc' => __('Space between the heading, the toggle, and the message below it.', 'woocommerce-deposits'),
-                'desc_tip' => true,
-            ),
             'toggle_message_size' => array(
                 'name' => __('Message Text Size', 'woocommerce-deposits'),
                 'type' => 'text',
@@ -1504,7 +1495,6 @@ JS;
         $settings['wc_deposits_style_toggle_weight']     = $this->wcdp_sanitize_style_weight('wc_deposits_style_toggle_weight');
         $settings['wc_deposits_style_toggle_padding']    = $this->wcdp_sanitize_style_size('wc_deposits_style_toggle_padding');
         $settings['wc_deposits_style_toggle_radius']     = $this->wcdp_sanitize_style_size('wc_deposits_style_toggle_radius');
-        $settings['wc_deposits_style_toggle_gap']          = $this->wcdp_sanitize_style_size('wc_deposits_style_toggle_gap');
         $settings['wc_deposits_style_toggle_message_size'] = $this->wcdp_sanitize_style_size('wc_deposits_style_toggle_message_size');
         $settings['wc_deposits_style_toggle_message_color'] = $this->wcdp_sanitize_style_color('wc_deposits_style_toggle_message_color');
         $align = isset($_POST['wc_deposits_style_toggle_align']) ? $_POST['wc_deposits_style_toggle_align'] : 'left';
