@@ -75,14 +75,20 @@ p.form-row-last[class*="_wc_deposits_payment_plans"] select {
 
    position:sticky rather than fixed: it stays in the document flow, so it cannot overlap
    the admin footer or cover the last field, and needs no compensating padding. Sticky is
-   silently disabled by `overflow` on any ancestor — none of #mainform's have it. */
+   silently disabled by `overflow` on any ancestor — none of #mainform's have it.
+
+   The button stays LEFT — WordPress's own default for p.submit, and where every other
+   settings page in the admin puts Save, so it is where the eye already looks. It also
+   keeps the button under the column being read: the fields end around 664px on a
+   1094px-wide form, so right-aligning put the button ~290px into empty space, and the
+   form is fluid — on a wider monitor that gap only grows. The BAR spans the full width
+   and is what makes Save findable; the button does not need to chase the right edge. */
 body.woocommerce_page_wc-settings-wc-deposits #mainform p.submit {
   position: sticky;
   bottom: 0;
   z-index: 10;
   margin: 20px 0 0;
   padding: 12px 0;
-  text-align: right;
   /* Opaque: the form scrolls behind this. #f0f0f1 is the admin content background it
      sits on, so the bar reads as part of the page rather than a panel. */
   background-color: #f0f0f1;
