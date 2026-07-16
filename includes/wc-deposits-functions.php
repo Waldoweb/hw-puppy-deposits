@@ -810,16 +810,36 @@ function wcdp_get_deposit_slider_custom_styles(){
 
     $basic_buttons = get_option('wc_deposits_use_basic_radio_buttons', true) === 'yes';
 
-    // Heading font-weight is applied here as a real CSS rule (with !important) instead of
-    // inline on the element, so it (a) survives themes/scripts that strip inline
-    // font-weight from paragraphs — e.g. Bricks/Automatic.css normalisation, which caused a
-    // bold→light "flash" — and (b) is present in <head> at first paint. Store-wide, so a
-    // single rule is correct. Configurable via the Styling tab; defaults to 700 (bold).
-    $heading_weight = trim((string) get_option('wc_deposits_style_heading_weight', ''));
-    if ('' === $heading_weight) {
-        $heading_weight = '700';
+    // Card, heading, message and radio-option styling all live in assets/css/style.css and
+    // read --wcdp-* custom properties, each with the original default as its CSS fallback.
+    // So this only publishes the properties a merchant has actually set: a blank option emits
+    // nothing and the stylesheet's default applies. Nothing here needs !important, and there
+    // is exactly one place a default is written down (the fallback) instead of three.
+    //
+    // A bare number means px (the Styling tab accepts "16" as well as "16px", "1.5rem",
+    // "var(--x)" or "calc(...)"); anything else is passed through verbatim.
+    $wcdp_len = static function ($val) {
+        return preg_match('/^[0-9]+(?:\.[0-9]+)?$/', $val) ? $val . 'px' : $val;
+    };
+
+    $card_vars = array();
+    $opt = static function ($key) { return trim((string) get_option($key, '')); };
+
+    if ('' !== ($v = $opt('wc_deposits_style_card_bg')))            { $card_vars[] = "--wcdp-card-bg:{$v}"; }
+    if ('' !== ($v = $opt('wc_deposits_style_card_border_color')))  { $card_vars[] = "--wcdp-card-border-color:{$v}"; }
+    if ('' !== ($v = $opt('wc_deposits_style_card_border_width')))  { $card_vars[] = "--wcdp-card-border-width:" . $wcdp_len($v); }
+    if ('' !== ($v = $opt('wc_deposits_style_card_radius')))        { $card_vars[] = "--wcdp-card-radius:" . $wcdp_len($v); }
+    if ('' !== ($v = $opt('wc_deposits_style_card_padding')))       { $card_vars[] = "--wcdp-card-padding:" . $wcdp_len($v); }
+    if ('' !== ($v = $opt('wc_deposits_style_heading_color')))      { $card_vars[] = "--wcdp-heading-color:{$v}"; }
+    if ('' !== ($v = $opt('wc_deposits_style_heading_size')))       { $card_vars[] = "--wcdp-heading-size:" . $wcdp_len($v); }
+    if ('' !== ($v = $opt('wc_deposits_style_heading_weight')))     { $card_vars[] = "--wcdp-heading-weight:{$v}"; }
+    if ('' !== ($v = $opt('wc_deposits_style_radio_accent')))       { $card_vars[] = "--wcdp-radio-accent:{$v}"; }
+    if ('' !== ($v = $opt('wc_deposits_style_option_text_color')))  { $card_vars[] = "--wcdp-option-text:{$v}"; }
+    if ('' !== ($v = $opt('wc_deposits_style_subline_color'))) {
+        // A configured subline colour should be shown as chosen, not faded to 70% of itself.
+        $card_vars[] = "--wcdp-subline-color:{$v}";
+        $card_vars[] = "--wcdp-subline-opacity:1";
     }
-    $heading_rule = ".wc-deposits-reserve-heading{font-weight:{$heading_weight} !important;}\n";
 
     // Toggle settings (only meaningful in toggle mode). A blank value means "keep the
     // default", which is expressed as the fallback in .wcdp-toggle's custom properties in
@@ -851,40 +871,27 @@ function wcdp_get_deposit_slider_custom_styles(){
     if ('' !== $t_padding)    { $toggle_vars[] = "--wcdp-toggle-padding:{$t_padding}"; }
     if ('' !== $t_radius)     { $toggle_vars[] = "--wcdp-toggle-radius:{$t_radius}"; }
 
-    $toggle_extra = ".wcdp-toggle{" . implode(';', $toggle_vars) . ";}\n";
-    if ('' !== $t_gap) {
-        // Uniform vertical spacing between the heading, the toggle and the message below it:
-        // lay the reserve card out as a flex column with a gap and drop the elements' own
-        // vertical margins so the gap is the single source of spacing. Toggle mode only.
-        $toggle_extra .= ".wc-deposits-reserve-card{display:flex !important;flex-direction:column !important;gap:{$t_gap} !important;}.wc-deposits-reserve-card > *{margin-top:0 !important;margin-bottom:0 !important;}\n";
-    }
-    // Inset the message under the toggle and centre it. The element is a <span>, so it needs
-    // display:block for width/margin to apply at all — it only computes to block today because
-    // the gap rule above makes the card a flex container, and that rule is conditional.
-    // margin-left/right rather than the margin shorthand: the gap rule zeroes the vertical
-    // margins to keep `gap` the single source of vertical spacing, and an auto vertical margin
-    // on a flex item absorbs free space. Horizontal centring is all that's wanted here.
-    $toggle_extra .= ".wc-deposits-reserve-card .wc-deposits-notice{display:block !important;width:90% !important;margin-left:auto !important;margin-right:auto !important;}\n";
-    if ('' !== $t_message_size) {
-        $toggle_extra .= ".wc-deposits-reserve-card .wc-deposits-notice{font-size:{$t_message_size} !important;}\n";
-    }
-    if ('' !== $t_message_color) {
-        $toggle_extra .= ".wc-deposits-reserve-card .wc-deposits-notice{color:{$t_message_color} !important;}\n";
-    }
+    // Toggle-mode card settings. These describe the card, not the switch, so they join the
+    // card variables — but they only apply in toggle mode, matching the previous behaviour.
+    if ('' !== $t_gap)           { $card_vars[] = "--wcdp-card-gap:{$t_gap}"; }
+    if ('' !== $t_message_size)  { $card_vars[] = "--wcdp-message-size:{$t_message_size}"; }
+    if ('' !== $t_message_color) { $card_vars[] = "--wcdp-message-color:{$t_message_color}"; }
     if ('center' === $t_align || 'right' === $t_align) {
-        // Align the heading + message with the (symmetric) toggle. text-align is inherited,
-        // so it reaches the heading and message; the toggle labels are already centred and
-        // the full-width toggle itself is unaffected.
-        $toggle_extra .= ".wc-deposits-reserve-card{text-align:{$t_align} !important;}\n";
+        // text-align inherits, so this reaches the heading and message. The toggle labels are
+        // centred by their own rule and the full-width toggle itself is unaffected.
+        $card_vars[] = "--wcdp-card-align:{$t_align}";
     }
 
-    // Label colour, the selected-option background and the price inheriting the label colour
-    // are all handled by .wcdp-toggle in style.css, driven by the custom properties above.
-    // The sliding switcher's multi-vendor gradient went with the candy switch: the selected
-    // option is now a flat --wcdp-toggle-selected. That also retires this function's use of
-    // wc_deposits_adjust_colour(), which only existed to darken the gradient's second stop
-    // and returned a WP_Error for any non-hex value (var(), rgb()), needing a guard.
-    $styles = $heading_rule . ( $basic_buttons ? "" : $toggle_extra );
+    // One variable block per element that needs one. The card is the ancestor of the toggle,
+    // so its properties cascade down; the toggle is listed separately as well because the
+    // checkout-mode slider renders a .wcdp-toggle that is NOT inside a card.
+    $styles = '';
+    if (!empty($card_vars)) {
+        $styles .= ".wc-deposits-reserve-card{" . implode(';', $card_vars) . ";}\n";
+    }
+    if (!$basic_buttons) {
+        $styles .= ".wc-deposits-reserve-card,.wcdp-toggle{" . implode(';', $toggle_vars) . ";}\n";
+    }
 
     return apply_filters('wc_deposits_deposit_slider_custom_styles', $styles);
 

@@ -20,6 +20,105 @@
  */
 
 /* ─────────────────────────────────────────────────────────────────────────────
+   Reserve card — the framed block around the deposit controls on a product page.
+
+   Everything a merchant can configure is a --wcdp-* custom property carrying the
+   old default as its fallback. wcdp_get_deposit_slider_custom_styles() publishes
+   only the properties that have a value, on .wc-deposits-reserve-card; the card is
+   the ancestor of everything here, so they cascade to the toggle and options too.
+   ───────────────────────────────────────────────────────────────────────────── */
+.wc-deposits-reserve-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--wcdp-card-gap, 0.75em);
+  margin: 1em 0 1.25em;
+  padding: var(--wcdp-card-padding, 1em 1.25em);
+  border: var(--wcdp-card-border-width, 1px) solid
+    var(--wcdp-card-border-color, rgba(0, 0, 0, 0.12));
+  border-radius: var(--wcdp-card-radius, 8px);
+  background: var(--wcdp-card-bg, rgba(0, 0, 0, 0.03));
+  text-align: var(--wcdp-card-align, left);
+}
+/* `gap` is the single source of vertical rhythm, so children bring no margins. */
+.wc-deposits-reserve-card > * {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+/* font-weight must come from a stylesheet, NOT an inline style: an external script
+   (Bricks / Automatic.css paragraph normalisation) strips inline font-weight off
+   paragraphs after load, which showed as a bold→light flash. A rule survives it. */
+.wc-deposits-reserve-heading {
+  font-size: var(--wcdp-heading-size, 1.05em);
+  font-weight: var(--wcdp-heading-weight, 700);
+  color: var(--wcdp-heading-color, inherit);
+}
+
+/* The message under the controls. It is a <span>, so display:block is required for
+   width/margin to apply at all. Centred with explicit left/right margins rather than
+   the shorthand — an auto vertical margin on a flex item absorbs free space. */
+.wc-deposits-reserve-card .wc-deposits-notice {
+  display: block;
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+  font-size: var(--wcdp-message-size, inherit);
+  color: var(--wcdp-message-color, inherit);
+}
+
+/* ── Radio presentation (the "Use basic radio buttons" mode) ────────────────── */
+.wc-deposits-options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75em;
+}
+
+/* Grid: [radio | text]. align-items:center centres the radio on the FIRST (title)
+   line; the balance subline drops to row 2 / column 2, aligned under the title.
+   color defaults to inherit so option text matches the theme's normal text colour,
+   overriding the muted grey a Frames/Automatic.css `.form--light label` rule applies. */
+.wc-deposits-option {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: 0.6em;
+  align-items: center;
+  margin: 0;
+  cursor: pointer;
+  color: var(--wcdp-option-text, inherit);
+}
+.wc-deposits-option .input-radio {
+  grid-column: 1;
+  grid-row: 1;
+  margin: 0;
+  align-self: center;
+  accent-color: var(--wcdp-radio-accent, auto);
+}
+.wc-deposits-option-title {
+  grid-column: 2;
+  grid-row: 1;
+}
+.wc-deposits-option-sub {
+  grid-column: 2;
+  grid-row: 2;
+  margin-top: 0.15em;
+  font-size: 0.85em;
+  line-height: 1.35;
+  color: var(--wcdp-subline-color, inherit);
+  /* PHP sets --wcdp-subline-opacity to 1 when a subline colour is configured, so a
+     chosen colour is shown as chosen rather than faded to 70% of itself. */
+  opacity: var(--wcdp-subline-opacity, 0.7);
+}
+
+/* Forced deposit: mute the TITLE, not the row — a row-level opacity would compound
+   with the subline's own and leave the explanation too faint to read. */
+.wc-deposits-option--disabled {
+  cursor: not-allowed;
+}
+.wc-deposits-option--disabled .wc-deposits-option-title {
+  opacity: 0.55;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
    Deposit toggle — a two-option segmented control.
 
    Replaces the vendored "candy" switch that used to live here: a 2013-era
