@@ -32,7 +32,11 @@ class WC_Deposits_Checkout
 
             add_action('wp_enqueue_scripts', array($this, 'enqueue_scripts'), 100);
             add_action('woocommerce_checkout_update_order_review', array($this, 'update_order_review'), 10, 1);
-            add_action('woocommerce_review_order_after_order_total', array($this, 'checkout_deposit_button'), 50);
+            // BEFORE the total, not after. The deposit choice DETERMINES the total, so it
+            // belongs above the line it produces — the same place, and for the same reason,
+            // that WooCommerce puts the shipping-method radios above it. Rendering a control
+            // after the total presents the conclusion before the input that decides it.
+            add_action('woocommerce_review_order_before_order_total', array($this, 'checkout_deposit_button'), 50);
         }
 
         add_action('woocommerce_checkout_create_order_line_item', array($this, 'checkout_create_order_line_item'), 10, 4);
@@ -232,6 +236,11 @@ class WC_Deposits_Checkout
         $args = array(
             'force_deposit' => $force_deposit,
             'deposit_amount' => $amount,
+            // The full order total, so each option can show what it charges. Same source the
+            // Total row uses for its "(of $X)" — WC_Deposits_Cart::deposit_order_total_html —
+            // so the two can never disagree. get_total('edit') is the raw unformatted float
+            // and stays the FULL total regardless of which option is selected.
+            'full_amount' => WC()->cart ? (float) WC()->cart->get_total('edit') : 0.0,
             'basic_buttons' => $basic_buttons,
             'deposit_text' => $deposit_text,
             'full_text' => $full_text,

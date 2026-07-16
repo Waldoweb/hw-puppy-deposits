@@ -19,6 +19,13 @@
  */
 
 $wcdp_full_disabled = ( isset( $force_deposit ) && $force_deposit === 'yes' );
+
+// Amounts shown beside each label, matching the product page's "Pay Deposit ($200.00)".
+// Both are guarded: a zero deposit or total means there is nothing worth showing, and a
+// bare "($0.00)" next to a payment option is worse than no figure at all.
+$wcdp_deposit    = isset( $deposit_amount ) ? (float) $deposit_amount : 0.0;
+$wcdp_full       = isset( $full_amount ) ? (float) $full_amount : 0.0;
+$wcdp_show_price = ( $wcdp_deposit > 0 && $wcdp_full > 0 );
 ?>
 
 <tr  class="deposit-buttons">
@@ -35,12 +42,12 @@ $wcdp_full_disabled = ( isset( $force_deposit ) && $force_deposit === 'yes' );
                         <label id="pay-deposit-label" class="wc-deposits-option deposit-option-row">
                             <input id='pay-deposit' name='deposit-radio' type='radio' class='input-radio'
                                    value='deposit' <?php checked( $default_checked, 'deposit' ); ?>>
-                            <span class="wc-deposits-option-title"><?php echo esc_html__( $deposit_text, 'woocommerce-deposits' ); ?></span>
+                            <span class="wc-deposits-option-title"><?php echo esc_html__( $deposit_text, 'woocommerce-deposits' ); ?><?php if ( $wcdp_show_price ) : ?> (<?php echo wp_kses_post( wc_price( $wcdp_deposit ) ); ?>)<?php endif; ?></span>
                         </label>
                         <label id="pay-full-amount-label" class="wc-deposits-option full-option-row<?php echo $wcdp_full_disabled ? ' wc-deposits-option--disabled' : ''; ?>">
                             <input id='pay-full-amount' name='deposit-radio' type='radio' class='input-radio'
                                    value='full' <?php checked( $default_checked, 'full' ); ?> <?php disabled( $wcdp_full_disabled ); ?>>
-                            <span class="wc-deposits-option-title"><?php echo esc_html__( $full_text, 'woocommerce-deposits' ); ?></span>
+                            <span class="wc-deposits-option-title"><?php echo esc_html__( $full_text, 'woocommerce-deposits' ); ?><?php if ( $wcdp_show_price ) : ?> (<?php echo wp_kses_post( wc_price( $wcdp_full ) ); ?>)<?php endif; ?></span>
                         </label>
                     </div>
 
@@ -51,11 +58,11 @@ $wcdp_full_disabled = ( isset( $force_deposit ) && $force_deposit === 'yes' );
                             <input id='pay-deposit' name='deposit-radio' type='radio' class='input-radio wcdp-toggle__input'
                                    value='deposit' <?php checked( $default_checked, 'deposit' ); ?>>
                             <label id="pay-deposit-label" class="wcdp-toggle__option wcdp-toggle__option--deposit"
-                                   for='pay-deposit'><?php echo esc_html__( $deposit_text, 'woocommerce-deposits' ); ?></label>
+                                   for='pay-deposit'><?php echo esc_html__( $deposit_text, 'woocommerce-deposits' ); ?><?php if ( $wcdp_show_price ) : ?> <span class="wcdp-toggle__price">(<?php echo wp_kses_post( wc_price( $wcdp_deposit ) ); ?>)</span><?php endif; ?></label>
                             <input id='pay-full-amount' name='deposit-radio' type='radio' class='input-radio wcdp-toggle__input'
                                    value='full' <?php checked( $default_checked, 'full' ); ?> <?php disabled( $wcdp_full_disabled ); ?>>
                             <label id="pay-full-amount-label" class="wcdp-toggle__option wcdp-toggle__option--full"
-                                   for='pay-full-amount'><?php echo esc_html__( $full_text, 'woocommerce-deposits' ); ?></label>
+                                   for='pay-full-amount'><?php echo esc_html__( $full_text, 'woocommerce-deposits' ); ?><?php if ( $wcdp_show_price ) : ?> <span class="wcdp-toggle__price">(<?php echo wp_kses_post( wc_price( $wcdp_full ) ); ?>)</span><?php endif; ?></label>
                         </div>
                     </div>
 
