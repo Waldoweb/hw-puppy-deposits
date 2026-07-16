@@ -1276,22 +1276,22 @@ JS;
         ?>
         <tr class="">
             <th scope="row"
-                class="titledesc"><label for="wc_deposits_deposit_buttons_colors_primary"><?php echo __('Selected Button Background Color', 'woocommerce-deposits'); echo wc_help_tip( __('Button background color of the selected option in the deposit toggle.', 'woocommerce-deposits') ); ?></label></th>
+                class="titledesc"><label for="wc_deposits_deposit_buttons_colors_primary"><?php echo __('Selected Button Background Color', 'woocommerce-deposits'); echo wc_help_tip( __('Background of the selected option in the deposit toggle. The unselected option is drawn automatically as a 20% tint of this, so the two always match — there is nothing separate to set.', 'woocommerce-deposits') ); ?></label></th>
             <td class="forminp forminp-checkbox">
                 <fieldset>
                     <input type="text" id="wc_deposits_deposit_buttons_colors_primary" name="wc_deposits_deposit_buttons_colors_primary" class="wcdp-style-color"
-                           placeholder="e.g. #711919 or var(--action)" style="width:400px;"
+                           placeholder="e.g. #711919, rgba(0,0,0,.12) or var(--token)" style="width:400px;"
                            value="<?php echo esc_attr($primary_color); ?>">
                 </fieldset>
             </td>
         </tr>
         <tr class="">
             <th scope="row"
-                class="titledesc"><label for="wc_deposits_deposit_buttons_colors_secondary"><?php echo __('Button Text Color', 'woocommerce-deposits'); echo wc_help_tip( __('Text color of the deposit toggle labels, including the amounts.', 'woocommerce-deposits') ); ?></label></th>
+                class="titledesc"><label for="wc_deposits_deposit_buttons_colors_secondary"><?php echo __('Selected Button Text Color', 'woocommerce-deposits'); echo wc_help_tip( __('Text color of the SELECTED option only, including its amount — that is the one with a fill behind it to contrast against. The unselected option inherits your theme\'s normal text color, because a 20% tint is light and a light label would be unreadable on it.', 'woocommerce-deposits') ); ?></label></th>
             <td class="forminp forminp-checkbox">
                 <fieldset>
                     <input type="text" id="wc_deposits_deposit_buttons_colors_secondary" name="wc_deposits_deposit_buttons_colors_secondary" class="wcdp-style-color"
-                           placeholder="e.g. #ffffff or var(--base)" style="width:400px;"
+                           placeholder="e.g. #ffffff or var(--token)" style="width:400px;"
                            value="<?php echo esc_attr($secondary_color); ?>">
                 </fieldset>
             </td>

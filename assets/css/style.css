@@ -219,13 +219,27 @@
   white-space: nowrap;
 }
 
+/* Unselected: a 20% tint of the SELECTED colour, so it tracks that one setting and the
+   two can never fall out of sync. Deliberately not `opacity` on the whole button —
+   that would fade the label with the fill, and it would collide with the disabled state
+   below (opacity .4), leaving "unselected" and "unavailable" looking alike on a control
+   choosing between a deposit and the full price.
+
+   The label colour does NOT follow the fill: a tint of a dark selected colour is light,
+   so light selected-text would be unreadable on it. Unselected inherits the theme's own
+   text colour; --wcdp-toggle-text applies to the selected option only (see below), where
+   it has a fill to contrast against. */
 .wcdp-toggle__option {
   flex: 1 1 0;
   margin: 0;
   padding: var(--wcdp-toggle-padding, 12px 24px);
   border-radius: inherit;
   cursor: pointer;
-  color: var(--wcdp-toggle-text, inherit);
+  background-color: var(
+    --wcdp-toggle-unselected-bg,
+    color-mix(in srgb, var(--wcdp-toggle-selected, rgba(0, 0, 0, 0.12)) 20%, transparent)
+  );
+  color: inherit;
   font-size: var(--wcdp-toggle-label-size, 1em);
   font-weight: var(--wcdp-toggle-weight, 700);
   line-height: normal;
@@ -234,9 +248,14 @@
     color 0.2s ease-out;
 }
 
-/* Selected is declared after hover so the two never fight on the selected option. */
+/* Hover deepens the same tint rather than swapping in an unrelated colour. The checked
+   rule below outranks this (3 classes vs 2), so hovering the selected option cannot
+   dislodge its fill — that holds regardless of source order. */
 .wcdp-toggle__option:hover {
-  background-color: var(--wcdp-toggle-hover-bg, rgba(0, 0, 0, 0.025));
+  background-color: var(
+    --wcdp-toggle-hover-bg,
+    color-mix(in srgb, var(--wcdp-toggle-selected, rgba(0, 0, 0, 0.12)) 35%, transparent)
+  );
 }
 
 /* The price always takes its own line under the label — deterministic, rather than
@@ -253,8 +272,12 @@
   color: inherit;
 }
 
+/* The selected option carries the configured colour, and the configured text colour with
+   it — this is the only state with a fill to contrast against, which is what the "Button
+   Text Color" setting was always for. */
 .wcdp-toggle__input:checked + .wcdp-toggle__option {
   background-color: var(--wcdp-toggle-selected, rgba(0, 0, 0, 0.12));
+  color: var(--wcdp-toggle-text, inherit);
 }
 
 /* currentColor, not --wcdp-toggle-selected: the selected fill is a faint overlay by
@@ -270,9 +293,14 @@
   opacity: 0.4;
   cursor: not-allowed;
 }
-/* A disabled option is not selectable, so it must not offer a hover affordance. */
+/* A disabled option is not selectable, so it must not offer a hover affordance — hold the
+   unselected fill rather than resetting to transparent, which would make hovering an
+   unavailable option LIGHTEN it. */
 .wcdp-toggle__input:disabled + .wcdp-toggle__option:hover {
-  background-color: transparent;
+  background-color: var(
+    --wcdp-toggle-unselected-bg,
+    color-mix(in srgb, var(--wcdp-toggle-selected, rgba(0, 0, 0, 0.12)) 20%, transparent)
+  );
 }
 
 /* Tooltip explaining why "Pay in Full" is unavailable. A sibling of the labels, not a
