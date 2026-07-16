@@ -1,0 +1,1234 @@
+msgid ""
+msgstr ""
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: POEditor.com\n"
+"Project-Id-Version: WooCommerce Deposits\n"
+"Language: es\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: woocommerce-deposits.php:89, woocommerce-deposits.php:133,
+#: includes/admin/class-wc-deposits-admin-settings.php:37
+msgid "WooCommerce Deposits"
+msgstr "Depósitos de WooCommerce"
+
+#: woocommerce-deposits.php:149, woocommerce-deposits.php:153,
+#: includes/admin/class-wc-deposits-admin-order.php:1116,
+#: includes/admin/class-wc-deposits-admin-order.php:1103
+msgid "Partial Payments"
+msgstr "Pagos parciales"
+
+#: woocommerce-deposits.php:150,
+#: includes/emails/class-wc-deposits-email-partial-payment.php:23,
+#: includes/admin/list-tables/class-wc-deposits-admin-list-table-partial-payments.php:116
+msgid "Partial Payment"
+msgstr "Pago parcial"
+
+#: woocommerce-deposits.php:151
+msgctxt "custom post type setting"
+msgid "Edit"
+msgstr "Editar"
+
+#: woocommerce-deposits.php:152,
+#: includes/admin/class-wc-deposits-taxonomies.php:69
+msgid "Search"
+msgstr "Buscar"
+
+#: woocommerce-deposits.php:194
+msgid "Settings"
+msgstr "Ajustes"
+
+#: woocommerce-deposits.php:195
+msgid "Documentation"
+msgstr "Documentación"
+
+#: woocommerce-deposits.php:196
+msgid "Support"
+msgstr "Atención al cliente"
+
+#: woocommerce-deposits.php:641
+msgctxt "Order status"
+msgid "Partially Paid"
+msgstr "Parcialmente pagado"
+
+#: woocommerce-deposits.php:646
+msgid "Partially Paid <span class=\"count\">(%s)</span>"
+msgid_plural "Partially Paid <span class=\"count\">(%s)</span>"
+msgstr[0] "Parcialmente pagado <span class=\"count\">(%s)</span>"
+msgstr[1] "Parcialmente pagados <span class=\"count\">(%s)</span>"
+
+#: includes/class-wc-deposits-add-to-cart.php:620,
+#: includes/class-wc-deposits-add-to-cart.php:607
+msgid "per item"
+msgstr "por artículo"
+
+#: includes/class-wc-deposits-add-to-cart.php:605
+msgid "per booking"
+msgstr "por reserva"
+
+#: includes/class-wc-deposits-add-to-cart.php:603
+msgid "per person"
+msgstr "por persona"
+
+#: includes/class-wc-deposits-add-to-cart.php:635,
+#: includes/class-wc-deposits-checkout.php:170,
+#: includes/admin/class-wc-deposits-admin-settings.php:173
+msgid "Pay Deposit"
+msgstr "Pagar depósito"
+
+#: includes/class-wc-deposits-add-to-cart.php:639,
+#: includes/class-wc-deposits-checkout.php:174,
+#: includes/admin/class-wc-deposits-admin-settings.php:174
+msgid "Full Amount"
+msgstr "Importe total"
+
+#: includes/class-wc-deposits-add-to-cart.php:644,
+#: includes/class-wc-deposits-checkout.php:179,
+#: includes/admin/class-wc-deposits-admin-settings.php:416,
+#: includes/admin/class-wc-deposits-admin-settings.php:418
+msgid "Deposit Option"
+msgstr "Opción de depósito"
+
+#: includes/class-wc-deposits-cart.php:174
+msgid "Future Payment"
+msgstr "Pago futuro"
+
+#: includes/class-wc-deposits-cart.php:380,
+#: includes/class-wc-deposits-orders.php:875,
+#: includes/admin/class-wc-deposits-admin-product.php:154,
+#: includes/admin/class-wc-deposits-admin-product.php:449,
+#: includes/admin/class-wc-deposits-admin-product.php:653,
+#: includes/admin/class-wc-deposits-admin-settings.php:402,
+#: includes/admin/class-wc-deposits-admin-settings.php:404,
+#: includes/admin/class-wc-deposits-admin-settings.php:504
+msgid "Deposit Amount"
+msgstr "Importe del depósito"
+
+#: includes/class-wc-deposits-cart.php:393,
+#: includes/class-wc-deposits-cart.php:1175,
+#: includes/class-wc-deposits-checkout.php:356,
+#: includes/class-wc-deposits-checkout.php:317,
+#: includes/class-wc-deposits-orders.php:878,
+#: includes/admin/class-wc-deposits-admin-order.php:472,
+#: includes/admin/class-wc-deposits-admin-order.php:850,
+#: includes/admin/class-wc-deposits-admin-order.php:951,
+#: includes/admin/class-wc-deposits-admin-settings.php:409,
+#: includes/admin/class-wc-deposits-admin-settings.php:411,
+#: templates/emails/wc-deposits-email-partial-payments-summary.php:54,
+#: templates/order/wc-deposits-partial-payments-summary.php:50
+msgid "Future Payments"
+msgstr "Pagos futuros"
+
+#: includes/class-wc-deposits-cart.php:408,
+#: includes/admin/class-wc-deposits-admin-product.php:143,
+#: includes/admin/class-wc-deposits-admin-product.php:611,
+#: includes/admin/class-wc-deposits-admin-settings.php:499,
+#: includes/admin/class-wc-deposits-taxonomies.php:67,
+#: includes/admin/views/order-recalculate-deposit-modal.php:126,
+#: includes/admin/views/order-recalculate-deposit-modal.php:64
+msgid "Payment plan"
+msgstr "Plan de pago"
+
+#: includes/class-wc-deposits-cart.php:503,
+#: includes/class-wc-deposits-checkout.php:410,
+#: includes/class-wc-deposits-orders.php:981,
+#: includes/admin/class-wc-deposits-admin-order.php:422,
+#: includes/admin/class-wc-deposits-admin-order.php:849,
+#: includes/admin/class-wc-deposits-admin-order.php:941,
+#: includes/admin/class-wc-deposits-admin-product.php:81,
+#: templates/emails/wc-deposits-email-partial-payments-summary.php:56,
+#: templates/order/wc-deposits-partial-payments-summary.php:52,
+#: includes/admin/views/order-recalculate-deposit-modal.php:96,
+#: includes/admin/views/order-recalculate-deposit-modal.php:46
+msgid "Deposit"
+msgstr "Depósito"
+
+#: includes/class-wc-deposits-cart.php:504
+msgid "Remaining"
+msgstr "Restante"
+
+#: includes/class-wc-deposits-cart.php:1170,
+#: includes/class-wc-deposits-checkout.php:351,
+#: includes/class-wc-deposits-checkout.php:312,
+#: includes/class-wc-deposits-orders.php:871,
+#: includes/admin/class-wc-deposits-admin-settings.php:395,
+#: includes/admin/class-wc-deposits-admin-settings.php:397
+msgid "To Pay"
+msgstr "A pagar"
+
+#: includes/class-wc-deposits-emails.php:92
+msgid "Below is a summary of original order"
+msgstr "A continuación se adjunta un resumen del pedido original"
+
+#: includes/class-wc-deposits-orders.php:805
+msgid "Partially Paid"
+msgstr "Parcialmente pagado"
+
+#: includes/class-wc-deposits-orders.php:1142,
+#: includes/wc-deposits-functions.php:423
+msgid "Partial Payment for order %s"
+msgstr "Pago parcial para el pedido %s"
+
+#: includes/class-wcdp-payment.php:622
+msgid "Partial Payment amount:"
+msgstr "Importe del pago parcial:"
+
+#: includes/wc-deposits-functions.php:25
+msgid "Cart items"
+msgstr "Elementos de carrito"
+
+#: includes/wc-deposits-functions.php:26
+msgid "Fees"
+msgstr "Tasas"
+
+#: includes/wc-deposits-functions.php:27
+msgid "Tax"
+msgstr "Impuestos"
+
+#: includes/wc-deposits-functions.php:28
+msgid "Shipping"
+msgstr "Envío"
+
+#: includes/wc-deposits-functions.php:29
+msgid "Shipping Tax"
+msgstr "Impuestos de envío"
+
+#: includes/wc-deposits-functions.php:513
+msgid "<strong>%s order</strong> partially paid"
+msgid_plural "<strong>%s orders</strong> partially paid"
+msgstr[0] "<strong>%s pedido</strong> parcialmente pagado"
+msgstr[1] "<strong>%s pedidos</strong> parcialmente pagados"
+
+#: templates/wc-deposits-checkout-mode-slider.php:63,
+#: templates/wc-deposits-checkout-mode-slider.php:66,
+#: templates/single-product/wc-deposits-product-single-plan.php:11,
+#: templates/single-product/wc-deposits-product-single-plan.php:14
+msgid "View details"
+msgstr "Ver detalles"
+
+#: templates/wc-deposits-checkout-mode-slider.php:64,
+#: templates/single-product/wc-deposits-product-single-plan.php:12
+msgid "Hide details"
+msgstr "Ocultar detalles"
+
+#: includes/admin/class-wc-deposits-admin-order.php:619
+msgid "Are you sure? this action is irreversible."
+msgstr "¿Estás seguro? Esta acción es irreversible."
+
+#: includes/admin/class-wc-deposits-admin-order.php:626
+msgid "Recalculate Deposit"
+msgstr "Recalcular depósito"
+
+#: includes/admin/class-wc-deposits-admin-order.php:743
+msgid "Partial Payment reminder email manually sent to customer."
+msgstr "Correo electrónico de recordatorio de pago parcial enviado manualmente al cliente."
+
+#: includes/admin/class-wc-deposits-admin-order.php:784
+msgid "Email Partial Payment Reminder"
+msgstr "Enviar por correo electrónico un recordatorio de pago parcial"
+
+#: includes/admin/class-wc-deposits-admin-order.php:941
+msgid "Note: Deposit amount is affected by settings for fees, taxes & shipping handling"
+msgstr "Nota: El total del depósito está sujeto a la configuración de comisiones, impuestos y gestión del transporte."
+
+#: includes/admin/class-wc-deposits-admin-order.php:1075
+msgid "This is a partial payment for order %s"
+msgstr "Esto es un pago parcial para el pedido %s"
+
+#: includes/admin/class-wc-deposits-admin-order.php:1078
+msgid "View"
+msgstr "Ver"
+
+#: includes/admin/class-wc-deposits-admin-order.php:1086
+msgid "Due date:"
+msgstr "Fecha de vencimiento:"
+
+#: includes/admin/class-wc-deposits-admin-order.php:1234
+msgid "Error saving. A payment with this date already exist. <a href=\"%s\"> Return </a>"
+msgstr "Error al guardar. Ya existe un pago con esta fecha. <a href=\"%s\"> Volver </a>"
+
+#: includes/admin/class-wc-deposits-admin-product.php:100
+msgid "Checkout Mode enabled"
+msgstr "Modo de pago activado"
+
+#: includes/admin/class-wc-deposits-admin-product.php:103
+msgid "Go to plugin settings"
+msgstr "Ir a ajustes de complemento"
+
+#: includes/admin/class-wc-deposits-admin-product.php:120,
+#: includes/admin/class-wc-deposits-admin-product.php:583
+msgid "Enable deposit"
+msgstr "Activar depósito"
+
+#: includes/admin/class-wc-deposits-admin-product.php:121,
+#: includes/admin/class-wc-deposits-admin-product.php:584
+msgid "Enable this to require a deposit for this item."
+msgstr "Activa esto para requerir un depósito para este artículo."
+
+#: includes/admin/class-wc-deposits-admin-product.php:126,
+#: includes/admin/class-wc-deposits-admin-product.php:593,
+#: includes/admin/class-wc-deposits-admin-settings.php:486
+msgid "Force deposit"
+msgstr "Forzar depósito"
+
+#: includes/admin/class-wc-deposits-admin-product.php:127,
+#: includes/admin/class-wc-deposits-admin-product.php:594
+msgid "If you enable this, the customer will not be allowed to make a full payment."
+msgstr "Si activas esto, el cliente no podrá realizar un pago completo."
+
+#: includes/admin/class-wc-deposits-admin-product.php:139,
+#: includes/admin/class-wc-deposits-admin-product.php:607
+msgid "Specify the type of deposit:"
+msgstr "Especifica el tipo de depósito:"
+
+#: includes/admin/class-wc-deposits-admin-product.php:141,
+#: includes/admin/class-wc-deposits-admin-product.php:609
+msgid "Fixed value"
+msgstr "Valor fijo"
+
+#: includes/admin/class-wc-deposits-admin-product.php:142,
+#: includes/admin/class-wc-deposits-admin-product.php:610
+msgid "Percentage of price"
+msgstr "Porcentaje del precio"
+
+#: includes/admin/class-wc-deposits-admin-product.php:155,
+#: includes/admin/class-wc-deposits-admin-product.php:654
+msgid "This is the minimum deposited amount.<br/>Note: Tax will be added to the deposit amount you specify here."
+msgstr "Es el importe mínimo depositado.<br/>Nota: Los impuestos se añadirán al importe del depósito que especifiques aquí."
+
+#: includes/admin/class-wc-deposits-admin-product.php:180,
+#: includes/admin/class-wc-deposits-admin-product.php:632,
+#: includes/admin/class-wc-deposits-admin-settings.php:532
+msgid "Payment plan(s)"
+msgstr "Plan(es) de pago"
+
+#: includes/admin/class-wc-deposits-admin-product.php:181,
+#: includes/admin/class-wc-deposits-admin-product.php:633,
+#: includes/admin/class-wc-deposits-admin-settings.php:536
+msgid "Selected payment plan(s) will be available for customers to choose from"
+msgstr "Los planes de pago seleccionados estarán disponibles para que los clientes puedan elegir"
+
+#: includes/admin/class-wc-deposits-admin-product.php:201
+msgid "Multiply by persons"
+msgstr "Multiplica por personas"
+
+#: includes/admin/class-wc-deposits-admin-product.php:202
+msgid "Enable this to multiply the deposit by person count. (Only works when Fixed Value is active)"
+msgstr "Activa esto para multiplicar el depósito por el número de personas. (Solo funciona cuando se ha activado el Valor Fijo)"
+
+#: includes/admin/class-wc-deposits-admin-product.php:231,
+#: includes/emails/class-wc-deposits-email-customer-remaining-reminder.php:28
+msgid "Partial Payment Reminder"
+msgstr "Recordatorio de pago parcial"
+
+#: includes/admin/class-wc-deposits-admin-product.php:283
+msgid "If you would like to send out second payment reminder emails to all orders containing this product on a specific date in the future, set a date below."
+msgstr "Si quieres enviar una segunda tanda de correos de recordatorio de pago a todos los pedidos que contengan este producto en una fecha específica en el futuro, establece una fecha a continuación."
+
+#: includes/admin/class-wc-deposits-admin-product.php:285
+msgid "Next Reminder Date :"
+msgstr "Siguiente fecha de recordatorio:"
+
+#: includes/admin/class-wc-deposits-admin-product.php:373
+msgid "Deposit Options"
+msgstr "Opciones del depósito"
+
+#: includes/admin/class-wc-deposits-admin-product.php:376
+msgid "Enable Deposit ?"
+msgstr "¿Activar depósito?"
+
+#: includes/admin/class-wc-deposits-admin-product.php:394
+msgid "Force Deposit?"
+msgstr "¿Forzar depósito?"
+
+#: includes/admin/class-wc-deposits-admin-product.php:399,
+#: includes/admin/class-wc-deposits-admin-product.php:417,
+#: includes/admin/class-wc-deposits-admin-product.php:435,
+#: includes/admin/class-wc-deposits-admin-product.php:454
+msgid "— No Change —"
+msgstr "— Sin cambios —"
+
+#: includes/admin/class-wc-deposits-admin-product.php:400,
+#: includes/admin/class-wc-deposits-admin-product.php:418
+msgid "Yes"
+msgstr "Sí"
+
+#: includes/admin/class-wc-deposits-admin-product.php:401,
+#: includes/admin/class-wc-deposits-admin-product.php:419
+msgid "No"
+msgstr "No"
+
+#: includes/admin/class-wc-deposits-admin-product.php:412
+msgid "Multiply By Persons?"
+msgstr "¿Multiplicar por personas?"
+
+#: includes/admin/class-wc-deposits-admin-product.php:430
+msgid "Deposit Type?"
+msgstr "¿Tipo de depósito?"
+
+#: includes/admin/class-wc-deposits-admin-product.php:436,
+#: includes/admin/class-wc-deposits-admin-settings.php:497,
+#: includes/admin/views/order-recalculate-deposit-modal.php:122,
+#: includes/admin/views/order-recalculate-deposit-modal.php:60
+msgid "Fixed"
+msgstr "Fijo"
+
+#: includes/admin/class-wc-deposits-admin-product.php:437,
+#: includes/admin/class-wc-deposits-admin-settings.php:498,
+#: includes/admin/views/order-recalculate-deposit-modal.php:124,
+#: includes/admin/views/order-recalculate-deposit-modal.php:62
+msgid "Percentage"
+msgstr "Porcentaje"
+
+#: includes/admin/class-wc-deposits-admin-product.php:455
+msgid "Change to:"
+msgstr "Cambiar a:"
+
+#: includes/admin/class-wc-deposits-admin-product.php:456
+msgid "Increase by (fixed amount or %):"
+msgstr "Aumentar en (importe fijo o %):"
+
+#: includes/admin/class-wc-deposits-admin-product.php:457
+msgid "Decrease by (fixed amount or %):"
+msgstr "Reducir en (importe fijo o %):"
+
+#: includes/admin/class-wc-deposits-admin-product.php:468
+msgid "Enter Deposit Amount (%s)"
+msgstr "Introduce el importe del depósito (%s)"
+
+#: includes/admin/class-wc-deposits-admin-product.php:557
+msgid "Deposit settings"
+msgstr "Ajustes de depósito"
+
+#: includes/admin/class-wc-deposits-admin-product.php:571
+msgid "Override product deposits options"
+msgstr "Opciones de anulación de depósitos de productos"
+
+#: includes/admin/class-wc-deposits-admin-product.php:572
+msgid "Enable to override deposit settings of parent"
+msgstr "Activa para anular ajustes de depósitos de matriz"
+
+#: includes/admin/class-wc-deposits-admin-reports.php:26,
+#: includes/admin/class-wc-deposits-admin-settings.php:72
+msgid "Deposits"
+msgstr "Depósitos"
+
+#: includes/admin/class-wc-deposits-admin-reports.php:78,
+#: includes/admin/views/edit-order-partial-payments.php:19
+msgid "Date"
+msgstr "Fecha"
+
+#: includes/admin/class-wc-deposits-admin-reports.php:81
+msgid "Export CSV"
+msgstr "Exportar CSV"
+
+#: includes/admin/class-wc-deposits-admin-reports.php:142
+msgid "%s deposits in total"
+msgstr "%s depósitos en total"
+
+#: includes/admin/class-wc-deposits-admin-reports.php:150
+msgid "%s remaining in total"
+msgstr "%s restantes en total"
+
+#: includes/admin/class-wc-deposits-admin-reports.php:158
+msgid "%s partially-paid in total"
+msgstr "%s parcialmente pagado en total"
+
+#: includes/admin/class-wc-deposits-admin-reports.php:265
+msgid "Number of deposits"
+msgstr "Número de depósitos"
+
+#: includes/admin/class-wc-deposits-admin-reports.php:283
+msgid "Paid deposits"
+msgstr "Depósitos pagados"
+
+#: includes/admin/class-wc-deposits-admin-reports.php:319
+msgid "Order Remaining in Total"
+msgstr "Pedido restante en total"
+
+#: includes/admin/class-wc-deposits-admin-settings.php:37
+msgid "Please <a href=\"%s\"> enter your purchase code </a> to receive automatic updates"
+msgstr "<a href=\"%s\">Introduzca su código de compra</a> para recibir actualizaciones automáticas"
+
+#: includes/admin/class-wc-deposits-admin-settings.php:57
+msgid "Updated successfully"
+msgstr "Actualizado correctamente"
+
+#: includes/admin/class-wc-deposits-admin-settings.php:85
+msgid "Checkout Mode Enabled"
+msgstr "Modo de pago activado"
+
+#: includes/admin/class-wc-deposits-admin-settings.php:86
+msgid "Debugging Mode Enabled"
+msgstr "Modo de depuración activado"
+
+#: includes/admin/class-wc-deposits-admin-settings.php:89
+msgid "Woocommerce Deposits Settings"
+msgstr "Ajustes de depósitos de Woocommerce"
+
+#: includes/admin/class-wc-deposits-admin-settings.php:92
+msgid "General Settings"
+msgstr "Ajustes generales"
+
+#: includes/admin/class-wc-deposits-admin-settings.php:93,
+#: includes/admin/class-wc-deposits-admin-settings.php:319
+msgid "Display & Text"
+msgstr "Mostrar y texto"
+
+#: includes/admin/class-wc-deposits-admin-settings.php:94
+msgid "Checkout Mode"
+msgstr "Modo de pago"
+
+#: includes/admin/class-wc-deposits-admin-settings.php:95
+msgid "Future Payments & Reminders"
+msgstr "Pagos y recordatorios futuros"
+
+#: includes/admin/class-wc-deposits-admin-settings.php:96
+msgid "Gateways"
+msgstr "Pasarelas de pago"
+
+#: includes/admin/class-wc-deposits-admin-settings.php:97,
+#: includes/admin/class-wc-deposits-admin-settings.php:753
+msgid "Automatic Updates"
+msgstr "Actualizaciones automáticas"
+
+#: includes/admin/class-wc-deposits-admin-settings.php:154
+msgid "Site-wide Settings"
+msgstr "Ajustes de todo el sitio"
+
+#: includes/admin/class-wc-deposits-admin-settings.php:160
+msgid "Disable Deposits"
+msgstr "Desactivar depósitos"
+
+#: includes/admin/class-wc-deposits-admin-settings.php:162
+msgid "Check this to disable all deposit functionality with one click."
+msgstr "Marca esto para desactivar todas las funciones de depósito con un solo clic."
+
+#: includes/admin/class-wc-deposits-admin-settings.php:168
+msgid "Default Selection"
+msgstr "Selección predeterminada"
+
+#: includes/admin/class-wc-deposits-admin-settings.php:170
+msgid "Select the default deposit option."
+msgstr "Selecciona la opción de depósito predeterminada. "
+
+#: includes/admin/class-wc-deposits-admin-settings.php:179
+msgid "Display Taxes In Product page"
+msgstr "Mostrar los impuestos en la página del producto"
+
+#: includes/admin/class-wc-deposits-admin-settings.php:181
+msgid "Check this to count taxes as part of deposits for purposes of display to the customer in product page."
+msgstr "Compruebe esto para contar los impuestos como parte de los depósitos con el fin de mostrarlos al cliente en la página del producto."
+
+#: includes/admin/class-wc-deposits-admin-settings.php:185
+msgid "Display taxes in cart item Details"
+msgstr "Mostrar los impuestos en la cesta de la compra. Detalles"
+
+#: includes/admin/class-wc-deposits-admin-settings.php:187
+msgid "Check this to count taxes as part of deposits for purposes of display to the customer in cart item details"
+msgstr "Compruebe esto para contar los impuestos como parte de los depósitos con el fin de mostrar al cliente los detalles del artículo del carrito."
+
+#: includes/admin/class-wc-deposits-admin-settings.php:191
+msgid "Display Deposit-breakdown Tooltip in cart"
+msgstr "Mostrar descripción emergente de desglose de depósito en carrito"
+
+#: includes/admin/class-wc-deposits-admin-settings.php:193
+msgid "Check to display tooltip in cart totals detailing deposit breakdown)"
+msgstr "Activa para mostrar descripción emergente en carrito que detalle el desglose de depósito"
+
+#: includes/admin/class-wc-deposits-admin-settings.php:197
+msgid "Fees Collection Method"
+msgstr "Método de cobro de comisiones"
+
+#: includes/admin/class-wc-deposits-admin-settings.php:199
+msgid "Choose how to handle fees."
+msgstr "Elige cómo gestionar las comisiones."
+
+#: includes/admin/class-wc-deposits-admin-settings.php:202,
+#: includes/admin/class-wc-deposits-admin-settings.php:212,
+#: includes/admin/class-wc-deposits-admin-settings.php:223,
+#: includes/admin/class-wc-deposits-admin-settings.php:234
+msgid "with deposit"
+msgstr "con depósito"
+
+#: includes/admin/class-wc-deposits-admin-settings.php:203,
+#: includes/admin/class-wc-deposits-admin-settings.php:213,
+#: includes/admin/class-wc-deposits-admin-settings.php:224,
+#: includes/admin/class-wc-deposits-admin-settings.php:235,
+#: includes/admin/class-wc-deposits-admin-settings.php:247
+msgid "Split according to deposit amount"
+msgstr "Dividir según cantidad de depósito"
+
+#: includes/admin/class-wc-deposits-admin-settings.php:204,
+#: includes/admin/class-wc-deposits-admin-settings.php:214,
+#: includes/admin/class-wc-deposits-admin-settings.php:225,
+#: includes/admin/class-wc-deposits-admin-settings.php:236
+msgid "with future payment(s)"
+msgstr "con pago(s) futuro(s)"
+
+#: includes/admin/class-wc-deposits-admin-settings.php:207
+msgid "Taxes Collection Method"
+msgstr "Método de recaudación de impuestos"
+
+#: includes/admin/class-wc-deposits-admin-settings.php:209
+msgid "Choose how to handle taxes."
+msgstr "Elige cómo gestionar los impuestos."
+
+#: includes/admin/class-wc-deposits-admin-settings.php:218
+msgid "Shipping Handling Method"
+msgstr "Método de gestión del envío"
+
+#: includes/admin/class-wc-deposits-admin-settings.php:220
+msgid "Choose how to handle shipping."
+msgstr "Elige cómo gestionar el envío."
+
+#: includes/admin/class-wc-deposits-admin-settings.php:229
+msgid "Shipping Taxes Handling Method"
+msgstr "Método de gestión de impuestos de envío"
+
+#: includes/admin/class-wc-deposits-admin-settings.php:231
+msgid "Choose how to handle shipping taxes."
+msgstr "Elige cómo gestionar los impuestos de envío."
+
+#: includes/admin/class-wc-deposits-admin-settings.php:241
+msgid "Discount Coupons Handling"
+msgstr "Gestión de cupones de descuento"
+
+#: includes/admin/class-wc-deposits-admin-settings.php:243
+msgid "Choose how to handle coupon discounts"
+msgstr "Elige cómo gestionar cupones de descuento"
+
+#: includes/admin/class-wc-deposits-admin-settings.php:246
+msgid "Deduct from deposit"
+msgstr "Deducir del depósito"
+
+#: includes/admin/class-wc-deposits-admin-settings.php:248
+msgid "Deduct from future payment(s)"
+msgstr "Deducir de los pagos futuros"
+
+#: includes/admin/class-wc-deposits-admin-settings.php:253
+msgid "Reduce Stocks On"
+msgstr "Reducir existencias en"
+
+#: includes/admin/class-wc-deposits-admin-settings.php:255
+msgid "Choose when to reduce stocks."
+msgstr "Elige cuándo reducir las existencias."
+
+#: includes/admin/class-wc-deposits-admin-settings.php:258
+msgid "Deposit Payment"
+msgstr "Pago del depósito"
+
+#: includes/admin/class-wc-deposits-admin-settings.php:259,
+#: includes/emails/class-wc-deposits-email-full-payment.php:23
+msgid "Full Payment"
+msgstr "Pago completo"
+
+#: includes/admin/class-wc-deposits-admin-settings.php:264
+msgid "Make partially paid orders editable"
+msgstr "Hacer editables los pedidos parcialmente pagados"
+
+#: includes/admin/class-wc-deposits-admin-settings.php:266
+msgid "Check to make orders editable while in \"partially paid\" status"
+msgstr "Marca para hacer que los pedidos con estado \"parcialmente pagado\" se puedan editar."
+
+#: includes/admin/class-wc-deposits-admin-settings.php:271
+msgid "Show \"has deposit\" column in admin order list table"
+msgstr "Mostrar la columna \"tiene depósito\" en la tabla de lista de pedidos de administrador"
+
+#: includes/admin/class-wc-deposits-admin-settings.php:273
+msgid "Check to show a column in admin order list indicating if order has deposit"
+msgstr "Marca para mostrar una columna en la lista de pedidos de administrador que indica si el pedido tiene depósito"
+
+#: includes/admin/class-wc-deposits-admin-settings.php:278,
+#: includes/admin/class-wc-deposits-admin-settings.php:282
+msgid "Disable deposit for selected user roles"
+msgstr "Desactivar depósito para los roles de usuario seleccionados"
+
+#: includes/admin/class-wc-deposits-admin-settings.php:287
+msgid "Restrict deposits for logged-in users only"
+msgstr "Restringir depósitos a solo usuarios que hayan iniciado sesión"
+
+#: includes/admin/class-wc-deposits-admin-settings.php:289
+msgid "Check this to disable all deposit functionality for guests"
+msgstr "Marca esto para desactivar todas las funciones de depósito para los invitados"
+
+#: includes/admin/class-wc-deposits-admin-settings.php:314
+msgid "Text to replace "
+msgstr "Texto que sustituir "
+
+#: includes/admin/class-wc-deposits-admin-settings.php:324
+msgid "Override payment form"
+msgstr "Anular el formulario de pago"
+
+#: includes/admin/class-wc-deposits-admin-settings.php:326
+msgid "allow overriding \"form-pay.php\" template to display original order details during partial payment checkout"
+msgstr "permitir que la plantilla \"form-pay.php\" anulada muestre los detalles del pedido original durante la comprobación del pago parcial"
+
+#: includes/admin/class-wc-deposits-admin-settings.php:341
+msgid "Buttons"
+msgstr "Botones"
+
+#: includes/admin/class-wc-deposits-admin-settings.php:343
+msgid "No HTML allowed. Text will be translated to the user if a translation is available.<br/>Please note that any overflow will be hidden, since button width is theme-dependent."
+msgstr "No admite HTML. El texto se traducirá al usuario si hay una traducción disponible.<br/>Ten en cuenta que cuaquier sobrante se ocultará, ya que el botón de anchura es dependiente del tema."
+
+#: includes/admin/class-wc-deposits-admin-settings.php:348
+msgid "Use Basic Deposit Buttons"
+msgstr "Usar botones de depósito básicos"
+
+#: includes/admin/class-wc-deposits-admin-settings.php:350
+msgid "Use basic radio buttons for deposits, Check this if you are facing issues with deposits slider buttons in product page, "
+msgstr "Usa los botones de radio básicos para depósitos. Márcalo si tienes problemas con los botones de los depósitos en la página del producto, "
+
+#: includes/admin/class-wc-deposits-admin-settings.php:363
+msgid "Deposit choice strings"
+msgstr "Cadenas de elección de depósito"
+
+#: includes/admin/class-wc-deposits-admin-settings.php:365,
+#: includes/admin/class-wc-deposits-admin-settings.php:390
+msgid "No HTML allowed. Text will be translated to the user if a translation is available."
+msgstr "No admite HTML. El texto se traducirá al usuario si hay una traducción disponible."
+
+#: includes/admin/class-wc-deposits-admin-settings.php:370
+msgid "Deposit Button Text"
+msgstr "Texto del botón depósito"
+
+#: includes/admin/class-wc-deposits-admin-settings.php:372
+msgid "Text displayed in the 'Pay Deposit' button."
+msgstr "Texto que se muestra en el botón \"Pagar depósito\"."
+
+#: includes/admin/class-wc-deposits-admin-settings.php:377
+msgid "Full Amount Button Text"
+msgstr "Texto del botón importe total"
+
+#: includes/admin/class-wc-deposits-admin-settings.php:379
+msgid "Text displayed in the 'Full Amount' button."
+msgstr "Texto que se muestra en el botón \"Importe total\"."
+
+#: includes/admin/class-wc-deposits-admin-settings.php:388
+msgid "Checkout & Order strings"
+msgstr "Cadenas para pedir y pagar"
+
+#: includes/admin/class-wc-deposits-admin-settings.php:433
+msgid "Messages"
+msgstr "Mensajes"
+
+#: includes/admin/class-wc-deposits-admin-settings.php:435
+msgid "Please check the documentation for allowed HTML tags."
+msgstr "Revisa la documentación sobre las etiquetas HTML admitidas."
+
+#: includes/admin/class-wc-deposits-admin-settings.php:439
+msgid "Deposit Message"
+msgstr "Mensaje de depósito"
+
+#: includes/admin/class-wc-deposits-admin-settings.php:441
+msgid "Message to show when 'Pay Deposit' is selected on the product's page."
+msgstr "Mensaje que se muestra cuando se selecciona \"Pagar depósito\" en la página del producto."
+
+#: includes/admin/class-wc-deposits-admin-settings.php:445
+msgid "Full Amount Message"
+msgstr "Mensaje de importe total"
+
+#: includes/admin/class-wc-deposits-admin-settings.php:447
+msgid "Message to show when 'Full Amount' is selected on the product's page."
+msgstr "Mensaje que se muestra cuando se selecciona \"Importe total\" en la página del producto."
+
+#: includes/admin/class-wc-deposits-admin-settings.php:474
+msgid "Deposit on Checkout Mode"
+msgstr "Depósito en modo de pago"
+
+#: includes/admin/class-wc-deposits-admin-settings.php:476
+msgid "changes the way deposits work to be based on total amount at checkout button"
+msgstr "cambia el funcionamiento del depósito para que se base en el importe total en el botón de pago"
+
+#: includes/admin/class-wc-deposits-admin-settings.php:480
+msgid "Enable checkout mode"
+msgstr "Activar el modo de pago"
+
+#: includes/admin/class-wc-deposits-admin-settings.php:482
+msgid "Check this to enable checkout mode, which makes deposits calculate based on total amount during checkout instead of per product"
+msgstr "Marca esta casilla si deseas activar el modo de pago. Esto hará que el depósito se calcule basándose en el importe total durante el pago en lugar de por producto."
+
+#: includes/admin/class-wc-deposits-admin-settings.php:488
+msgid "If you check this, the customer will not be allowed to make a full payment during checkout"
+msgstr "Si activas esto, el cliente no podrá realizar un pago completo durante el pago"
+
+#: includes/admin/class-wc-deposits-admin-settings.php:492,
+#: includes/admin/views/order-recalculate-deposit-modal.php:95,
+#: includes/admin/views/order-recalculate-deposit-modal.php:45
+msgid "Amount Type"
+msgstr "Tipo de importe"
+
+#: includes/admin/class-wc-deposits-admin-settings.php:494
+msgid "Choose amount type"
+msgstr "Elegir tipo de importe"
+
+#: includes/admin/class-wc-deposits-admin-settings.php:506
+msgid "Amount of deposit ( should not be more than 99 for percentage or more than order total for fixed"
+msgstr "Importe del depósito (no debería superar el 99 % del importe total del pedido)."
+
+#: includes/admin/class-wc-deposits-admin-settings.php:570
+msgid "Future Payments Settings"
+msgstr "Ajustes de pagos futuros"
+
+#: includes/admin/class-wc-deposits-admin-settings.php:575
+msgid "Enable Future Payments"
+msgstr "Habilitar pagos futuros"
+
+#: includes/admin/class-wc-deposits-admin-settings.php:577
+msgid "Uncheck this to prevent the customer from making any payment beyond deposit. (You'll have to manually mark the orders as completed)"
+msgstr "Desmarque esto para evitar que el cliente haga cualquier pago más allá del depósito (tendrá que marcar manualmente los pedidos como completados)."
+
+#: includes/admin/class-wc-deposits-admin-settings.php:591
+msgid "Second Payment Settings"
+msgstr "Ajustes de segundo pago"
+
+#: includes/admin/class-wc-deposits-admin-settings.php:593
+msgid "Second Payment Reminder controls  (You can always send a reminder manually from order actions ) "
+msgstr "Controles de recordatorio de segundo pago (si lo deseas, puedes enviar un recordatorio manualmente desde el pedido) "
+
+#: includes/admin/class-wc-deposits-admin-settings.php:594
+msgid "These settings apply only to orders where there are only 2 payments (Deposit & Second payment)"
+msgstr "Estos ajustes se aplican solo a los pedidos en los que únicamente hay dos pagos (depósito y segundo pago)"
+
+#: includes/admin/class-wc-deposits-admin-settings.php:599
+msgid "Enable Second Payment Reminder after \"X\" Days"
+msgstr "Activar recordatorio de segundo pago tras \"X\" días"
+
+#: includes/admin/class-wc-deposits-admin-settings.php:601
+msgid "Check this to enable sending second payment reminder email automatically after X number of days of deposit payment."
+msgstr "Activa para que se envíe de forma automática un correo electrónico como recordatorio de segundo pago tras X días del pago del depósito"
+
+#: includes/admin/class-wc-deposits-admin-settings.php:608
+msgid "Days before Second Payment reminder "
+msgstr "Días antes del recordatorio del segundo pago"
+
+#: includes/admin/class-wc-deposits-admin-settings.php:610
+msgid "Duration between partial payment and second payment reminder (in days)"
+msgstr "Tiempo entre el pago parcial y el recordatorio del segundo pago (en días)"
+
+#: includes/admin/class-wc-deposits-admin-settings.php:617
+msgid "Days before Second Payment is due"
+msgstr "Días antes de que venza el segundo pago"
+
+#: includes/admin/class-wc-deposits-admin-settings.php:619
+msgid "Number of days before second payment is due ( leave field empty for unlimited days )"
+msgstr "Número de días antes de que venza el segundo pago (dejar el campo en blanco para días ilimitados)"
+
+#: includes/admin/class-wc-deposits-admin-settings.php:636
+msgid "Payment plan Settings"
+msgstr "Ajustes de plan de pago"
+
+#: includes/admin/class-wc-deposits-admin-settings.php:638
+msgid "These settings apply only to orders where there are more than 2 payments (%s)."
+msgstr "Estos ajustes sólo se aplican a los pedidos en los que hay más de dos pagos (%s)."
+
+#: includes/admin/class-wc-deposits-admin-settings.php:643
+msgid "Enable Partial Payment reminder"
+msgstr "Habilitar el recordatorio de pago parcial"
+
+#: includes/admin/class-wc-deposits-admin-settings.php:645
+msgid "Check this to enable Partial payment reminder"
+msgstr "Marque esto para activar el recordatorio de pago parcial"
+
+#: includes/admin/class-wc-deposits-admin-settings.php:651
+msgid "Partial Payment reminder"
+msgstr "Recordatorio de pago parcial"
+
+#: includes/admin/class-wc-deposits-admin-settings.php:653
+msgid "Send a reminder email x days before partial payment due date"
+msgstr "Envíe un correo electrónico de recordatorio x días antes de la fecha de vencimiento del pago parcial"
+
+#: includes/admin/class-wc-deposits-admin-settings.php:692
+msgid "Disallowed Gateways"
+msgstr "Pasarelas de pago no permitidas"
+
+#: includes/admin/class-wc-deposits-admin-settings.php:694
+msgid "Disallow the following gateways when there is a deposit in the cart."
+msgstr "Rechaza las siguientes pasarelas de pago cuando haya un depósito en el carrito."
+
+#: includes/admin/class-wc-deposits-admin-settings.php:709,
+#: includes/admin/class-wc-deposits-admin-settings.php:713
+msgid "Disallowed For Deposits"
+msgstr "No permitida para depósitos"
+
+#: includes/admin/class-wc-deposits-admin-settings.php:718,
+#: includes/admin/class-wc-deposits-admin-settings.php:722
+msgid "Disallowed For Partial Payments"
+msgstr "No se permiten pagos parciales"
+
+#: includes/admin/class-wc-deposits-admin-settings.php:758
+msgid "Purchase code"
+msgstr "Código de compra"
+
+#: includes/admin/class-wc-deposits-admin-settings.php:760
+msgid "Insert your <a  target=\"_blank\" href=\"%s\"> purchase code </a> to receive automatic updates."
+msgstr "Introduce tu <a  target=\"_blank\" href=\"%s\">código de compra</a> para recibir actualizaciones automáticas."
+
+#: includes/admin/class-wc-deposits-admin-settings.php:772
+msgid "Verify purchase code"
+msgstr "Verificar código de compra"
+
+#: includes/admin/class-wc-deposits-admin-settings.php:800
+msgid "Advanced"
+msgstr "Avanzado"
+
+#: includes/admin/class-wc-deposits-admin-settings.php:844
+msgid "If you would like to send out all partial payment reminders on a specific date in the future, set a date below."
+msgstr "Si quieres enviar todos los recordatorios de pagos parciales en una fecha específica en el futuro, establece la fecha a continuación."
+
+#: includes/admin/class-wc-deposits-admin-settings.php:846
+msgid "Next Custom Reminder Date :"
+msgstr "Siguiente fecha de recordatorio personalizado:"
+
+#: includes/admin/class-wc-deposits-admin-settings.php:864
+msgid "Deposit Buttons Primary Colour"
+msgstr "Color primario de botones de depósito"
+
+#: includes/admin/class-wc-deposits-admin-settings.php:874
+msgid "Deposit Buttons Secondary Colour"
+msgstr "Color secundario de botones de depósito"
+
+#: includes/admin/class-wc-deposits-admin-settings.php:884
+msgid "Deposit Buttons Highlight Colour"
+msgstr "Color de realce de botones de depósito"
+
+#: includes/admin/class-wc-deposits-admin-settings.php:935
+msgid "Error verifying purchase code, please try again later. If issue persist, please submit a  ticket to our <a target=\"_blank\" href=\"%s\"> support platform. </a> "
+msgstr "Error al verificar el correo de compra, vuelve a intentarlo. Si el problema continúa, envía un ticket a nuestra <a target=\"_blank\" href=\"%s\">plataforma de atención al cliente</a>. "
+
+#: includes/admin/class-wc-deposits-admin-settings.php:928
+msgid "Invalid Purchase code"
+msgstr "Código de compra no válido"
+
+#: includes/admin/class-wc-deposits-admin-settings.php:922
+msgid "Thank You. Purchase code verified successfully."
+msgstr "Gracias. Se ha verificado correctamente tu código de compra."
+
+#: includes/admin/class-wc-deposits-taxonomies.php:64,
+#: includes/admin/class-wc-deposits-taxonomies.php:66,
+#: includes/emails/class-wc-deposits-email-customer-remaining-reminder.php:187
+msgid "Payment plans"
+msgstr "Planes de pago"
+
+#: includes/admin/class-wc-deposits-taxonomies.php:68
+msgctxt "Admin menu name"
+msgid "Payment plans"
+msgstr "Planes de pago"
+
+#: includes/admin/class-wc-deposits-taxonomies.php:70
+msgid "All plans"
+msgstr "Todos los planes"
+
+#: includes/admin/class-wc-deposits-taxonomies.php:71
+msgid "Edit"
+msgstr "Editar"
+
+#: includes/admin/class-wc-deposits-taxonomies.php:72
+msgid "Update"
+msgstr "Actualizar"
+
+#: includes/admin/class-wc-deposits-taxonomies.php:73
+msgid "Add new"
+msgstr "Añadir nuevo"
+
+#: includes/admin/class-wc-deposits-taxonomies.php:74
+msgid "New plan name"
+msgstr "Nuevo nombre de plan"
+
+#: includes/admin/class-wc-deposits-taxonomies.php:75
+msgid "Add or remove plans"
+msgstr "Añadir o quitar planes"
+
+#: includes/admin/class-wc-deposits-taxonomies.php:76
+msgid "No plans found"
+msgstr "No se ha encontrado ningún plan"
+
+#: includes/admin/class-wc-deposits-taxonomies.php:109
+msgid "Plan schedule"
+msgstr "Planificar horario"
+
+#: includes/admin/class-wc-deposits-taxonomies.php:131
+msgid "Immediately"
+msgstr "Inmediatamente"
+
+#: includes/emails/class-wc-deposits-email-customer-deposit-paid.php:25
+msgid "Deposit Payment Received"
+msgstr "Pago de depósito recibido"
+
+#: includes/emails/class-wc-deposits-email-customer-deposit-paid.php:28,
+#: includes/emails/class-wc-deposits-email-customer-partially-paid.php:29
+msgid "This is an order notification sent to the customer after partial-payment, containing order details and a link to pay the remaining balance."
+msgstr "Esta es una notificación del pedido que se envía al cliente tras el pago parcial, el cual contiene los detalles del pedido y un enlace para pagar el saldo restante."
+
+#: includes/emails/class-wc-deposits-email-customer-deposit-paid.php:66,
+#: includes/emails/class-wc-deposits-email-customer-partially-paid.php:74,
+#: includes/emails/class-wc-deposits-email-customer-remaining-reminder.php:113
+msgid "Link"
+msgstr "Enlace"
+
+#: includes/emails/class-wc-deposits-email-customer-deposit-paid.php:123,
+#: includes/emails/class-wc-deposits-email-customer-partially-paid.php:134
+msgid "Your {site_title} order receipt from {order_date}"
+msgstr "Tu recibo del pedido de {site_title} realizado el {order_date}"
+
+#: includes/emails/class-wc-deposits-email-customer-deposit-paid.php:134
+msgid "Thank you for your order"
+msgstr "Gracias por tu pedido"
+
+#: includes/emails/class-wc-deposits-email-customer-deposit-paid.php:139
+msgid "Your deposit has been received and your order is now being processed. Your order details are shown below for your reference:"
+msgstr "Su depósito se ha recibido y su pedido se está procesando. Los detalles de su pedido se muestran a continuación para su referencia:"
+
+#: includes/emails/class-wc-deposits-email-customer-deposit-paid.php:145,
+#: includes/emails/class-wc-deposits-email-customer-partially-paid.php:156
+msgid "To pay the remaining balance, please visit this link:  {wcdp_payment_link}"
+msgstr "Para pagar el saldo restante, visite este enlace:  {wcdp_payment_link}"
+
+#: includes/emails/class-wc-deposits-email-customer-deposit-paid.php:196,
+#: includes/emails/class-wc-deposits-email-customer-partially-paid.php:207,
+#: includes/emails/class-wc-deposits-email-customer-remaining-reminder.php:208
+msgid "Payment text"
+msgstr "Texto de pago"
+
+#: includes/emails/class-wc-deposits-email-customer-deposit-paid.php:197,
+#: includes/emails/class-wc-deposits-email-customer-partially-paid.php:208,
+#: includes/emails/class-wc-deposits-email-customer-remaining-reminder.php:209
+msgid "Text to appear with payment link"
+msgstr "El texto aparecerá con el enlace de pago"
+
+#: includes/emails/class-wc-deposits-email-customer-partially-paid.php:26
+msgid "Partial Payment Received"
+msgstr "Pago parcial recibido"
+
+#: includes/emails/class-wc-deposits-email-customer-partially-paid.php:145
+msgid "Thank you for your payment"
+msgstr "Gracias por su pago"
+
+#: includes/emails/class-wc-deposits-email-customer-partially-paid.php:150
+msgid "Your payment {partial_payment_number} has been received. Your order details are shown below for your reference:"
+msgstr "Su pago {partial_payment_number} se ha recibido. Los detalles de su pedido se muestran a continuación para su referencia:"
+
+#: includes/emails/class-wc-deposits-email-customer-remaining-reminder.php:29
+msgid "Reminder of partially-paid order sent to the customer"
+msgstr "Se envía al cliente un recordatorio de pedido parcialmente pagado"
+
+#: includes/emails/class-wc-deposits-email-customer-remaining-reminder.php:47
+msgid "Your {site_title} order partial payment reminder {order_date}"
+msgstr "Su {site_title} pedido de recordatorio de pago parcial {order_date}"
+
+#: includes/emails/class-wc-deposits-email-customer-remaining-reminder.php:59
+msgid "Partial Payment Reminder #{order_number}"
+msgstr "Recordatorio de pago parcial {order_number}"
+
+#: includes/emails/class-wc-deposits-email-customer-remaining-reminder.php:73
+msgid "Kindly be reminded that your order's partial payment is still pending payment."
+msgstr "Recuerde que el pago parcial de su pedido aún está pendiente de pago."
+
+#: includes/emails/class-wc-deposits-email-customer-remaining-reminder.php:79
+msgid "To make payment, please visit this link: {wcdp_payment_link}"
+msgstr "Para realizar el pago, visite este enlace: {wcdp_payment_link}"
+
+#: includes/emails/class-wc-deposits-email-customer-remaining-reminder.php:184
+msgid "Partial payment reminder subject"
+msgstr "Tema de recordatorio de pago parcial"
+
+#: includes/emails/class-wc-deposits-email-customer-remaining-reminder.php:187
+msgid "For partial payment reminders (%s)"
+msgstr "Para recordatorios de pagos parciales (%s)"
+
+#: includes/emails/class-wc-deposits-email-full-payment.php:24
+msgid "Full payment emails are sent when an order is fully paid."
+msgstr "Los mensajes de pago completo se envían cuando el pedido está completamente pagado."
+
+#: includes/emails/class-wc-deposits-email-full-payment.php:26
+msgid "Order fully paid"
+msgstr "Pedido completamente pagado"
+
+#: includes/emails/class-wc-deposits-email-full-payment.php:27
+msgid "[{site_title}] Order fully paid ({order_number}) - {order_date}"
+msgstr "[{site_title}] Pedido completamente pagado ({order_number}) - {order_date}"
+
+#: includes/emails/class-wc-deposits-email-full-payment.php:114,
+#: includes/emails/class-wc-deposits-email-partial-payment.php:116
+msgid "Enable/Disable"
+msgstr "Activar/Desactivar"
+
+#: includes/emails/class-wc-deposits-email-full-payment.php:116,
+#: includes/emails/class-wc-deposits-email-partial-payment.php:118
+msgid "Enable this email notification"
+msgstr "Activa esta notificación por correo"
+
+#: includes/emails/class-wc-deposits-email-full-payment.php:120,
+#: includes/emails/class-wc-deposits-email-partial-payment.php:122
+msgid "Recipient(s)"
+msgstr "Destinatario(s)"
+
+#: includes/emails/class-wc-deposits-email-full-payment.php:122,
+#: includes/emails/class-wc-deposits-email-partial-payment.php:124
+msgid "Enter recipients (comma separated) for this email. Defaults to <code>%s</code>."
+msgstr "Introduce los destinatarios (separados por una coma) de este mensaje. Por defecto <code>%s</code>."
+
+#: includes/emails/class-wc-deposits-email-full-payment.php:127,
+#: includes/emails/class-wc-deposits-email-partial-payment.php:129
+msgid "Subject"
+msgstr "Asunto"
+
+#: includes/emails/class-wc-deposits-email-full-payment.php:129,
+#: includes/emails/class-wc-deposits-email-partial-payment.php:131
+msgid "This controls the email subject line. Leave blank to use the default subject: <code>%s</code>."
+msgstr "Esto controla el asunto del mensaje. Déjalo en blanco para utilizar el asunto predeterminado: <code>%s</code>."
+
+#: includes/emails/class-wc-deposits-email-full-payment.php:134,
+#: includes/emails/class-wc-deposits-email-partial-payment.php:136
+msgid "Email Heading"
+msgstr "Encabezado del mensaje"
+
+#: includes/emails/class-wc-deposits-email-full-payment.php:136,
+#: includes/emails/class-wc-deposits-email-partial-payment.php:138
+msgid "This controls the main heading contained within the email notification. Leave blank to use the default heading: <code>%s</code>."
+msgstr "Esto controla el encabezado principal de la notificación por correo. Déjalo en blanco para utilizar el encabezado predeterminado: <code>%s</code>."
+
+#: includes/emails/class-wc-deposits-email-full-payment.php:141,
+#: includes/emails/class-wc-deposits-email-partial-payment.php:143
+msgid "Email type"
+msgstr "Tipo de mensaje"
+
+#: includes/emails/class-wc-deposits-email-full-payment.php:143,
+#: includes/emails/class-wc-deposits-email-partial-payment.php:145
+msgid "Choose which format of email to send."
+msgstr "Elige el formato de mensaje que quieres enviar."
+
+#: includes/emails/class-wc-deposits-email-full-payment.php:147,
+#: includes/emails/class-wc-deposits-email-partial-payment.php:149
+msgid "Plain text"
+msgstr "Texto sin formato"
+
+#: includes/emails/class-wc-deposits-email-full-payment.php:148,
+#: includes/emails/class-wc-deposits-email-partial-payment.php:150
+msgid "HTML"
+msgstr "HTML"
+
+#: includes/emails/class-wc-deposits-email-full-payment.php:149,
+#: includes/emails/class-wc-deposits-email-partial-payment.php:151
+msgid "Multipart"
+msgstr "Multiparte"
+
+#: includes/emails/class-wc-deposits-email-partial-payment.php:24
+msgid "Partial payment emails are sent when an order is partially paid."
+msgstr "Los mensajes de pago parcial se envían cuando el pedido se ha pagado parcialmente."
+
+#: includes/emails/class-wc-deposits-email-partial-payment.php:26
+msgid "Order partially paid"
+msgstr "Pedido parcialmente pagado"
+
+#: includes/emails/class-wc-deposits-email-partial-payment.php:27
+msgid "[{site_title}] Order partially paid ({order_number}) - {order_date}"
+msgstr "Pedido de [{site_title}] pagado parcialmente ({order_number}) - {order_date}"
+
+#: templates/emails/admin-order-fully-paid.php:21,
+#: templates/emails/plain/admin-order-fully-paid.php:9
+msgid "An order from %s has been paid in full. Their order is as follows:"
+msgstr "Se ha pagado al completo un pedido de %s. Su pedido es el siguiente:"
+
+#: templates/emails/admin-order-partially-paid.php:22,
+#: templates/emails/plain/admin-order-partially-paid.php:9
+msgid "You have received a %s order from %s. Their order is as follows:"
+msgstr "Has recibido un pedido parcialmente pagado de %s. Su pedido es el siguiente:"
+
+#: templates/emails/wc-deposits-email-partial-payments-summary.php:23
+msgid "Partial Payments Summary"
+msgstr "Resumen de pagos parciales"
+
+#: templates/emails/wc-deposits-email-partial-payments-summary.php:33,
+#: templates/order/wc-deposits-partial-payments-summary.php:27,
+#: includes/admin/views/edit-order-partial-payments.php:18
+msgid "Payment"
+msgstr "Pago"
+
+#: templates/emails/wc-deposits-email-partial-payments-summary.php:34,
+#: templates/order/wc-deposits-partial-payments-summary.php:28
+msgid "Payment ID"
+msgstr "ID de pago"
+
+#: templates/emails/wc-deposits-email-partial-payments-summary.php:35,
+#: templates/order/wc-deposits-partial-payments-summary.php:29,
+#: includes/admin/views/edit-order-partial-payments.php:21
+msgid "Status"
+msgstr "Estado"
+
+#: templates/emails/wc-deposits-email-partial-payments-summary.php:36,
+#: templates/order/wc-deposits-partial-payments-summary.php:30,
+#: templates/single-product/wc-deposits-product-single-plan.php:31,
+#: includes/admin/views/edit-order-partial-payments.php:22
+msgid "Amount"
+msgstr "Importe"
+
+#: templates/order/wc-deposits-partial-payments-summary.php:20
+msgid "Partial payments summary"
+msgstr "Resumen de pagos parciales"
+
+#: templates/single-product/wc-deposits-product-single-plan.php:20
+msgid "Payments Total"
+msgstr "Total de pagos"
+
+#: templates/single-product/wc-deposits-product-single-plan.php:30
+msgid "Payment Date"
+msgstr "Fecha de pago"
+
+#: includes/admin/list-tables/class-wc-deposits-admin-list-table-orders.php:78
+msgid "Has Deposit"
+msgstr "Tiene depósito"
+
+#: includes/admin/list-tables/class-wc-deposits-admin-list-table-orders.php:115
+msgid "Mark partially paid"
+msgstr "Marcar parcialmente pagado"
+
+#: includes/admin/list-tables/class-wc-deposits-admin-list-table-orders.php:133
+msgid "Order status changed by bulk edit:"
+msgstr "Estado de pedido cambiado en edición masiva:"
+
+#: includes/admin/list-tables/class-wc-deposits-admin-list-table-partial-payments.php:52
+msgid "No partial payments found."
+msgstr "No se han encontrado pagos parciales."
+
+#: includes/admin/views/edit-order-partial-payments.php:20
+msgid "Payment method"
+msgstr "Método de pago"
+
+#: includes/admin/views/edit-order-partial-payments.php:23
+msgid "Actions"
+msgstr "Acciones"
+
+#: includes/admin/views/edit-order-partial-payments.php:10
+msgid "No payment schedule found."
+msgstr "No se ha encontrado ninguna programación de pagos."
+
+#: includes/admin/views/order-recalculate-deposit-modal.php:158
+msgid "Save"
+msgstr "Guardar"
+
+#: includes/compatibility/pdf-invoices/class-wcdp-partial-payment-invoice.php:22,
+#: includes/compatibility/pdf-invoices/class-wcdp-partial-payment-invoice.php:51
+msgid "Partial Payment Invoice"
+msgstr "Factura de pago parcial"
+
+#: includes/compatibility/pdf-invoices/main.php:349
+msgid "PDF Invoice"
+msgstr "Factura en PDF"
+
+#: includes/compatibility/pdf-invoices/partial_payment_invoice.php:146
+msgid "Balance Due"
+msgstr "Saldo adeudado"
+
+#: templates/emails/plain/customer-order-partially-paid.php:16,
+#: templates/emails/plain/customer-order-remaining-reminder.php:15
+msgid "Order number: %s"
+msgstr "Pedido número: %s"
+
+#: templates/emails/plain/customer-order-partially-paid.php:17,
+#: templates/emails/plain/customer-order-remaining-reminder.php:16
+msgid "Order date: %s"
+msgstr "Fecha del pedido: %s"
+

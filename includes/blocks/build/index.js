@@ -1,0 +1,1 @@
+(()=>{"use strict";const a=window.wp.data,e={sharedData:{}},t={setSharedData:a=>({type:"SET_SHARED_DATA",sharedData:a})},r=(0,a.createReduxStore)("depositwp/wcdp",{reducer:(a=e,t)=>"SET_SHARED_DATA"===t.type?{...a,sharedData:t.sharedData}:a,actions:t,selectors:{getSharedData:a=>a.sharedData}});(0,a.register)(r)})();

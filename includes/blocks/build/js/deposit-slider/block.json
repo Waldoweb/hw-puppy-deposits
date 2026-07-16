@@ -1,0 +1,28 @@
+{
+  "apiVersion": 3,
+  "name": "woocommerce-deposits/deposit-slider",
+  "version": "1.0.0",
+  "title": "WooCommerce Deposit Slider",
+  "description": "Adds a deposit slider to the checkout page.",
+  "category": "woocommerce-deposits/blocks",
+  "supports": {
+    "html": false,
+    "align": false,
+    "multiple": false,
+    "reusable": false
+  },
+  "parent": [
+    "woocommerce/checkout-totals-block"
+  ],
+  "attributes": {
+    "lock": {
+      "type": "object",
+      "default": {
+        "remove": true,
+        "move": false
+      }
+    }
+  },
+  "textdomain": "woocommerce-deposits",
+  "editorStyle": "file:../../../build/style-woocommerce-deposits-deposit-slider-block.css"
+}

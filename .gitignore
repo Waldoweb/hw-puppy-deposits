@@ -1,0 +1,10 @@
+# macOS
+.DS_Store
+
+# Editor / OS noise
+Thumbs.db
+*.swp
+*~
+
+# If a build step is ever added for the blocks bundle
+node_modules/
