@@ -49,7 +49,7 @@ class WC_Deposits_Admin_Settings
                 wp_enqueue_style('wp-color-picker');
                 wp_enqueue_script('jquery-ui-datepicker');
 
-                // Greyed-out state for the General tab when deposits are disabled. Piggy-backs
+                // Grayed-out state for the General tab when deposits are disabled. Piggy-backs
                 // on the color-picker stylesheet — always enqueued on this screen — rather than
                 // registering a whole stylesheet for two rules.
                 // Deliberately NOT the disabled attribute: disabled inputs are not POSTed, and
@@ -86,7 +86,7 @@ class WC_Deposits_Admin_Settings
         if ( ! $sel.length ) { return; }
         $( '#wc_deposits_full_unavailable_text' ).closest( 'tr' ).toggle( 'yes' === $sel.val() );
     }
-    // Grey out the settings that stop having any effect when deposits are disabled, so the
+    // Gray out the settings that stop having any effect when deposits are disabled, so the
     // off state is obvious. Cross-tab: every tab is in the DOM, inactive ones merely hidden.
     // Rows keep their name/value so they still POST — see the note on .wcdp-settings-off.
     //
@@ -94,7 +94,7 @@ class WC_Deposits_Admin_Settings
     //   - the master select itself and its "Global Settings" heading;
     //   - #second_payment — emails and reminders load in early_includes(), OUTSIDE the
     //     is_disabled() guard, so existing partially-paid orders keep sending reminders
-    //     and keep their pay links. Greying it would claim otherwise.
+    //     and keep their pay links. Graying it would claim otherwise.
     function wcdpSyncDepositsEnabled() {
         var $sel = $( '#wc_deposits_site_wide_disable' );
         if ( ! $sel.length ) { return; }
@@ -245,7 +245,7 @@ JS;
 
                 /*
                  * Global settings — the master switch lives here, so this section renders
-                 * first and everything below it is what the switch greys out.
+                 * first and everything below it is what the switch grays out.
                  */
 
                 'sitewide_title' => array(
@@ -725,7 +725,7 @@ JS;
                 'class' => 'wcdp-style-color',
                 'placeholder' => 'e.g. #711919, rgba(0,0,0,.05) or var(--token)',
                 'id' => 'wc_deposits_style_heading_bg',
-                'desc' => __('Fill behind the Card Heading, which renders as a band across the top of the card. Blank uses a faint tint of whatever is behind it. For a strong band, set this to a solid colour and set Heading Color to a light one. Radio Buttons style only.', 'woocommerce-deposits'),
+                'desc' => __('Fill behind the Card Heading, which renders as a band across the top of the card. Blank uses a faint tint of whatever is behind it. For a strong band, set this to a solid color and set Heading Color to a light one. Radio Buttons style only.', 'woocommerce-deposits'),
                 'desc_tip' => true,
             ),
             'heading_color' => array(
@@ -1302,7 +1302,7 @@ JS;
     /*** END  DEPOSIT OPTIONS CUSTOM FIELDS CALLBACKS **/
 
     /**
-     * @brief Sanitise a Styling-tab color field.
+     * @brief Sanitize a Styling-tab color field.
      *
      * Accepts a hex color (#rgb / #rgba / #rrggbb / #rrggbbaa), a CSS custom-property
      * reference (var(--token) or var(--token, fallback)), an rgb()/rgba()/hsl()/hsla()
@@ -1355,7 +1355,7 @@ JS;
     }
 
     /**
-     * @brief Sanitise a Styling-tab size field.
+     * @brief Sanitize a Styling-tab size field.
      *
      * Accepts a plain number (16 — the template appends px), a CSS length/percentage with
      * a unit (16px, 1.5rem, 50%), a space-separated list of lengths (16px 20px, for
@@ -1405,7 +1405,7 @@ JS;
     }
 
     /**
-     * @brief Sanitise a Styling-tab font-weight field.
+     * @brief Sanitize a Styling-tab font-weight field.
      *
      * Accepts a numeric weight (100–900), a CSS keyword (normal, bold, bolder, lighter),
      * or a CSS variable (var(--token) / var(--token, fallback)). Anything else — including

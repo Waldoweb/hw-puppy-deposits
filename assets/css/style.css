@@ -13,10 +13,17 @@
  * changed formatting only, no rules. The pristine upstream copy is kept for reference
  * in ../webtomizer-woocommerce-deposits-4.6.10/.
  *
- * The `.switch-*` rules below are the vendored "candy" toggle switch. Historically the
- * plugin could not edit them, so wc-deposits-functions.php generated !important
- * overrides to fight them at runtime. Now that this file is editable, prefer changing a
- * rule here over adding another override there.
+ * The vendored "candy" toggle switch that used to live here was replaced in 5.1.0 by
+ * .wcdp-toggle. Nothing generates !important overrides against this file any more:
+ * wc-deposits-functions.php only publishes --wcdp-* custom properties, and every
+ * default is the fallback beside its property here. Keep it that way — put the rule
+ * here and the default in its fallback, rather than emitting CSS from PHP.
+ *
+ * Defaults must be literals. They ship to any site, so a fallback naming a theme token
+ * (var(--action) etc.) resolves to nothing where that token does not exist. Settings may
+ * hold tokens; defaults may not.
+ *
+ * US spelling, matching the settings labels and CSS itself ("color", not "colour").
  */
 
 /* ─────────────────────────────────────────────────────────────────────────────
@@ -64,7 +71,7 @@
    tooltip escapes the card upwards.
 
    font-weight must come from a stylesheet, NOT an inline style: an external script
-   (Bricks / Automatic.css paragraph normalisation) strips inline font-weight off
+   (Bricks / Automatic.css paragraph normalization) strips inline font-weight off
    paragraphs after load, which showed as a bold→light flash. A rule survives it. */
 .wc-deposits-reserve-heading {
   padding: var(--wcdp-heading-padding, 0.9em 1.25em);
@@ -78,7 +85,7 @@
 }
 
 /* The message under the controls. It is a <span>, so display:block is required for
-   width/margin to apply at all. Centred with explicit left/right margins rather than
+   width/margin to apply at all. Centered with explicit left/right margins rather than
    the shorthand — an auto vertical margin on a flex item absorbs free space, and the
    top margin here is doing real work. It sets the message off from the toggle above
    (this is the only pair in the body needing separation, so it replaces the body gap). */
@@ -109,10 +116,10 @@
   flex-direction: column;
 }
 
-/* Grid: [radio | text]. align-items:center centres the radio on the FIRST (title)
+/* Grid: [radio | text]. align-items:center centers the radio on the FIRST (title)
    line; the balance subline drops to row 2 / column 2, aligned under the title.
-   color defaults to inherit so option text matches the theme's normal text colour,
-   overriding the muted grey a Frames/Automatic.css `.form--light label` rule applies. */
+   color defaults to inherit so option text matches the theme's normal text color,
+   overriding the muted gray a Frames/Automatic.css `.form--light label` rule applies. */
 /* Rows are flush to the card edges, so they carry the horizontal inset the card used
    to provide. No per-row radius: the card's own corners round the first and last row. */
 .wc-deposits-option {
@@ -163,8 +170,8 @@
   font-size: 0.85em;
   line-height: 1.35;
   color: var(--wcdp-subline-color, inherit);
-  /* PHP sets --wcdp-subline-opacity to 1 when a subline colour is configured, so a
-     chosen colour is shown as chosen rather than faded to 70% of itself. */
+  /* PHP sets --wcdp-subline-opacity to 1 when a subline color is configured, so a
+     chosen color is shown as chosen rather than faded to 70% of itself. */
   opacity: var(--wcdp-subline-opacity, 0.7);
 }
 
@@ -196,10 +203,10 @@
    inputs, and the sibling .wc-deposits-notice, are queried by add-to-cart.js, which
    re-renders this markup over AJAX. The .wcdp-toggle* classes are ours and free.
    ───────────────────────────────────────────────────────────────────────────── */
-/* The WHOLE switch carries the unselected colour — a 20% tint of the selected one — and
+/* The WHOLE switch carries the unselected color — a 20% tint of the selected one — and
    the selected option paints over it. The options each inherit the container's radius, so
    two rounded options never tile a rounded container; anything behind them shows through
-   at the corners and between them. Colouring the container (rather than each unselected
+   at the corners and between them. Coloring the container (rather than each unselected
    option) means there is nothing else to show through. */
 .wcdp-toggle {
   display: flex;
@@ -227,7 +234,7 @@
   white-space: nowrap;
 }
 
-/* Unselected options are transparent and simply show the container's colour, so the whole
+/* Unselected options are transparent and simply show the container's color, so the whole
    switch reads as one unselected surface with the selected option painted on it.
 
    Deliberately not `opacity` for the unselected state — that would fade the label with the
@@ -235,9 +242,9 @@
    "unselected" and "unavailable" looking alike on a control choosing between a deposit and
    the full price.
 
-   The label colour does NOT follow the fill: a tint of a dark selected colour is light, so
+   The label color does NOT follow the fill: a tint of a dark selected color is light, so
    light selected-text would be unreadable on it. Unselected inherits the theme's own text
-   colour; --wcdp-toggle-text applies to the selected option only (see below), where it has
+   color; --wcdp-toggle-text applies to the selected option only (see below), where it has
    a fill to contrast against. */
 .wcdp-toggle__option {
   flex: 1 1 0;
@@ -255,7 +262,7 @@
     color 0.2s ease-out;
 }
 
-/* Hover paints a deeper tint of the same colour ON TOP of the container's, so the two
+/* Hover paints a deeper tint of the same color ON TOP of the container's, so the two
    composite to something darker still — which is the intent: hover reads as "more than
    resting". The checked rule below outranks this (3 classes vs 2), so hovering the
    selected option cannot dislodge its fill, regardless of source order. */
@@ -273,14 +280,14 @@
   font-size: var(--wcdp-toggle-price-size, 0.85em);
 }
 
-/* wc_price() wraps the amount and its currency symbol in spans that themes colour
-   independently; without this the symbol can stay a different colour to the number. */
+/* wc_price() wraps the amount and its currency symbol in spans that themes color
+   independently; without this the symbol can stay a different color to the number. */
 .wcdp-toggle__price .amount,
 .wcdp-toggle__price .amount * {
   color: inherit;
 }
 
-/* The selected option carries the configured colour, and the configured text colour with
+/* The selected option carries the configured color, and the configured text color with
    it — this is the only state with a fill to contrast against, which is what the "Button
    Text Color" setting was always for. */
 .wcdp-toggle__input:checked + .wcdp-toggle__option {
@@ -302,7 +309,7 @@
   cursor: not-allowed;
 }
 /* A disabled option is not selectable, so it must not offer a hover affordance. transparent
-   is correct now that the container carries the unselected colour: it reveals that, rather
+   is correct now that the container carries the unselected color: it reveals that, rather
    than stripping the fill to nothing. */
 .wcdp-toggle__input:disabled + .wcdp-toggle__option:hover {
   background-color: transparent;

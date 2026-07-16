@@ -781,7 +781,7 @@ function wcdp_is_shop_order_screen()
 }
 
 /**
- * @brief returns the frontend colours from the WooCommerce settings page, or the defaults.
+ * @brief returns the frontend colors from the WooCommerce settings page, or the defaults.
  *
  * @return array
  */
@@ -803,7 +803,7 @@ function wcdp_is_shop_order_screen()
 
  
 function wcdp_get_deposit_slider_custom_styles(){
-    // Toggle colours. Emitted ONLY when the merchant has set one, so the defaults live
+    // Toggle colors. Emitted ONLY when the merchant has set one, so the defaults live
     // exactly once — as the fallbacks on .wcdp-toggle in style.css (selected #000000,
     // track #5d5b5b, text #fff). This previously fell back to
     // wc_deposits_woocommerce_frontend_colors() and so emitted a value on every render,
@@ -846,7 +846,7 @@ function wcdp_get_deposit_slider_custom_styles(){
     if ('' !== ($v = $opt('wc_deposits_style_radio_accent')))       { $card_vars[] = "--wcdp-radio-accent:{$v}"; }
     if ('' !== ($v = $opt('wc_deposits_style_option_text_color')))  { $card_vars[] = "--wcdp-option-text:{$v}"; }
     if ('' !== ($v = $opt('wc_deposits_style_subline_color'))) {
-        // A configured subline colour should be shown as chosen, not faded to 70% of itself.
+        // A configured subline color should be shown as chosen, not faded to 70% of itself.
         $card_vars[] = "--wcdp-subline-color:{$v}";
         $card_vars[] = "--wcdp-subline-opacity:1";
     }
@@ -881,14 +881,14 @@ function wcdp_get_deposit_slider_custom_styles(){
     // Card settings that belong to TOGGLE MODE ONLY. They describe the card, but they are
     // configured in the Styling tab's "Toggle Switch Style" section (note the option names:
     // wc_deposits_style_toggle_*), and radio mode has never honoured them. Keep them gated:
-    // leaking the toggle's centre alignment into radio mode centres the whole option list,
+    // leaking the toggle's centre alignment into radio mode centers the whole option list,
     // which reads wrong next to left-aligned radios and has no setting to turn it off.
     if (!$basic_buttons) {
         if ('' !== $t_message_size)  { $card_vars[] = "--wcdp-message-size:{$t_message_size}"; }
         if ('' !== $t_message_color) { $card_vars[] = "--wcdp-message-color:{$t_message_color}"; }
         if ('center' === $t_align || 'right' === $t_align) {
             // text-align inherits, so this reaches the heading and message. The toggle labels
-            // are centred by their own rule and the full-width toggle itself is unaffected.
+            // are centered by their own rule and the full-width toggle itself is unaffected.
             $card_vars[] = "--wcdp-card-align:{$t_align}";
         }
     }
