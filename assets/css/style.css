@@ -68,7 +68,23 @@
 
 /* ── Radio presentation (the "Use basic radio buttons" mode) ────────────────── */
 /* The options read as one grouped control: no gap between them, separated by rules
-   instead, each row filling on hover and when selected. */
+   instead, each row filling on hover and when selected.
+
+   The rows span the card edge to edge so a selected row's fill covers its whole half
+   of the card. That means the card carries no padding of its own in this mode — the
+   padding moves onto the rows (and onto the heading, below) — and clips the fill to
+   its own rounded corners. overflow:hidden is safe HERE but would not be in toggle
+   mode, where the "Pay in Full unavailable" tooltip escapes the card upwards; radio
+   mode shows that message as an inline subline instead, so nothing needs to escape. */
+.basic-wc-deposits-options-form .wc-deposits-reserve-card {
+  padding: 0;
+  overflow: hidden;
+}
+/* The heading keeps the card's padding, since it is no longer inset by the card. */
+.basic-wc-deposits-options-form .wc-deposits-reserve-heading {
+  padding: var(--wcdp-card-padding, 1em 1.25em);
+  padding-bottom: 0;
+}
 .wc-deposits-options {
   display: flex;
   flex-direction: column;
@@ -78,14 +94,15 @@
    line; the balance subline drops to row 2 / column 2, aligned under the title.
    color defaults to inherit so option text matches the theme's normal text colour,
    overriding the muted grey a Frames/Automatic.css `.form--light label` rule applies. */
+/* Rows are flush to the card edges, so they carry the horizontal inset the card used
+   to provide. No per-row radius: the card's own corners round the first and last row. */
 .wc-deposits-option {
   display: grid;
   grid-template-columns: auto 1fr;
   column-gap: 0.6em;
   align-items: center;
   margin: 0;
-  padding: var(--wcdp-option-padding, 0.7em 0.75em);
-  border-radius: var(--wcdp-option-radius, 4px);
+  padding: var(--wcdp-option-padding, 0.9em 1.25em);
   cursor: pointer;
   color: var(--wcdp-option-text, inherit);
   transition: background-color 0.15s ease-out;
