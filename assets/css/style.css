@@ -27,28 +27,51 @@
    only the properties that have a value, on .wc-deposits-reserve-card; the card is
    the ancestor of everything here, so they cascade to the toggle and options too.
    ───────────────────────────────────────────────────────────────────────────── */
+/* The card carries NO padding: its children decide their own insets, so the heading
+   band can span edge to edge. In toggle mode the toggle and message sit in a padded
+   .wcdp-card-body; in radio mode the option rows are full-bleed with their own padding. */
 .wc-deposits-reserve-card {
   display: flex;
   flex-direction: column;
-  gap: var(--wcdp-card-gap, 0.75em);
+  gap: 0;
   margin: 1em 0 1.25em;
-  padding: var(--wcdp-card-padding, 1em 1.25em);
+  padding: 0;
   border: var(--wcdp-card-border-width, 1px) solid
     var(--wcdp-card-border-color, rgba(0, 0, 0, 0.12));
   border-radius: var(--wcdp-card-radius, 8px);
   background: var(--wcdp-card-bg, rgba(0, 0, 0, 0.03));
   text-align: var(--wcdp-card-align, left);
 }
-/* `gap` is the single source of vertical rhythm, so children bring no margins. */
 .wc-deposits-reserve-card > * {
   margin-top: 0;
   margin-bottom: 0;
 }
 
-/* font-weight must come from a stylesheet, NOT an inline style: an external script
+/* Toggle mode's padded region under the band. `gap` is the single source of vertical
+   rhythm between the toggle and the message. */
+.wcdp-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--wcdp-card-gap, 0.75em);
+  padding: var(--wcdp-card-padding, 1em 1.25em);
+}
+
+/* The heading is a header band across the top of the card in BOTH modes — its own fill,
+   edge to edge, with a rule beneath separating it from what follows. Subtle by default;
+   set Heading Background + Heading Color on the Styling tab for a strong band.
+
+   It rounds its own top corners to match the card rather than relying on the card's
+   overflow:hidden — toggle mode cannot clip, because the "Pay in Full unavailable"
+   tooltip escapes the card upwards.
+
+   font-weight must come from a stylesheet, NOT an inline style: an external script
    (Bricks / Automatic.css paragraph normalisation) strips inline font-weight off
    paragraphs after load, which showed as a bold→light flash. A rule survives it. */
 .wc-deposits-reserve-heading {
+  padding: var(--wcdp-heading-padding, 0.9em 1.25em);
+  background-color: var(--wcdp-heading-bg, rgba(0, 0, 0, 0.04));
+  border-bottom: 1px solid var(--wcdp-option-divider, rgba(0, 0, 0, 0.1));
+  border-radius: var(--wcdp-card-radius, 8px) var(--wcdp-card-radius, 8px) 0 0;
   font-size: var(--wcdp-heading-size, 1.05em);
   font-weight: var(--wcdp-heading-weight, 700);
   color: var(--wcdp-heading-color, inherit);
@@ -70,28 +93,13 @@
 /* The options read as one grouped control: no gap between them, separated by rules
    instead, each row filling on hover and when selected.
 
-   The rows span the card edge to edge so a selected row's fill covers its whole half
-   of the card. That means the card carries no padding of its own in this mode — the
-   padding moves onto the rows (and onto the heading, below) — and clips the fill to
-   its own rounded corners. overflow:hidden is safe HERE but would not be in toggle
-   mode, where the "Pay in Full unavailable" tooltip escapes the card upwards; radio
-   mode shows that message as an inline subline instead, so nothing needs to escape. */
+   The rows are full-bleed so a selected row's fill covers its whole half of the card,
+   and the last row's fill has to be clipped to the card's bottom corners. overflow is
+   safe to hide HERE but not in toggle mode, where the "Pay in Full unavailable" tooltip
+   escapes the card upwards; radio mode shows that message as an inline subline instead,
+   so nothing needs to escape. */
 .basic-wc-deposits-options-form .wc-deposits-reserve-card {
-  padding: 0;
   overflow: hidden;
-  /* No gap: the heading band and the rows tile the card. A gap would show as a stripe
-     of card background between the band and the first option. */
-  gap: 0;
-}
-
-/* The heading is a header band across the top of the card, set apart from the options
-   by its own fill and a rule beneath it. Subtle by default — a faint tint of whatever
-   the card sits on. For a strong band (solid colour, light text), set Heading
-   Background and Heading Color together on the Styling tab. */
-.basic-wc-deposits-options-form .wc-deposits-reserve-heading {
-  padding: var(--wcdp-heading-padding, 0.9em 1.25em);
-  background-color: var(--wcdp-heading-bg, rgba(0, 0, 0, 0.04));
-  border-bottom: 1px solid var(--wcdp-option-divider, rgba(0, 0, 0, 0.1));
 }
 .wc-deposits-options {
   display: flex;

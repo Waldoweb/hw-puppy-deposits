@@ -102,7 +102,10 @@ $full_disabled = ( isset( $force_deposit ) && $force_deposit === 'yes' );
 
         <?php else : ?>
 
-            <div class="wcdp-toggle">
+            <?php // Padded region under the heading band. The card itself is padding-free so
+                  // the band can span edge to edge; this keeps the toggle and message inset. ?>
+            <div class="wcdp-card-body">
+                <div class="wcdp-toggle">
                 <input id="<?php echo esc_attr( $pid ); ?>-pay-deposit" class="pay-deposit input-radio wcdp-toggle__input" name="<?php echo esc_attr( $pid ); ?>-deposit-radio" type="radio" <?php checked( $default_checked, 'deposit' ); ?> value="deposit">
                 <label class="pay-deposit-label wcdp-toggle__option wcdp-toggle__option--deposit" for="<?php echo esc_attr( $pid ); ?>-pay-deposit"><?php echo esc_html( $deposit_text ); ?><?php if ( $has_amounts ) : ?> <span class="wcdp-toggle__price">(<?php echo wp_kses_post( wc_price( $deposit_value ) ); ?>)</span><?php endif; ?></label>
                 <input id="<?php echo esc_attr( $pid ); ?>-pay-full-amount" class="pay-full-amount input-radio wcdp-toggle__input" name="<?php echo esc_attr( $pid ); ?>-deposit-radio" type="radio" <?php checked( $default_checked, 'full' ); ?> <?php disabled( $full_disabled ); ?> value="full">
@@ -110,8 +113,9 @@ $full_disabled = ( isset( $force_deposit ) && $force_deposit === 'yes' );
                 <?php if ( $full_disabled && '' !== $full_unavailable_text ) : ?>
                     <span class="wcdp-toggle__tip" role="tooltip"><?php echo esc_html( $full_unavailable_text ); ?></span>
                 <?php endif; ?>
+                </div>
+                <span class="deposit-message wc-deposits-notice"></span>
             </div>
-            <span class="deposit-message wc-deposits-notice"></span>
 
         <?php endif; ?>
 
