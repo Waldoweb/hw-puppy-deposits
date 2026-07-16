@@ -200,7 +200,7 @@
   display: flex;
   position: relative; /* anchors __tip */
   border-radius: var(--wcdp-toggle-radius, 3px);
-  background: var(--wcdp-toggle-track, #5d5b5b);
+  background: var(--wcdp-toggle-track, rgba(0, 0, 0, 0.05));
   text-align: center;
 }
 
@@ -225,13 +225,18 @@
   padding: var(--wcdp-toggle-padding, 12px 24px);
   border-radius: inherit;
   cursor: pointer;
-  color: var(--wcdp-toggle-text, #fff);
+  color: var(--wcdp-toggle-text, inherit);
   font-size: var(--wcdp-toggle-label-size, 1em);
   font-weight: var(--wcdp-toggle-weight, 700);
   line-height: normal;
   transition:
     background-color 0.2s ease-out,
     color 0.2s ease-out;
+}
+
+/* Selected is declared after hover so the two never fight on the selected option. */
+.wcdp-toggle__option:hover {
+  background-color: var(--wcdp-toggle-hover-bg, rgba(0, 0, 0, 0.025));
 }
 
 /* The price always takes its own line under the label — deterministic, rather than
@@ -249,12 +254,14 @@
 }
 
 .wcdp-toggle__input:checked + .wcdp-toggle__option {
-  background: var(--wcdp-toggle-selected, #000000);
+  background-color: var(--wcdp-toggle-selected, rgba(0, 0, 0, 0.12));
 }
 
+/* currentColor, not --wcdp-toggle-selected: the selected fill is a faint overlay by
+   default, and a focus ring drawn in it would be all but invisible. */
 .wcdp-toggle__input:focus-visible + .wcdp-toggle__option {
-  outline: 2px solid var(--wcdp-toggle-selected, #000000);
-  outline-offset: 2px;
+  outline: 2px solid currentColor;
+  outline-offset: -2px;
 }
 
 /* Forced deposit: "Pay in Full" renders disabled. Read as clearly unavailable while
@@ -262,6 +269,10 @@
 .wcdp-toggle__input:disabled + .wcdp-toggle__option {
   opacity: 0.4;
   cursor: not-allowed;
+}
+/* A disabled option is not selectable, so it must not offer a hover affordance. */
+.wcdp-toggle__input:disabled + .wcdp-toggle__option:hover {
+  background-color: transparent;
 }
 
 /* Tooltip explaining why "Pay in Full" is unavailable. A sibling of the labels, not a
