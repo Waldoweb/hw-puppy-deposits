@@ -51,6 +51,51 @@
   </head>
   <body>
     <div class="changelog">
+      <h4>16/07/2026 - Version 5.2.0</h4>
+      <h6>Checkout:</h6>
+      <ul>
+        <li>
+          The deposit choice at checkout now uses the same card and options as the product
+          page. It previously rendered as a plain, unstyled list of radio buttons, so the two
+          places a customer picks a deposit looked like different plugins.
+        </li>
+        <li>
+          Each option now shows what it charges — <strong>Pay Deposit ($200.00)</strong> /
+          <strong>Pay in Full ($3,745.00)</strong> — instead of leaving the customer to work it
+          out from the Total.
+        </li>
+        <li>
+          <strong>The deposit choice moved above the Total.</strong> It decides the total, so it
+          belongs above the line it produces — the same place WooCommerce already puts the
+          shipping options, and for the same reason. Previously the page stated a total and only
+          then revealed that it was a choice; now the Total confirms the selection instead of
+          pre-empting it.
+        </li>
+      </ul>
+
+      <h6>Settings:</h6>
+      <ul>
+        <li>
+          <strong>Save changes now follows you down the page.</strong> The Deposits screen runs
+          about two screens tall, so Save sat off the bottom and every save meant scrolling to
+          find it. It now stays visible at the bottom while there is more form below.
+        </li>
+        <li>Deposit Mode moved up beneath Enable/Disable Deposits — the two top-level choices now sit together, above the settings that depend on them.</li>
+        <li>Deposit Mode's first option renamed from "Product Deposits" to <strong>Products Mode</strong>, to read in parallel with Checkout Mode.</li>
+      </ul>
+
+      <h6>Under the Hood:</h6>
+      <ul>
+        <li>
+          <strong>Fixed: admin styling changes never reached browsers.</strong> The admin
+          stylesheet was cache-busted against WordPress's version rather than the plugin's, so an
+          updated admin style only arrived when WordPress itself updated — not when this plugin
+          did. Every other script and style on the plugin was checked; this was the only one
+          affected.
+        </li>
+        <li>The admin stylesheet is now editable source rather than a minified file with no source, matching the front-end CSS in 5.1.0.</li>
+      </ul>
+
       <h4>16/07/2026 - Version 5.1.0</h4>
       <h6>Accessibility:</h6>
       <ul>

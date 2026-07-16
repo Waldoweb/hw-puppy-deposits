@@ -7,7 +7,7 @@
  * ability to read the file.
  *
  * History: began as the vendored, source-less `admin-style.min.css` from WooCommerce
- * Deposits 4.6.10 (Webtomizer). De-minified in 5.1.0 with prettier; that change was
+ * Deposits 4.6.10 (Webtomizer). De-minified in 5.2.0 with prettier; that change was
  * formatting only, no rules. The pristine upstream copy is kept for reference in
  * ../webtomizer-woocommerce-deposits-4.6.10/.
  *

@@ -2,7 +2,7 @@
 /**
  * The Template for displaying the deposit selector on the checkout page in Checkout Mode.
  *
- * 5.1.0 rebuilt this to use the same card, option rows and toggle as the product page,
+ * 5.2.0 rebuilt this to use the same card, option rows and toggle as the product page,
  * instead of the bare <input><label><br> list it used to render. The classes below are
  * styled by assets/css/style.css — see the "Reserve card" section there — so the two
  * places a customer picks a deposit now look like the same control.
@@ -15,7 +15,7 @@
  * This template can be overridden by copying it to yourtheme/woocommerce/wc-deposits-checkout-mode-slider.php.
  *
  * @package DepositWP\Templates
- * @version 5.1.0
+ * @version 5.2.0
  */
 
 $wcdp_full_disabled = ( isset( $force_deposit ) && $force_deposit === 'yes' );
