@@ -4,7 +4,7 @@
 /**
  * Plugin Name: Puppy Deposits
  * Description: Deposits & partial payments for WooCommerce, tailored for puppy reservations.
- * Version: 5.0.1
+ * Version: 5.1.0
  * Author: Hostetler Web Design
  * Text Domain: woocommerce-deposits
  * Domain Path: /locale
@@ -151,7 +151,7 @@ if (wc_deposits_woocommerce_is_active()):
             // means browsers keep serving stale JS/CSS after an update. It had been stuck at
             // the upstream 4.6.10 since the fork. (DB migrations use the separate
             // wc_deposits_db_version option, so bumping this triggers nothing.)
-            define('WC_DEPOSITS_VERSION', '5.0.1');
+            define('WC_DEPOSITS_VERSION', '5.1.0');
             define('WC_DEPOSITS_TEMPLATE_PATH', untrailingslashit(plugin_dir_path(__FILE__)) . '/templates/');
             define('WC_DEPOSITS_PLUGIN_PATH', plugin_dir_path(__FILE__));
             define('WC_DEPOSITS_PLUGIN_URL', untrailingslashit(plugins_url(basename(plugin_dir_path(__FILE__)), basename(__FILE__))));

@@ -51,6 +51,82 @@
   </head>
   <body>
     <div class="changelog">
+      <h4>16/07/2026 - Version 5.1.0</h4>
+      <h6>Accessibility:</h6>
+      <ul>
+        <li>
+          <strong>Fixed: the payment choice could not be made with a keyboard.</strong> The
+          deposit toggle hid its radio buttons with <code>display: none</code>, which removes
+          them from the tab order and the accessibility tree entirely — so a keyboard user
+          could not select "Pay Deposit" or "Pay in Full" at all. The radios are now visually
+          hidden but focusable, and the focused option draws a focus ring.
+        </li>
+      </ul>
+
+      <h6>Settings:</h6>
+      <ul>
+        <li>
+          The Checkout Mode tab is gone. Its settings moved to General Settings, and
+          "Enable checkout mode" became <strong>Deposit Mode: Product Deposits | Checkout
+          Mode</strong> — the two are halves of one choice, and the relevant settings now show
+          and hide beneath it. Existing settings carry over with no migration.
+        </li>
+        <li>"Display &amp; Text" is now <strong>Labels &amp; Text</strong>, and reordered: the deposit and checkout wording first, the three display switches last under "Additional Details".</li>
+        <li>
+          "Deposit Option" renamed to <strong>Card Heading</strong> and moved in with the
+          deposit choice wording. It is the heading above the payment options on the product
+          page; the old name described a text-replacement that did not exist. Leaving it blank
+          now removes the heading entirely instead of leaving an empty gap.
+        </li>
+        <li>New Styling fields: Heading Background, Divider Color, Selected Option Background, Option Hover Background.</li>
+        <li>The Styling tab now leads with the presentation choice; Card Style moved to the end.</li>
+        <li>Removed the Vertical Gap setting — the layout it spaced no longer needs it.</li>
+        <li>
+          Fixed: size fields silently rejected values written as <code>.85em</code> — a leading
+          decimal point failed validation and saved as blank, with nothing shown to explain it.
+          Affected all ten size fields.
+        </li>
+        <li>Fixed: toggle-only settings (alignment, spacing, message) were being applied in radio mode, where nothing could turn them off.</li>
+      </ul>
+
+      <h6>Product Page:</h6>
+      <ul>
+        <li>
+          The deposit toggle is now our own control instead of a vendored 2013 switch library.
+          It looks the same, but it is themeable, keyboard-accessible, and no longer runs an
+          infinite background animation on every page load.
+        </li>
+        <li>The unselected toggle button is drawn automatically as a 20% tint of the selected one, so the two always match and there is nothing extra to configure.</li>
+        <li>Radio mode: options are separated by a divider and fill on hover and when selected, edge to edge across the card.</li>
+        <li>The Card Heading renders as a header band across the top of the card, in both presentation styles.</li>
+        <li>Fixed: the price could fall outside the toggle button when no Button Padding was set. Button Padding now defaults to <code>12px 24px</code> and is what sets the button's height.</li>
+      </ul>
+
+      <h6>Under the Hood:</h6>
+      <ul>
+        <li>
+          <strong>The front-end CSS is editable again.</strong> It shipped as a minified blob
+          with no source, so every change had to be fought in with <code>!important</code>
+          overrides generated from PHP. The stylesheet is now the source — no build step, no
+          minified copy — and the generated CSS went from 2,908 bytes of overrides to 608 bytes
+          of custom properties, with no <code>!important</code> left in it.
+        </li>
+        <li>
+          Each default now lives in exactly one place. It used to be written in three — the
+          template's inline style, the generated override, and the settings field — which is
+          what let the padding bug above happen.
+        </li>
+        <li>Defaults no longer reference theme design tokens, so the plugin renders correctly on sites without them.</li>
+        <li>
+          <strong>Scripts ship once.</strong> Six scripts existed as both a readable file and a
+          minified one, and only the minified one was ever loaded — so editing the readable
+          copy did nothing, silently. The file you edit is now the file that runs. Each pair was
+          verified equivalent before consolidating.
+        </li>
+        <li>Removed dead code: 13 unused CSS rules, two duplicate stylesheets, an unreachable settings tab, a non-functional debugging badge, and ~15 generated override rules.</li>
+        <li>Fixed several duplicate HTML ids in the settings screens.</li>
+      </ul>
+
       <h4>16/07/2026 - Version 5.0.1</h4>
       <h6>Bug Fixes &amp; Improvements:</h6>
       <ul>
