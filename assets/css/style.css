@@ -200,7 +200,7 @@
   display: flex;
   position: relative; /* anchors __tip */
   border-radius: var(--wcdp-toggle-radius, 3px);
-  background: var(--wcdp-toggle-track, #2d3035);
+  background: var(--wcdp-toggle-track, #5d5b5b);
   text-align: center;
 }
 
@@ -249,11 +249,11 @@
 }
 
 .wcdp-toggle__input:checked + .wcdp-toggle__option {
-  background: var(--wcdp-toggle-selected, #ad74a2);
+  background: var(--wcdp-toggle-selected, #000000);
 }
 
 .wcdp-toggle__input:focus-visible + .wcdp-toggle__option {
-  outline: 2px solid var(--wcdp-toggle-selected, #ad74a2);
+  outline: 2px solid var(--wcdp-toggle-selected, #000000);
   outline-offset: 2px;
 }
 

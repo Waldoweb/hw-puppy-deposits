@@ -803,10 +803,16 @@ function wcdp_is_shop_order_screen()
 
  
 function wcdp_get_deposit_slider_custom_styles(){
-    $colors = get_option('wc_deposits_deposit_buttons_colors');
-    $fallback_colors = wc_deposits_woocommerce_frontend_colors();
-    $gstart = $colors['primary'] ? $colors['primary'] : $fallback_colors['primary'];
-    $secondary = $colors['secondary'] ? $colors['secondary'] : $fallback_colors['secondary'];
+    // Toggle colours. Emitted ONLY when the merchant has set one, so the defaults live
+    // exactly once — as the fallbacks on .wcdp-toggle in style.css (selected #000000,
+    // track #5d5b5b, text #fff). This previously fell back to
+    // wc_deposits_woocommerce_frontend_colors() and so emitted a value on every render,
+    // which made those CSS fallbacks unreachable and put the default in two places.
+    // Also (array) cast: the option is false before it is ever saved, and indexing false
+    // raised a warning.
+    $colors    = (array) get_option('wc_deposits_deposit_buttons_colors', array());
+    $sel_bg    = isset($colors['primary']) ? trim((string) $colors['primary']) : '';
+    $sel_text  = isset($colors['secondary']) ? trim((string) $colors['secondary']) : '';
 
     $basic_buttons = get_option('wc_deposits_use_basic_radio_buttons', true) === 'yes';
 
@@ -863,11 +869,9 @@ function wcdp_get_deposit_slider_custom_styles(){
     // nothing here needs !important. Until 5.1.0 this block generated ~15 override rules to
     // fight the vendored candy switch's fixed height, floats, text-shadow and bevel. The
     // switch is gone; so are they.
-    $toggle_vars = array(
-        // $gstart/$secondary always resolve — option value, else WooCommerce's frontend colours.
-        "--wcdp-toggle-selected:{$gstart}",
-        "--wcdp-toggle-text:{$secondary}",
-    );
+    $toggle_vars = array();
+    if ('' !== $sel_bg)       { $toggle_vars[] = "--wcdp-toggle-selected:{$sel_bg}"; }
+    if ('' !== $sel_text)     { $toggle_vars[] = "--wcdp-toggle-text:{$sel_text}"; }
     if ('' !== $t_label_size) { $toggle_vars[] = "--wcdp-toggle-label-size:{$t_label_size}"; }
     if ('' !== $t_price_size) { $toggle_vars[] = "--wcdp-toggle-price-size:{$t_price_size}"; }
     if ('' !== $t_weight)     { $toggle_vars[] = "--wcdp-toggle-weight:{$t_weight}"; }
@@ -896,7 +900,9 @@ function wcdp_get_deposit_slider_custom_styles(){
     if (!empty($card_vars)) {
         $styles .= ".wc-deposits-reserve-card{" . implode(';', $card_vars) . ";}\n";
     }
-    if (!$basic_buttons) {
+    // Can legitimately be empty now that every toggle property is emitted only when set —
+    // an unconfigured store renders the stylesheet's defaults and needs no block at all.
+    if (!$basic_buttons && !empty($toggle_vars)) {
         $styles .= ".wc-deposits-reserve-card,.wcdp-toggle{" . implode(';', $toggle_vars) . ";}\n";
     }
 
