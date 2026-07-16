@@ -109,13 +109,25 @@ class WC_Deposits_Admin_Settings
             $tab.find( 'h2' ).not( $masterHeading ).toggleClass( 'wcdp-settings-off', off );
         } );
     }
+    // Deposit Mode picks ONE of the two mode sections on General Settings; show only that
+    // one. The option is still the old 'wc_deposits_checkout_mode_enabled' yes/no, so
+    // 'yes' means Checkout Mode.
+    function wcdpSyncDepositMode() {
+        var $sel = $( '#wc_deposits_checkout_mode_enabled' );
+        if ( ! $sel.length ) { return; }
+        var isCheckout = 'yes' === $sel.val();
+        $( '#wcdp-mode-checkout' ).toggle( isCheckout );
+        $( '#wcdp-mode-product' ).toggle( ! isCheckout );
+    }
     $( function () {
         wcdpSyncStyleMode();
         wcdpSyncForceMessage();
         wcdpSyncDepositsEnabled();
+        wcdpSyncDepositMode();
         $( document ).on( 'change', '#wc_deposits_use_basic_radio_buttons', wcdpSyncStyleMode );
         $( document ).on( 'change', '#wc_deposits_storewide_deposit_force_deposit', wcdpSyncForceMessage );
         $( document ).on( 'change', '#wc_deposits_site_wide_disable', wcdpSyncDepositsEnabled );
+        $( document ).on( 'change', '#wc_deposits_checkout_mode_enabled', wcdpSyncDepositMode );
     } );
 } )( jQuery );
 JS;
@@ -162,7 +174,6 @@ JS;
         // in the URL (so it keeps existing bookmarks working). Renaming it would break all three.
         'display_text' => __('Labels & Text', 'woocommerce-deposits'),
         'styling' => __('Styling', 'woocommerce-deposits'),
-        'checkout_mode' => __('Checkout Mode', 'woocommerce-deposits'),
         'second_payment' => __('Future Payments & Reminders', 'woocommerce-deposits'),
         'gateways' => __('Gateways', 'woocommerce-deposits'),
     )); ?>
@@ -240,12 +251,13 @@ JS;
                 }
             }
             ?>
-            <?php $general_settings = array(
+            <?php $global_settings = array(
 
 
                 /*
-                 * Global settings — the master switch lives here, so this section renders
-                 * first and everything below it is what the switch grays out.
+                 * Global settings — the master switch and the mode choice live here, so this
+                 * section renders first: everything below it is what the switch grays out,
+                 * and which of the two mode sections follows depends on Deposit Mode.
                  */
 
                 'sitewide_title' => array(
@@ -309,11 +321,32 @@ JS;
                     'desc' => __('Check this to disable all deposit functionality for guests', 'woocommerce-deposits'),
                     'id' => 'wc_deposits_restrict_deposits_for_logged_in_users_only',
                 ),
+                'deposit_mode' => array(
+                    'name' => __('Deposit Mode', 'woocommerce-deposits'),
+                    'type' => 'select',
+                    'desc_tip' => true,
+                    'options' => array(
+                        // Values are unchanged from the old "Enable checkout mode" select
+                        // ('no'/'yes'), so wcdp_checkout_mode() and every stored setting keep
+                        // working — only the label and the wording changed.
+                        'no'  => __('Product Deposits', 'woocommerce-deposits'),
+                        'yes' => __('Checkout Mode', 'woocommerce-deposits'),
+                    ),
+                    'desc' => __('Product Deposits: each product carries its own deposit, chosen on the product page. Checkout Mode: one deposit calculated from the cart total, chosen at checkout. The settings below change to match.', 'woocommerce-deposits'),
+                    'id' => 'wc_deposits_checkout_mode_enabled',
+                    'default' => 'no'
+                ),
                 'sitewide_end' => array(
                     'type' => 'sectionend',
                     'id' => 'wc_deposits_site_wide_end'
                 ),
+            );
 
+            /*
+             * Product Deposits mode. Shown only when Deposit Mode = Product Deposits;
+             * wcdpSyncDepositMode() toggles #wcdp-mode-product against #wcdp-mode-checkout.
+             */
+            $product_deposit_settings = array(
                 'deposit_storewide_values' => array(
 
                     'name' => __('Product Deposit Settings', 'woocommerce-deposits'),
@@ -404,6 +437,78 @@ JS;
                     'type' => 'sectionend',
                     'id' => 'wc_deposits_deposit_storewide_values_end'
                 ),
+            );
+
+            /*
+             * Checkout Mode. Moved here from its own tab in 5.1.0: it was never a separate
+             * area of configuration, it is the OTHER half of the same choice, and a tab
+             * whose settings only apply when a select inside it says "yes" hid that.
+             * Shown only when Deposit Mode = Checkout Mode.
+             */
+            $checkout_mode_settings = array(
+                'checkout_mode_title' => array(
+                    'name' => __('Checkout Mode Settings', 'woocommerce-deposits'),
+                    'type' => 'title',
+                    'desc' => __('One deposit is calculated from the cart total and chosen at checkout, instead of per product.', 'woocommerce-deposits'),
+                    // Was wc_deposits_messages_title — a copy-paste of the Messages section's
+                    // id on the Labels & Text tab, i.e. a duplicate id in the page.
+                    'id' => 'wc_deposits_checkout_mode_title'
+                ),
+                'checkout_mode_force_deposit' => array(
+                    'name' => __('Force deposit', 'woocommerce-deposits'),
+                    'type' => 'select',
+                    'desc_tip' => true,
+                    'options' => array(
+                        'no' => __('No', 'woocommerce-deposits'),
+                        'yes' => __('Yes', 'woocommerce-deposits'),
+                    ),
+                    'desc' => __('If you enable this, the customer will not be allowed to make a full payment at checkout.', 'woocommerce-deposits'),
+                    'id' => 'wc_deposits_checkout_mode_force_deposit',
+                    'default' => 'no'
+                ),
+                'checkout_mode_amount_type' => array(
+                    'name' => __('Deposit Type', 'woocommerce-deposits'),
+                    'type' => 'select',
+                    'desc_tip' => true,
+                    'desc' => __('Choose amount type', 'woocommerce-deposits'),
+                    'id' => 'wc_deposits_checkout_mode_deposit_amount_type',
+                    'options' => array(
+                        'fixed' => __('Fixed Amount', 'woocommerce-deposits'),
+                        'percentage' => __('Percentage', 'woocommerce-deposits'),
+                    ),
+                    'default' => 'percentage'
+                ),
+                'checkout_mode_amount_deposit_amount' => array(
+                    'name' => __('Deposit Amount', 'woocommerce-deposits'),
+                    'type' => 'number',
+                    'desc_tip' => true,
+                    'desc' => __('Amount of deposit. Should not be more than 99 for a percentage, or more than the order total for a fixed amount.', 'woocommerce-deposits'),
+                    'id' => 'wc_deposits_checkout_mode_deposit_amount',
+                    'default' => '50',
+                    'custom_attributes' => array(
+                        'min' => '0.0',
+                        'step' => '0.01'
+                    )
+                ),
+                'checkout_mode_payment_plans' => array(
+                    'name' => __('Payment plan(s)', 'woocommerce-deposits'),
+                    'type' => 'multiselect',
+                    'desc_tip' => true,
+                    'class' => 'chosen_select',
+                    'options' => $all_plans,
+                    'desc' => __('Selected payment plan(s) will be available for customers to choose from.  ', 'woocommerce-deposits') . $manage_plans_link,
+                    'id' => 'wc_deposits_checkout_mode_payment_plans'
+                ),
+                'checkout_mode_end' => array(
+                    'type' => 'sectionend',
+                    'id' => 'wc_deposits_checkout_mode_end'
+                ),
+            );
+
+            /*
+             * Applies to both modes.
+             */
+            $calculation_settings = array(
                'calculation_and_structure' => array(
 
                     'name' => __('Calculation & Structure', 'woocommerce-deposits'),
@@ -479,12 +584,24 @@ JS;
                 ),
 
             );
-
-
-
-            woocommerce_admin_fields($general_settings);
-
             ?>
+            <?php
+            // Rendered as separate groups so the two mode sections can be shown and hidden
+            // as units. woocommerce_admin_fields() emits a section as an <h2> followed by a
+            // <table>, which cannot be toggled together without a wrapper.
+            ?>
+            <div id="wcdp-general-global">
+                <?php woocommerce_admin_fields($global_settings); ?>
+            </div>
+            <div id="wcdp-mode-product" class="wcdp-mode-group">
+                <?php woocommerce_admin_fields($product_deposit_settings); ?>
+            </div>
+            <div id="wcdp-mode-checkout" class="wcdp-mode-group">
+                <?php woocommerce_admin_fields($checkout_mode_settings); ?>
+            </div>
+            <div id="wcdp-general-calculation">
+                <?php woocommerce_admin_fields($calculation_settings); ?>
+            </div>
             <?php do_action('wc_deposits_settings_tabs_general_tab'); ?>
 
         </div>
@@ -948,105 +1065,6 @@ JS;
         <?php
     }
 
-    function tab_checkout_mode_output($active)
-    {
-        $class = $active ? '' : 'hidden';
-        ?>
-        <div id="checkout_mode" class="wcdp-tab-content wrap <?php echo $class; ?>">
-            <?php
-
-            $cart_checkout_settings = array(
-
-                'checkout_mode_title' => array(
-                    'name' => __('Deposit on Checkout Mode', 'woocommerce-deposits'),
-                    'type' => 'title',
-                    'desc' => __('changes the way deposits work to be based on total amount at checkout button', 'woocommerce-deposits'),
-                    'id' => 'wc_deposits_messages_title'
-                ),
-                'enable_checkout_mode' => array(
-                    'name' => __('Enable checkout mode', 'woocommerce-deposits'),
-                    'type' => 'select',
-                    'options' => array(
-                        'no' => __('No', 'woocommerce-deposits'),
-                        'yes' => __('Yes', 'woocommerce-deposits'),
-                    ),
-                    'desc' => __('Enable checkout mode, which makes deposits calculate based on total amount during checkout instead of per product.', 'woocommerce-deposits'),
-                    'id' => 'wc_deposits_checkout_mode_enabled',
-                ),
-                'checkout_mode_force_deposit' => array(
-                    'name' => __('Force deposit', 'woocommerce-deposits'),
-                    'type' => 'select',
-                    'options' => array(
-                        'no' => __('No', 'woocommerce-deposits'),
-                        'yes' => __('Yes', 'woocommerce-deposits'),
-                    ),
-                    'desc' => __('Force Checkout Mode Deposit, the customer will not be allowed to make a full payment during checkout.', 'woocommerce-deposits'),
-                    'id' => 'wc_deposits_checkout_mode_force_deposit',
-                ),
-                'checkout_mode_amount_type' => array(
-                    'name' => __('Amount Type', 'woocommerce-deposits'),
-                    'type' => 'select',
-                    'desc' => __('Choose amount type', 'woocommerce-deposits'),
-                    'id' => 'wc_deposits_checkout_mode_deposit_amount_type',
-                    'options' => array(
-                        'fixed' => __('Fixed', 'woocommerce-deposits'),
-                        'percentage' => __('Percentage', 'woocommerce-deposits'),
-                    ),
-                    'default' => 'percentage'
-                ),
-                'checkout_mode_amount_deposit_amount' => array(
-                    'name' => __('Deposit Amount', 'woocommerce-deposits'),
-                    'type' => 'number',
-                    'desc' => __('Amount of deposit ( should not be more than 99 for percentage or more than order total for fixed', 'woocommerce-deposits'),
-                    'id' => 'wc_deposits_checkout_mode_deposit_amount',
-                    'default' => '50',
-                    'custom_attributes' => array(
-                        'min' => '0.0',
-                        'step' => '0.01'
-                    )
-                ),
-
-
-            );
-
-
-            //payment plans
-            $payment_plans = get_terms(array(
-                    'taxonomy' => WC_DEPOSITS_PAYMENT_PLAN_TAXONOMY,
-                    'hide_empty' => false
-                )
-            );
-
-            $all_plans = array();
-            foreach ($payment_plans as $payment_plan) {
-                $all_plans[$payment_plan->term_id] = $payment_plan->name;
-            }
-
-            $cart_checkout_settings['checkout_mode_payment_plans'] = array(
-                'name' => __('Payment plan(s)', 'woocommerce-deposits'),
-                'type' => 'multiselect',
-                'class' => 'chosen_select',
-                'options' => $all_plans,
-                'desc' => __('Selected payment plan(s) will be available for customers to choose from', 'woocommerce-deposits'),
-                'id' => 'wc_deposits_checkout_mode_payment_plans'
-            );
-
-            $cart_checkout_settings['checkout_mode_end'] = array(
-                'type' => 'sectionend',
-                'id' => 'wc_deposits_checkout_mode_end'
-            );
-
-
-            woocommerce_admin_fields($cart_checkout_settings);
-
-            ?>
-            <?php do_action('wc_deposits_settings_tabs_checkout_mode_tab'); ?>
-
-        </div>
-
-        <?php
-
-    }
 
     function tab_second_payment_output($active)
     {
@@ -1545,7 +1563,9 @@ JS;
             'secondary' => $this->wcdp_sanitize_style_color('wc_deposits_deposit_buttons_colors_secondary'),
         );
 
-        $settings['wc_deposits_checkout_mode_enabled'] = isset($_POST['wc_deposits_checkout_mode_enabled']) ? $_POST['wc_deposits_checkout_mode_enabled'] : 'no';
+        // Deposit Mode. Still the same yes/no option the old "Enable checkout mode" select
+        // wrote, so wcdp_checkout_mode() and every stored value carry over untouched.
+        $settings['wc_deposits_checkout_mode_enabled'] = ( isset($_POST['wc_deposits_checkout_mode_enabled']) && $_POST['wc_deposits_checkout_mode_enabled'] === 'yes' ) ? 'yes' : 'no';
         $settings['wc_deposits_checkout_mode_force_deposit'] = isset($_POST['wc_deposits_checkout_mode_force_deposit']) ? $_POST['wc_deposits_checkout_mode_force_deposit'] : 'no';
         $settings['wc_deposits_checkout_mode_deposit_amount'] = isset($_POST['wc_deposits_checkout_mode_deposit_amount']) ? $_POST['wc_deposits_checkout_mode_deposit_amount'] : '0';
         $settings['wc_deposits_checkout_mode_deposit_amount_type'] = isset($_POST['wc_deposits_checkout_mode_deposit_amount_type']) ? $_POST['wc_deposits_checkout_mode_deposit_amount_type'] : 'percentage';
