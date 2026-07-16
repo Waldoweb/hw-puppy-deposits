@@ -385,7 +385,7 @@ if (wc_deposits_woocommerce_is_active()):
         public function register_styles()
         {
 
-            wp_register_style('wc-deposits-frontend-styles', plugins_url('assets/css/style.min.css', __FILE__), [], WC_DEPOSITS_VERSION);
+            wp_register_style('wc-deposits-frontend-styles', plugins_url('assets/css/style.css', __FILE__), [], WC_DEPOSITS_VERSION);
 
         }
         /**

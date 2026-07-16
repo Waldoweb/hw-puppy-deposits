@@ -1,0 +1,351 @@
+/*!
+ * Puppy Deposits — front-end styles.
+ *
+ * THIS FILE IS THE SOURCE. It is shipped and enqueued as-is; there is no build step
+ * and no minified counterpart. Edit it directly.
+ *
+ * Do not re-minify it. The server serves it Brotli-compressed (measured: the old
+ * 5,964-byte minified file went over the wire at 1,351 bytes), so minifying saves a
+ * couple of hundred bytes and costs the ability to read and maintain the file.
+ *
+ * History: this began as the vendored, source-less `style.min.css` from WooCommerce
+ * Deposits 4.6.10 (Webtomizer). It was de-minified in 5.1.0 with prettier; that commit
+ * changed formatting only, no rules. The pristine upstream copy is kept for reference
+ * in ../webtomizer-woocommerce-deposits-4.6.10/.
+ *
+ * The `.switch-*` rules below are the vendored "candy" toggle switch. Historically the
+ * plugin could not edit them, so wc-deposits-functions.php generated !important
+ * overrides to fight them at runtime. Now that this file is editable, prefer changing a
+ * rule here over adding another override there.
+ */
+
+.switch-light *,
+.switch-toggle * {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+}
+.switch-light span span,
+.switch-toggle a {
+  display: none;
+}
+.switch-light {
+  display: block;
+  height: 1.875em;
+  position: relative;
+  overflow: visible;
+  padding: 0;
+  margin-left: 6.25em;
+}
+.switch-light * {
+  box-sizing: border-box;
+}
+.switch-light label,
+.switch-light > span {
+  line-height: 1.875em;
+  vertical-align: middle;
+}
+.switch-light input:focus + label,
+.switch-light input:focus ~ a {
+  outline: #888 dotted 1px;
+}
+.switch-light label {
+  position: relative;
+  z-index: 3;
+  display: block;
+  width: 100%;
+}
+.switch-light input {
+  position: absolute;
+  opacity: 0;
+  z-index: 5;
+}
+.switch-light input:checked ~ a {
+  right: 0;
+}
+.switch-light > span {
+  position: absolute;
+  left: -6.25em;
+  width: 100%;
+  padding-right: 6.25em;
+  text-align: left;
+}
+.switch-light > span span {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 5;
+  display: block;
+  width: 50%;
+  margin-left: 6.25em;
+  text-align: center;
+}
+.switch-light > span span:last-child {
+  left: 50%;
+}
+.switch-light a {
+  -webkit-transition: all 0.2s ease-out;
+  -moz-transition: all 0.2s ease-out;
+  transition: all 0.2s ease-out;
+  position: absolute;
+  right: 50%;
+  top: 0;
+  z-index: 4;
+  display: block;
+  width: 50%;
+  height: 100%;
+  padding: 0;
+}
+.switch-toggle {
+  display: block;
+  height: 1.875em;
+  position: relative;
+  padding: 0 !important;
+}
+.switch-toggle * {
+  box-sizing: border-box;
+  font-size: 1em;
+}
+.switch-toggle label,
+.switch-toggle > span {
+  line-height: 1.875em;
+  vertical-align: middle;
+}
+.switch-toggle input:focus + label,
+.switch-toggle input:focus ~ a {
+  outline: #888 dotted 1px;
+}
+.switch-toggle input {
+  position: absolute;
+  opacity: 0;
+  left: 0;
+}
+.switch-toggle input + label {
+  cursor: pointer;
+  position: relative;
+  z-index: 2;
+  float: left;
+  width: 50%;
+  height: 100%;
+  text-align: center;
+}
+.switch-toggle a {
+  display: block;
+  -webkit-transition: all 0.2s ease-out;
+  -moz-transition: all 0.2s ease-out;
+  transition: all 0.2s ease-out;
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 0;
+  z-index: 1;
+  width: 50%;
+  height: 100%;
+}
+.switch-toggle input:last-of-type:checked ~ a {
+  left: 50%;
+}
+.switch-candy {
+  background-color: #2d3035;
+  border-radius: 3px;
+  color: #fff;
+  font-weight: 700;
+  text-align: center;
+  text-shadow: 1px 1px 1px #191b1e;
+  box-shadow:
+    inset 0 2px 6px rgba(0, 0, 0, 0.3),
+    0 1px 0 rgba(255, 255, 255, 0.2);
+}
+.switch-candy label {
+  color: #fff;
+  -webkit-transition: color 0.2s ease-out;
+  -moz-transition: color 0.2s ease-out;
+  transition: color 0.2s ease-out;
+}
+.switch-candy input:checked + label {
+  color: #333;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+.switch-candy a {
+  border: 1px solid #333;
+  background-color: #ad74a2;
+  border-radius: 3px;
+  box-shadow:
+    0 1px 1px rgba(0, 0, 0, 0.2),
+    inset 0 1px 1px rgba(255, 255, 255, 0.45);
+}
+.switch-candy > span {
+  color: #333;
+}
+.switch-candy span {
+  color: #fff;
+}
+.switch-candy.switch-candy-blue a {
+  background-color: #38a3d4;
+}
+.switch-candy.switch-candy-yellow a {
+  background-color: #f5e560;
+}
+@media only screen and (-webkit-max-device-pixel-ratio: 2) and (max-device-width: 80em) {
+  .switch-light,
+  .switch-toggle {
+    -webkit-animation: webkitSiblingBugfix infinite 1s;
+    animation: webkitSiblingBugfix infinite 1s;
+  }
+}
+.wc-deposits-options-form {
+  margin-bottom: 12px;
+}
+.wc-deposits-options-form .deposit-options {
+  overflow: hidden;
+}
+.wc-deposits-options-form hr.separator {
+  margin: 4px;
+}
+.wc-deposits-options-form .input-radio {
+  display: none;
+}
+@media only screen {
+  .wc-deposits-options-form input.input-radio:enabled ~ label {
+    margin: 0;
+    text-shadow: rgba(0, 0, 0, 0.6) 0 -1px 0;
+    box-shadow:
+      rgba(0, 0, 0, 0.0745098) 0 -1px 0 0 inset,
+      rgba(255, 255, 255, 0.298039) 0 1px 0 0 inset,
+      rgba(0, 0, 0, 0.0980392) 0 1px 2px 0;
+  }
+  .wc-deposits-options-form input.input-radio:disabled ~ label {
+    color: #797979;
+    background-color: #555;
+    box-shadow:
+      rgba(0, 0, 0, 0.0745098) 0 -1px 0 0 inset,
+      rgba(255, 255, 255, 0.298039) 0 1px 0 0 inset,
+      rgba(0, 0, 0, 0.0980392) 0 1px 2px 0;
+  }
+}
+#tiptip_holder {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 99999;
+}
+#tiptip_holder.tip_top {
+  padding-bottom: 5px;
+}
+#tiptip_holder.tip_bottom {
+  padding-top: 5px;
+}
+#tiptip_holder.tip_right {
+  padding-left: 5px;
+}
+#tiptip_holder.tip_left {
+  padding-right: 5px;
+}
+#tiptip_content {
+  font-size: 11px;
+  color: #fff;
+  text-shadow: 0 0 2px #000;
+  padding: 4px 8px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background-color: #191919;
+  background-color: rgba(25, 25, 25, 0.92);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(transparent), to(#000));
+  border-radius: 3px;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  box-shadow: 0 0 3px #555;
+  -webkit-box-shadow: 0 0 3px #555;
+  -moz-box-shadow: 0 0 3px #555;
+}
+#tiptip_arrow,
+#tiptip_arrow_inner {
+  position: absolute;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 6px;
+  height: 0;
+  width: 0;
+}
+#tiptip_holder.tip_top #tiptip_arrow {
+  border-top-color: #fff;
+  border-top-color: rgba(255, 255, 255, 0.35);
+}
+#tiptip_holder.tip_bottom #tiptip_arrow {
+  border-bottom-color: #fff;
+  border-bottom-color: rgba(255, 255, 255, 0.35);
+}
+#tiptip_holder.tip_right #tiptip_arrow {
+  border-right-color: #fff;
+  border-right-color: rgba(255, 255, 255, 0.35);
+}
+#tiptip_holder.tip_left #tiptip_arrow {
+  border-left-color: #fff;
+  border-left-color: rgba(255, 255, 255, 0.35);
+}
+#tiptip_holder.tip_top #tiptip_arrow_inner {
+  margin-top: -7px;
+  margin-left: -6px;
+  border-top-color: #191919;
+  border-top-color: rgba(25, 25, 25, 0.92);
+}
+#tiptip_holder.tip_bottom #tiptip_arrow_inner {
+  margin-top: -5px;
+  margin-left: -6px;
+  border-bottom-color: #191919;
+  border-bottom-color: rgba(25, 25, 25, 0.92);
+}
+#tiptip_holder.tip_right #tiptip_arrow_inner {
+  margin-top: -6px;
+  margin-left: -5px;
+  border-right-color: #191919;
+  border-right-color: rgba(25, 25, 25, 0.92);
+}
+#tiptip_holder.tip_left #tiptip_arrow_inner {
+  margin-top: -6px;
+  margin-left: -7px;
+  border-left-color: #191919;
+  border-left-color: rgba(25, 25, 25, 0.92);
+}
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+  #tiptip_content {
+    padding: 4px 8px 5px;
+    background-color: rgba(45, 45, 45, 0.88);
+  }
+  #tiptip_holder.tip_bottom #tiptip_arrow_inner {
+    border-bottom-color: rgba(45, 45, 45, 0.88);
+  }
+  #tiptip_holder.tip_top #tiptip_arrow_inner {
+    border-top-color: rgba(20, 20, 20, 0.92);
+  }
+}
+.wcdp_hidden {
+  display: none !important;
+}
+#deposit-help-tip {
+  background: rgba(80, 80, 80, 0.92);
+  padding: 1px 7px;
+  color: #fff;
+  border-radius: 5px;
+}
+.wcdp-payment-plans {
+  padding: 10px;
+}
+.wcdp-payment-plans a {
+  cursor: pointer;
+}
+.wcdp-payment-plans ul {
+  list-style: none !important;
+}
+#pay-deposit-label,
+#pay-full-amount-label {
+  margin: 0;
+}
+#wcdp-payment-plans ul {
+  list-style: none;
+}
+#pay-deposit-label,
+#pay-full-amount-label,
+#wcdp-payment-plans a,
+#wcdp-payment-plans input {
+  cursor: pointer;
+}

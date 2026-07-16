@@ -5,7 +5,7 @@
  * Two presentations, chosen by the "Use basic radio buttons" setting:
  *   - Basic radios ON  → Puppy Deposits flex layout: "{Pay Deposit} ($deposit)" with a
  *     smaller "balance of $X due …" subline, and "{Pay in Full} ($full)".
- *   - Basic radios OFF → the original candy toggle switch (styled by assets/css/style.min.css).
+ *   - Basic radios OFF → the original candy toggle switch (styled by assets/css/style.css).
  *
  * Engine/JS hooks are preserved verbatim in both so the add-to-cart engine and
  * add-to-cart.js keep working: the root `.depositwp_single_deposit_form` with
