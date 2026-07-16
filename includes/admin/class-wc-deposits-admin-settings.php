@@ -78,7 +78,7 @@ class WC_Deposits_Admin_Settings
         $( '#wcdp-style-toggle' ).toggle( ! isRadio );
     }
     // Only show the "Pay in Full" Unavailable Message when Force deposit by default = Yes.
-    // Cross-tab: the select is on General Settings, the message field on Display & Text.
+    // Cross-tab: the select is on General Settings, the message field on Labels & Text.
     // This works because every tab renders its fields into the DOM and inactive tabs are
     // merely CSS-hidden (see tab_*_output) — so both elements are always present.
     function wcdpSyncForceMessage() {
@@ -157,7 +157,10 @@ JS;
             echo '&nbsp;&nbsp;' . $mode_notice . '&nbsp;&nbsp;' . $deposits_disabled_notice ?> </h2>
         <?php $settings_tabs = apply_filters('wc_deposits_settings_tabs', array(
         'wcdp_general' => __('General Settings', 'woocommerce-deposits'),
-        'display_text' => __('Display & Text', 'woocommerce-deposits'),
+        // Label only. The 'display_text' KEY is load-bearing: it maps to tab_display_text_output()
+        // via method_exists(), to the #display_text container div, and to ?section=display_text
+        // in the URL (so it keeps existing bookmarks working). Renaming it would break all three.
+        'display_text' => __('Labels & Text', 'woocommerce-deposits'),
         'styling' => __('Styling', 'woocommerce-deposits'),
         'checkout_mode' => __('Checkout Mode', 'woocommerce-deposits'),
         'second_payment' => __('Future Payments & Reminders', 'woocommerce-deposits'),
