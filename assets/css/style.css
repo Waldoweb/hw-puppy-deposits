@@ -73,6 +73,7 @@
   border-radius: var(--wcdp-card-radius, 8px) var(--wcdp-card-radius, 8px) 0 0;
   font-size: var(--wcdp-heading-size, 1.05em);
   font-weight: var(--wcdp-heading-weight, 700);
+  line-height: 1.2;
   color: var(--wcdp-heading-color, inherit);
 }
 
