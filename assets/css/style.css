@@ -19,81 +19,12 @@
  * rule here over adding another override there.
  */
 
-.switch-light *,
 .switch-toggle * {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
 }
-.switch-light span span,
 .switch-toggle a {
   display: none;
-}
-.switch-light {
-  display: block;
-  height: 1.875em;
-  position: relative;
-  overflow: visible;
-  padding: 0;
-  margin-left: 6.25em;
-}
-.switch-light * {
-  box-sizing: border-box;
-}
-.switch-light label,
-.switch-light > span {
-  line-height: 1.875em;
-  vertical-align: middle;
-}
-.switch-light input:focus + label,
-.switch-light input:focus ~ a {
-  outline: #888 dotted 1px;
-}
-.switch-light label {
-  position: relative;
-  z-index: 3;
-  display: block;
-  width: 100%;
-}
-.switch-light input {
-  position: absolute;
-  opacity: 0;
-  z-index: 5;
-}
-.switch-light input:checked ~ a {
-  right: 0;
-}
-.switch-light > span {
-  position: absolute;
-  left: -6.25em;
-  width: 100%;
-  padding-right: 6.25em;
-  text-align: left;
-}
-.switch-light > span span {
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 5;
-  display: block;
-  width: 50%;
-  margin-left: 6.25em;
-  text-align: center;
-}
-.switch-light > span span:last-child {
-  left: 50%;
-}
-.switch-light a {
-  -webkit-transition: all 0.2s ease-out;
-  -moz-transition: all 0.2s ease-out;
-  transition: all 0.2s ease-out;
-  position: absolute;
-  right: 50%;
-  top: 0;
-  z-index: 4;
-  display: block;
-  width: 50%;
-  height: 100%;
-  padding: 0;
 }
 .switch-toggle {
   display: block;
@@ -179,14 +110,7 @@
 .switch-candy span {
   color: #fff;
 }
-.switch-candy.switch-candy-blue a {
-  background-color: #38a3d4;
-}
-.switch-candy.switch-candy-yellow a {
-  background-color: #f5e560;
-}
 @media only screen and (-webkit-max-device-pixel-ratio: 2) and (max-device-width: 80em) {
-  .switch-light,
   .switch-toggle {
     -webkit-animation: webkitSiblingBugfix infinite 1s;
     animation: webkitSiblingBugfix infinite 1s;
@@ -318,15 +242,28 @@
     border-top-color: rgba(20, 20, 20, 0.92);
   }
 }
+/* KEPT, though it looks unused here: .wcdp_hidden is applied by the blocks slider
+   (includes/blocks/build/…deposit-slider.js) when a deposit is forced and hidden. That
+   page loads the blocks stylesheet, not this file — enqueue_styles() bails early on
+   has_block('woocommerce/checkout') — so this copy is belt-and-braces, not the live one. */
 .wcdp_hidden {
   display: none !important;
 }
+/* KEPT — live. wc-deposits-functions.php renders #deposit-help-tip and
+   wc-deposits-checkout.prod.js runs WooCommerce's tipTip plugin on it, styled by the
+   #tiptip_* rules above. Do not remove either without removing that help tip. */
 #deposit-help-tip {
   background: rgba(80, 80, 80, 0.92);
   padding: 1px 7px;
   color: #fff;
   border-radius: 5px;
 }
+/* Payment plans were dropped in the fork (a locked decision), so everything from here to
+   the end of the payment-plan rules is dead in practice. KEPT deliberately: the feature was
+   disabled at its entry points rather than deep-deleted, so the markup that carries these
+   classes still exists in templates/wc-deposits-checkout-mode-slider.php and add-to-cart.js
+   — it is simply unreachable. Delete these rules together with that dormant code, not before,
+   or the two fall out of step. See the deep-delete TODO in FORK-HANDOFF.md. */
 .wcdp-payment-plans {
   padding: 10px;
 }
