@@ -138,7 +138,17 @@
   margin: 0;
   padding: var(--wcdp-option-padding, 0.9em 1.25em);
   cursor: pointer;
-  color: var(--wcdp-option-text, inherit);
+  /* Unselected rows carry an 18% tint of the Selected Option Background — the same
+     derivation the toggle uses for its unselected button, so the two styles match. The
+     selected row (below) paints the full color over it. */
+  background-color: var(
+    --wcdp-option-unselected-bg,
+    color-mix(in srgb, var(--wcdp-option-selected-bg, #dcdcdc) 18%, transparent)
+  );
+  /* Static fallback for the auto-contrast in the @supports block below — dark, readable on
+     the light tint. NOT --wcdp-option-text/inherit: the label must contrast the row's OWN
+     fill, not follow a setting or theme color that can be light on a light tint. */
+  color: #1a1a1a;
   /* Smoothly cross-fade the fill AND the text color as selection moves between options. */
   transition:
     background-color 0.28s ease,
@@ -153,22 +163,49 @@
 /* Selected wins over hover, so the two never fight when hovering the selected row.
    :has() lets the checked input tint its own label — the input is nested inside it. */
 .wc-deposits-option:hover {
-  background-color: var(--wcdp-option-hover-bg, rgba(0, 0, 0, 0.025));
+  background-color: var(
+    --wcdp-option-hover-bg,
+    color-mix(in srgb, var(--wcdp-option-selected-bg, #dcdcdc) 28%, transparent)
+  );
 }
 /* The selected row is a FILLED bar, like a selected toggle button: it takes the Selected
-   Option Background and its text (and checkmark, via currentColor) takes the Selected
-   Option Text Color. Same settings, same treatment as the toggle. border-radius default 0
+   Option Background, and its text (with the checkmark) auto-contrasts against it in the
+   @supports block below — Selected Option Text Color overrides. border-radius default 0
    keeps rows full-bleed; Option Corner Radius rounds the highlight if set. */
 .wc-deposits-option:has(.input-radio:checked) {
   background-color: var(--wcdp-option-selected-bg, rgba(0, 0, 0, 0.05));
-  /* Selected Option Text Color, else fall back to the base Option Text Color, else theme. */
-  color: var(--wcdp-option-selected-text, var(--wcdp-option-text, inherit));
+  color: var(--wcdp-option-selected-text, #fff); /* fallback; @supports refines below */
   border-radius: var(--wcdp-toggle-radius, 0);
 }
 
-/* A disabled option is not selectable, so it must not offer a hover affordance. */
+/* A disabled option is not selectable, so it must not offer a hover affordance — hold the
+   unselected tint rather than clearing to transparent, which would flash the bare card. */
 .wc-deposits-option--disabled:hover {
-  background-color: transparent;
+  background-color: var(
+    --wcdp-option-unselected-bg,
+    color-mix(in srgb, var(--wcdp-option-selected-bg, #dcdcdc) 18%, transparent)
+  );
+}
+
+/* Auto-contrast the radio labels, mirroring the toggle: black or white by the fill's
+   lightness, so text stays readable whatever Selected Option Background is chosen —
+   including a var() theme token, which PHP cannot resolve. #dcdcdc is the opaque stand-in
+   for the translucent defaults. The checkmark (currentColor) and price (inherit) follow. */
+@supports (color: oklch(from red l 0 0)) {
+  /* Unselected: against the 18% tint over a light surface — nearly always dark text. */
+  .wc-deposits-option {
+    color: oklch(
+      from color-mix(in srgb, var(--wcdp-option-selected-bg, #dcdcdc) 18%, white)
+        clamp(0, (0.62 - l) * 1000, 1) 0 0
+    );
+  }
+  /* Selected: Selected Option Text Color still wins; else contrast the solid fill. */
+  .wc-deposits-option:has(.input-radio:checked) {
+    color: var(
+      --wcdp-option-selected-text,
+      oklch(from var(--wcdp-option-selected-bg, #dcdcdc) clamp(0, (0.62 - l) * 1000, 1) 0 0)
+    );
+  }
 }
 /* Custom radio: instead of a round control, the SELECTED row shows a checkmark in
    column 1 — the same idea as the toggle's selected checkmark. The real <input> stays in

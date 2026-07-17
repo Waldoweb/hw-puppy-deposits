@@ -923,11 +923,9 @@ function wcdp_get_deposit_slider_custom_styles(){
         $card_vars[] = "--wcdp-option-selected-text:{$selected_text}";
         $card_vars[] = "--wcdp-toggle-text:{$selected_text}";
     }
-    if ('' !== ($v = $opt('wc_deposits_style_option_text_color'))) {
-        // Base text color for all options in both styles; the selected option overrides it
-        // with Selected Option Text Color (see style.css).
-        $card_vars[] = "--wcdp-option-text:{$v}";
-    }
+    // (Option Text Color / --wcdp-option-text was removed when option labels gained auto-contrast: unselected labels now
+    //  auto-contrast against their own tint, and the selected label against its fill, so a
+    //  single base text color no longer has a meaning that keeps contrast readable.)
     if ('' !== $hover_bg) {
         $card_vars[] = "--wcdp-option-hover-bg:{$hover_bg}";
         $card_vars[] = "--wcdp-toggle-hover-bg:{$hover_bg}";

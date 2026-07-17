@@ -979,16 +979,7 @@ JS;
                 'class' => 'wcdp-style-color',
                 'placeholder' => 'e.g. #ffffff or var(--token)',
                 'id' => 'wc_deposits_style_selected_text',
-                'desc' => __('Text and checkmark color on the SELECTED option, which has the fill above to contrast against. Blank inherits the surrounding text color. Unselected options use the Option Text Color below.', 'woocommerce-deposits'),
-                'desc_tip' => true,
-            ),
-            'option_text_color' => array(
-                'name' => __('Option Text Color', 'woocommerce-deposits'),
-                'type' => 'text',
-                'class' => 'wcdp-style-color',
-                'placeholder' => 'e.g. #711919 or var(--action)',
-                'id' => 'wc_deposits_style_option_text_color',
-                'desc' => __('Base text color for the options, both styles. The selected option overrides this with the Selected Option Text Color above. Blank inherits the theme\'s text color. Tip: for a dark Selected Option Background, set the Selected Option Text Color light and leave this at your normal (dark) text.', 'woocommerce-deposits'),
+                'desc' => __('Text and checkmark color on the SELECTED option, which has the fill above to contrast against. Blank picks black or white automatically for contrast — including when the fill is a theme color token. Unselected options always auto-contrast against their lighter tint.', 'woocommerce-deposits'),
                 'desc_tip' => true,
             ),
             'option_hover_bg' => array(
@@ -1520,7 +1511,8 @@ JS;
         // longer saved (their fields were removed) — left in the DB untouched as emitter
         // fallbacks so a pre-merge store keeps its look until it re-saves with new values.
         $settings['wc_deposits_style_selected_text']     = $this->wcdp_sanitize_style_color('wc_deposits_style_selected_text');
-        $settings['wc_deposits_style_option_text_color'] = $this->wcdp_sanitize_style_color('wc_deposits_style_option_text_color');
+        // wc_deposits_style_option_text_color (Option Text Color) retired when option labels gained auto-contrast; options
+        // auto-contrast now, so a single base text color no longer keeps contrast readable.
         $settings['wc_deposits_style_subline_color']     = $this->wcdp_sanitize_style_color('wc_deposits_style_subline_color');
 
         $settings ['wc_deposits_partially_paid_orders_editable'] = isset($_POST['wc_deposits_partially_paid_orders_editable']) ? 'yes' : 'no';
