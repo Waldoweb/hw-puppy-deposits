@@ -51,6 +51,31 @@
   </head>
   <body>
     <div class="changelog">
+      <h4>16/07/2026 - Version 5.3.0</h4>
+      <h6>Deposit Option Contrast:</h6>
+      <ul>
+        <li>
+          <strong>The deposit option labels now stay readable automatically.</strong> Whatever
+          color you choose for the selected option, its text is set to black or white for
+          contrast — and this works even when the color is a theme color token. It applies to
+          both the toggle and the radio styles, to the label, price and checkmark.
+        </li>
+        <li>
+          <strong>Fixed: option text could be unreadable.</strong> With a text color set for the
+          selected option, the unselected options could end up with light text on their light
+          background — effectively invisible. They now contrast automatically.
+        </li>
+        <li>
+          Radio mode: the unselected options now carry a soft tint of the selected color and
+          fill on hover, matching the toggle instead of sitting plain on the card.
+        </li>
+        <li>
+          Removed the "Option Text Color" setting — it is no longer needed now that option text
+          contrasts automatically, and leaving it set was the cause of the unreadable text above.
+          Use "Selected Option Text Color" if you want to force the selected label's color.
+        </li>
+      </ul>
+
       <h4>16/07/2026 - Version 5.2.0</h4>
       <h6>Checkout:</h6>
       <ul>
