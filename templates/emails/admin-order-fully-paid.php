@@ -18,7 +18,7 @@ if (!defined('ABSPATH')) {
 do_action( 'woocommerce_email_header', $email_heading, $email ); ?>
 
 
-<p><?php printf(__('An order from %s has been paid in full. Their order is as follows:', 'woocommerce-deposits'), $order->get_billing_first_name() . ' ' . $order->get_billing_last_name()); ?></p>
+<p><?php printf(esc_html__('An order from %s has been paid in full. Their order is as follows:', 'woocommerce-deposits'), esc_html($order->get_billing_first_name() . ' ' . $order->get_billing_last_name())); ?></p>
 
 <?php
 

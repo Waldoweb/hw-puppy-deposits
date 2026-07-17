@@ -47,9 +47,7 @@ class Express_Payment_Guard {
 		 *
 		 * @param bool $enabled Default true.
 		 */
-		// Default OFF while PayPal deposit support is being tested in sandbox.
-		// Flip back to true before shipping.
-		if ( ! apply_filters( 'wc_deposits_express_guard_enabled', false ) ) {
+		if ( ! apply_filters( 'wc_deposits_express_guard_enabled', true ) ) {
 			return;
 		}
 

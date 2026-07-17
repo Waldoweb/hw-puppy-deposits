@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 do_action( 'woocommerce_email_header', $email_heading, $email ); ?>
 
 
-<p><?php printf(__('You have received a %s order from %s. Their order is as follows:', 'woocommerce-deposits'), wc_get_order_status_name('partially-paid') , $order->get_billing_first_name() . ' ' . $order->get_billing_last_name()); ?></p>
+<p><?php printf(esc_html__('You have received a %s order from %s. Their order is as follows:', 'woocommerce-deposits'), esc_html(wc_get_order_status_name('partially-paid')) , esc_html($order->get_billing_first_name() . ' ' . $order->get_billing_last_name())); ?></p>
 
 <?php
 

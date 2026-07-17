@@ -50,9 +50,17 @@ if (!class_exists('WC_Deposits_Email_Customer_Partially_Paid')) :
         
             if($order && $order->get_type() === 'wcdp_payment' && $order->get_meta('_wc_deposits_payment_type', true)  !== 'deposit' ){
                 $parent = wc_get_order($order->get_parent_id());
+                if(!$parent) return; // orphaned payment order
+
                 // Skip when the order is now fully settled (processing/completed, or the
-                // custom fully-paid status) — the customer fully-paid email covers that.
-                if($parent->get_status() !== 'processing' && $parent->get_status() !== 'completed' && $parent->get_status() !== 'fully-paid'){
+                // CONFIGURED fully-paid target status) — the customer fully-paid email
+                // covers that.
+                $settled_statuses = array('processing', 'completed', 'fully-paid');
+                $configured_fully_paid = get_option('wc_deposits_order_fully_paid_status', 'fully-paid');
+                if ($configured_fully_paid) {
+                    $settled_statuses[] = preg_replace('/^wc-/', '', $configured_fully_paid);
+                }
+                if(!in_array($parent->get_status(), $settled_statuses, true)){
                     $this->partial_payment = $order;
                     $this->trigger($parent->get_id());
                 }
@@ -94,6 +102,10 @@ if (!class_exists('WC_Deposits_Email_Customer_Partially_Paid')) :
                     }
 
                 }
+
+                // Nothing to reference (fully settled order / preview with no unpaid
+                // payment) — bail instead of fatalling on a null partial payment.
+                if (!is_object($this->partial_payment)) return;
 
                 $this->placeholders['{order_date}'] = wc_format_datetime($this->object->get_date_created());
                 $this->placeholders['{order_number}'] = $this->object->get_order_number();
@@ -151,8 +163,9 @@ if (!class_exists('WC_Deposits_Email_Customer_Partially_Paid')) :
         function get_content_plain()
         {
 
-            return wc_get_template_html($this->template_html, array(
+            return wc_get_template_html($this->template_plain, array(
                 'order' => $this->object,
+                'partial_payment' => $this->partial_payment,
                 'email_heading' => $this->get_heading(),
                 'additional_content' => $this->get_additional_content(), 'sent_to_admin' => false,
                 'email_text' => $this->get_email_text(),

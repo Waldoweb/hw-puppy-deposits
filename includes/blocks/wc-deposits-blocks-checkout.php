@@ -26,6 +26,12 @@ Class  WC_Deposits_Store_Api_Checkout_Update_Order_Meta {
                     'meta_value' => 'deposit'
                 ));
 
+            // Guard against a mislabeled order with no deposit child — set_order()
+            // is typed WC_Order and would TypeError on null.
+            if ( empty( $deposit_payment ) || ! ( $deposit_payment[0] instanceof \WC_Order ) ) {
+                return;
+            }
+
             $context->set_order($deposit_payment[0]);
         }
     }
@@ -55,9 +61,19 @@ Class  WC_Deposits_Store_Api_Checkout_Update_Order_Meta {
             return;
         }
 
+        // Only flag orders whose cart actually holds a deposit — mirrors the classic
+        // checkout guard (WC_Deposits_Checkout::checkout_update_order_meta). Without
+        // this, EVERY block-checkout order was stamped as a deposit order; the payment
+        // hook then fetched an empty payment schedule and called set_order(null),
+        // fatalling a normal full-price checkout.
+        $deposit_enabled = isset( WC()->cart->deposit_info['deposit_enabled'] ) && WC()->cart->deposit_info['deposit_enabled'] === true;
+        if ( ! $deposit_enabled ) {
+            return;
+        }
+
         $order->add_meta_data('_wc_deposits_order_has_deposit', 'yes', true);
 
-        //update the data 
+        //update the data
         do_action('woocommerce_deposits_after_create_order', $order);
 
         $order->save();

@@ -50,6 +50,7 @@ if (!class_exists('WC_Deposits_Email_Customer_Deposit_Paid')) :
             
             if($order && $order->get_type() === 'wcdp_payment' && $order->get_meta('_wc_deposits_payment_type', true)  === 'deposit' ){
                 $parent = wc_get_order($order->get_parent_id());
+                if(!$parent) return; // orphaned payment order
                 $this->partial_payment = $order;
                 $this->trigger($parent->get_id());
             }
@@ -69,6 +70,14 @@ if (!class_exists('WC_Deposits_Email_Customer_Deposit_Paid')) :
 
             if ($order) {
                 if ($order->get_type() === 'wcdp_payment') return;
+
+                // Send once per order. An order only ever has one deposit, and without
+                // this marker an admin moving the child deposit order between
+                // processing/completed re-sent "your deposit has been received" for a
+                // deposit paid long ago. (A marker rather than an admin-save guard so
+                // the email still fires when staff record a deposit from wp-admin.)
+                if ($order->get_meta('_wc_deposits_deposit_paid_email_sent') === 'yes') return;
+
                 $this->object = $order;
                 if(!$this->partial_payment) {
                     //get the partial payment manually, this is suitable when the trigger is not order status change of
@@ -82,7 +91,7 @@ if (!class_exists('WC_Deposits_Email_Customer_Deposit_Paid')) :
                         )
                     ));
 
-                    $this->partial_payment = $payments[0]; // it will always be one result as a deposit payment
+                    $this->partial_payment = !empty($payments) ? $payments[0] : false; // at most one result as a deposit payment
                 }
 
                 if(!is_object($this->partial_payment)) return;
@@ -109,6 +118,8 @@ if (!class_exists('WC_Deposits_Email_Customer_Deposit_Paid')) :
 
                 $this->send($this->get_recipient(), $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments());
                 $this->object->delete_meta_data('_wcdp_current_payment');
+                $this->object->update_meta_data('_wc_deposits_deposit_paid_email_sent', 'yes');
+                $this->object->save();
 
             }
         }
@@ -142,7 +153,7 @@ if (!class_exists('WC_Deposits_Email_Customer_Deposit_Paid')) :
         function get_content_plain()
         {
 
-            return wc_get_template_html($this->template_html, array(
+            return wc_get_template_html($this->template_plain, array(
                 'order' => $this->object,
                 'email_heading' => $this->get_heading(),
                 'additional_content' =>  $this->get_additional_content(), 

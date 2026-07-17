@@ -84,7 +84,7 @@ $full_disabled = ( isset( $force_deposit ) && $force_deposit === 'yes' );
 
                 <label class="wc-deposits-option deposit-option-row">
                     <input id="<?php echo esc_attr( $pid ); ?>-pay-deposit" class="pay-deposit input-radio" name="<?php echo esc_attr( $pid ); ?>-deposit-radio" type="radio" value="deposit" <?php checked( $default_checked, 'deposit' ); ?>>
-                    <span class="wc-deposits-option-title"><?php echo esc_html( $deposit_text ); ?><?php if ( $has_amounts ) : ?> (<?php echo wp_kses_post( wc_price( $deposit_value ) ); ?>)<?php endif; ?></span>
+                    <span class="wc-deposits-option-title"><?php echo esc_html( $deposit_text ); ?><?php if ( $has_amounts ) : ?> <span class="wc-deposits-option-price">(<?php echo wp_kses_post( wc_price( $deposit_value ) ); ?>)</span><?php endif; ?></span>
                     <?php if ( '' !== $balance_row ) : ?>
                         <span class="wc-deposits-option-sub"><?php echo wp_kses_post( $balance_row ); ?></span>
                     <?php endif; ?>
@@ -92,7 +92,7 @@ $full_disabled = ( isset( $force_deposit ) && $force_deposit === 'yes' );
 
                 <label class="wc-deposits-option full-option-row<?php echo $full_disabled ? ' wc-deposits-option--disabled' : ''; ?>">
                     <input id="<?php echo esc_attr( $pid ); ?>-pay-full-amount" class="pay-full-amount input-radio" name="<?php echo esc_attr( $pid ); ?>-deposit-radio" type="radio" value="full" <?php checked( $default_checked, 'full' ); ?> <?php disabled( $full_disabled ); ?>>
-                    <span class="wc-deposits-option-title"><?php echo esc_html( $full_text ); ?><?php if ( $full > 0 ) : ?> (<?php echo wp_kses_post( wc_price( $full ) ); ?>)<?php endif; ?></span>
+                    <span class="wc-deposits-option-title"><?php echo esc_html( $full_text ); ?><?php if ( $full > 0 ) : ?> <span class="wc-deposits-option-price">(<?php echo wp_kses_post( wc_price( $full ) ); ?>)</span><?php endif; ?></span>
                     <?php if ( $full_disabled && '' !== $full_unavailable_text ) : ?>
                         <span class="wc-deposits-option-sub wc-deposits-option-unavailable"><?php echo esc_html( $full_unavailable_text ); ?></span>
                     <?php endif; ?>

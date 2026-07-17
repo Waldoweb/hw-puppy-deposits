@@ -54,8 +54,10 @@ class WC_Deposits_Add_To_Cart
 
     function ajax_update_deposit_container()
     {
-        $price = isset($_POST['price']) ? $_POST['price'] : false;
-        $product_id = isset($_POST['product_id']) ? $_POST['product_id'] : false;
+        // Public (nopriv) endpoint: coerce both inputs to safe scalars. An array or
+        // markup here previously reached arithmetic/attribute output untouched.
+        $price = isset($_POST['price']) && is_numeric(wp_unslash($_POST['price'])) ? floatval(wp_unslash($_POST['price'])) : false;
+        $product_id = isset($_POST['product_id']) ? absint(wp_unslash($_POST['product_id'])) : false;
         if ($product_id) {
             $deposit_slider_html = $this->get_deposit_container($product_id, $price);
             wp_send_json_success($deposit_slider_html);
@@ -235,7 +237,7 @@ JS;
         $basic_buttons = get_option('wc_deposits_use_basic_radio_buttons', true) === 'yes';
         $ajax_refresh =  apply_filters('wc_deposits_product_disable_deposit_ajax_refresh',false,$product_id) ? 'no':'yes';
         ob_start(); ?>
-        <div  data-product_id="<?php echo $product_id; ?>" style="height:20px; width:100%;"  data-ajax-refresh="<?php echo $ajax_refresh; ?>" class='depositwp_single_deposit_form <?php echo $basic_buttons ? 'basic-wc-deposits-options-form' : 'wc-deposits-options-form'; ?>'></div>
+        <div  data-product_id="<?php echo esc_attr($product_id); ?>" style="height:20px; width:100%;"  data-ajax-refresh="<?php echo esc_attr($ajax_refresh); ?>" class='depositwp_single_deposit_form <?php echo $basic_buttons ? 'basic-wc-deposits-options-form' : 'wc-deposits-options-form'; ?>'></div>
         <?php
         $html = ob_get_clean(); // always return empty div
 

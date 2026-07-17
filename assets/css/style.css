@@ -47,7 +47,6 @@
     var(--wcdp-card-border-color, rgba(0, 0, 0, 0.12));
   border-radius: var(--wcdp-card-radius, 8px);
   background: var(--wcdp-card-bg, rgba(0, 0, 0, 0.03));
-  text-align: var(--wcdp-card-align, left);
 }
 .wc-deposits-reserve-card > * {
   margin-top: 0;
@@ -82,6 +81,13 @@
   font-weight: var(--wcdp-heading-weight, 700);
   line-height: 1.2;
   color: var(--wcdp-heading-color, inherit);
+  /* Alignment is set on the heading and message directly rather than on the card.
+     text-align inherits, so on the card it also reached the radio option labels —
+     centering the whole option list next to left-aligned radios. Toggle mode is
+     unaffected by the move: the toggle's labels have their own centering and the
+     card body is flex, so the heading and message were the only things it ever
+     visually reached there. */
+  text-align: var(--wcdp-card-align, left);
 }
 
 /* The message under the controls. It is a <span>, so display:block is required for
@@ -97,6 +103,7 @@
   margin-right: auto;
   font-size: var(--wcdp-message-size, inherit);
   color: var(--wcdp-message-color, inherit);
+  text-align: var(--wcdp-card-align, left);
 }
 
 /* ── Radio presentation (the "Use basic radio buttons" mode) ────────────────── */
@@ -123,6 +130,7 @@
 /* Rows are flush to the card edges, so they carry the horizontal inset the card used
    to provide. No per-row radius: the card's own corners round the first and last row. */
 .wc-deposits-option {
+  position: relative; /* contains the visually-hidden input */
   display: grid;
   grid-template-columns: auto 1fr;
   column-gap: 0.6em;
@@ -131,7 +139,10 @@
   padding: var(--wcdp-option-padding, 0.9em 1.25em);
   cursor: pointer;
   color: var(--wcdp-option-text, inherit);
-  transition: background-color 0.15s ease-out;
+  /* Smoothly cross-fade the fill AND the text color as selection moves between options. */
+  transition:
+    background-color 0.28s ease,
+    color 0.28s ease;
 }
 
 /* A rule between rows, not around them — the row's own padding keeps the text off it. */
@@ -144,30 +155,86 @@
 .wc-deposits-option:hover {
   background-color: var(--wcdp-option-hover-bg, rgba(0, 0, 0, 0.025));
 }
+/* The selected row is a FILLED bar, like a selected toggle button: it takes the Selected
+   Option Background and its text (and checkmark, via currentColor) takes the Selected
+   Option Text Color. Same settings, same treatment as the toggle. border-radius default 0
+   keeps rows full-bleed; Option Corner Radius rounds the highlight if set. */
 .wc-deposits-option:has(.input-radio:checked) {
   background-color: var(--wcdp-option-selected-bg, rgba(0, 0, 0, 0.05));
+  /* Selected Option Text Color, else fall back to the base Option Text Color, else theme. */
+  color: var(--wcdp-option-selected-text, var(--wcdp-option-text, inherit));
+  border-radius: var(--wcdp-toggle-radius, 0);
 }
 
 /* A disabled option is not selectable, so it must not offer a hover affordance. */
 .wc-deposits-option--disabled:hover {
   background-color: transparent;
 }
+/* Custom radio: instead of a round control, the SELECTED row shows a checkmark in
+   column 1 — the same idea as the toggle's selected checkmark. The real <input> stays in
+   the DOM, just visually hidden: still focusable, still in the accessibility tree, still
+   the .pay-deposit / .pay-full-amount / .input-radio that add-to-cart.js re-renders and
+   queries. The check is a ::before on the row, revealed only when that row's input is
+   checked (:has). Its space is reserved on every row (transparent when unselected) so all
+   option text lines up. currentColor makes it take the selected row's text color (the
+   Selected Option Text Color), matching the label. */
 .wc-deposits-option .input-radio {
-  grid-column: 1;
-  grid-row: 1;
-  margin: 0;
-  align-self: center;
-  accent-color: var(--wcdp-radio-accent, auto);
+  /* Visually hidden, but focusable and present. */
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
+.wc-deposits-option::before {
+  content: "\2713"; /* ✓ */
+  grid-column: 1;
+  grid-row: 1 / -1; /* span the title + subline rows, so it centers between them */
+  align-self: center;
+  color: currentColor;
+  font-size: 1.3em;
+  line-height: 1;
+  opacity: 0;
+  transition: opacity 0.28s ease;
+}
+.wc-deposits-option:has(.input-radio:checked)::before {
+  opacity: 1;
+}
+/* Keyboard focus: outline the row, inset so the card's overflow:hidden cannot clip it. */
+.wc-deposits-option:has(.input-radio:focus-visible) {
+  outline: 2px solid currentColor;
+  outline-offset: -2px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .wc-deposits-option::before {
+    transition: none;
+  }
+}
+/* Option Label Text Size / Option Font Weight are shared with the toggle, fallbacks
+   included: both styles inherit the surrounding text size and render bold unless the
+   merchant sets otherwise, so the two presentations read the same by default. */
 .wc-deposits-option-title {
   grid-column: 2;
   grid-row: 1;
+  font-size: var(--wcdp-toggle-label-size, inherit);
+  font-weight: var(--wcdp-toggle-weight, 700);
+}
+
+/* Radio's price stays inline after the label (the toggle's is display:block, on its own
+   line, because its buttons are narrow). Both wrap the parentheses with the amount so
+   they scale together. */
+.wc-deposits-option-price {
+  font-size: var(--wcdp-toggle-price-size, inherit);
 }
 .wc-deposits-option-sub {
   grid-column: 2;
   grid-row: 2;
   margin-top: 0.15em;
-  font-size: 0.85em;
+  font-size: var(--wcdp-message-size, 0.85em);
   line-height: 1.35;
   color: var(--wcdp-subline-color, inherit);
   /* PHP sets --wcdp-subline-opacity to 1 when a subline color is configured, so a
@@ -203,18 +270,18 @@
    inputs, and the sibling .wc-deposits-notice, are queried by add-to-cart.js, which
    re-renders this markup over AJAX. The .wcdp-toggle* classes are ours and free.
    ───────────────────────────────────────────────────────────────────────────── */
-/* The WHOLE switch carries the unselected color — a 20% tint of the selected one — and
-   the selected option paints over it. The options each inherit the container's radius, so
-   two rounded options never tile a rounded container; anything behind them shows through
-   at the corners and between them. Coloring the container (rather than each unselected
-   option) means there is nothing else to show through. */
+/* The WHOLE switch carries the unselected color — an 18% tint of the selected one — and
+   the selected option paints over it. Each option rounds only its OUTER corners (the
+   --deposit / --full rules below), so the two meet in a straight seam while the switch's
+   outer corners stay rounded. Coloring the container (rather than each unselected option)
+   means there is nothing behind the options to show through. */
 .wcdp-toggle {
   display: flex;
   position: relative; /* anchors __tip */
   border-radius: var(--wcdp-toggle-radius, 3px);
   background-color: var(
     --wcdp-toggle-unselected-bg,
-    color-mix(in srgb, var(--wcdp-toggle-selected, rgba(0, 0, 0, 0.12)) 20%, transparent)
+    color-mix(in srgb, var(--wcdp-toggle-selected, rgba(0, 0, 0, 0.12)) 18%, transparent)
   );
   text-align: center;
 }
@@ -250,16 +317,45 @@
   flex: 1 1 0;
   margin: 0;
   padding: var(--wcdp-toggle-padding, 12px 24px);
-  border-radius: inherit;
   cursor: pointer;
   background-color: transparent;
-  color: inherit;
-  font-size: var(--wcdp-toggle-label-size, 1em);
+  /* Base (unselected) label color. The @supports block below auto-contrasts it against the
+     unselected tint; this static value is the fallback for browsers without relative-color
+     syntax. Deliberately NOT --wcdp-option-text or inherit: in toggle mode the label must
+     contrast with the toggle's OWN fills, not follow the shared radio option color or a
+     theme-inherited color that can be light on a light tint (which read as white-on-pink). */
+  color: #1a1a1a;
+  /* Two-column layout: [ checkmark | label-over-price ]. The check (::before) spans both
+     rows in column 1 so it centers vertically across the label AND the price line, instead
+     of shifting the first line as an inline mark did. The label text auto-places at row 1 /
+     column 2; the price is pinned to row 2 / column 2 below it. justify-content centers the
+     two columns as a group. */
+  display: grid;
+  grid-template-columns: auto auto;
+  justify-content: center;
+  justify-items: center;
+  align-items: center;
+  column-gap: 0.6em;
+  /* Shared defaults with the radio rows: inherit the surrounding text size, bold.
+     (1em and inherit compute identically here; inherit states the intent.) */
+  font-size: var(--wcdp-toggle-label-size, inherit);
   font-weight: var(--wcdp-toggle-weight, 700);
   line-height: normal;
+  /* Cross-fade the fill and text as selection moves between the two buttons. */
   transition:
-    background-color 0.2s ease-out,
-    color 0.2s ease-out;
+    background-color 0.28s ease,
+    color 0.28s ease;
+}
+
+/* Round only the OUTER corners so the seam between the two options stays a straight line.
+   --deposit is always the left option and --full the right (fixed template order), so
+   deposit rounds its left corners and full its right; the switch's own border-radius rounds
+   the container behind them to match. */
+.wcdp-toggle__option--deposit {
+  border-radius: var(--wcdp-toggle-radius, 3px) 0 0 var(--wcdp-toggle-radius, 3px);
+}
+.wcdp-toggle__option--full {
+  border-radius: 0 var(--wcdp-toggle-radius, 3px) var(--wcdp-toggle-radius, 3px) 0;
 }
 
 /* Hover paints a deeper tint of the same color ON TOP of the container's, so the two
@@ -269,13 +365,16 @@
 .wcdp-toggle__option:hover {
   background-color: var(
     --wcdp-toggle-hover-bg,
-    color-mix(in srgb, var(--wcdp-toggle-selected, rgba(0, 0, 0, 0.12)) 25%, transparent)
+    color-mix(in srgb, var(--wcdp-toggle-selected, rgba(0, 0, 0, 0.12)) 22%, transparent)
   );
 }
 
-/* The price always takes its own line under the label — deterministic, rather than
-   relying on width-based wrapping being consistent across prices and screens. */
+/* The price always takes its own line under the label. Pinned to row 2 / column 2 of the
+   option grid so it sits beneath the label text and beside the checkmark's column, not
+   under the checkmark. */
 .wcdp-toggle__price {
+  grid-column: 2;
+  grid-row: 2;
   display: block;
   font-size: var(--wcdp-toggle-price-size, 0.85em);
 }
@@ -287,12 +386,54 @@
   color: inherit;
 }
 
-/* The selected option carries the configured color, and the configured text color with
-   it — this is the only state with a fill to contrast against, which is what the "Button
-   Text Color" setting was always for. */
+/* The selected option carries the configured fill. Its text is the Selected Button Text
+   Color if set, otherwise auto-contrast (see @supports below); this static value is the
+   fallback for browsers without relative-color syntax — white suits the dark default fill. */
 .wcdp-toggle__input:checked + .wcdp-toggle__option {
   background-color: var(--wcdp-toggle-selected, rgba(0, 0, 0, 0.12));
-  color: var(--wcdp-toggle-text, inherit);
+  color: var(--wcdp-toggle-text, #fff);
+}
+
+/* Auto-contrast the toggle labels: pick black or white by the fill's lightness, so text
+   stays readable whatever color is chosen — INCLUDING a var() theme token, which PHP cannot
+   resolve to pick a text color for. oklch lightness `l` is 0..1; the clamp is a hard step
+   near 0.62 (dark text on light fills, light on dark). #dcdcdc is an opaque stand-in for the
+   default translucent fill, so the default state contrasts correctly too. Progressive
+   enhancement — browsers without relative-color syntax keep the static fallbacks above.
+   The checkmark and the price inherit this color, so both follow the label. */
+@supports (color: oklch(from red l 0 0)) {
+  /* Unselected: against the 20% tint composited over a light surface — nearly always dark. */
+  .wcdp-toggle__option {
+    color: oklch(
+      from color-mix(in srgb, var(--wcdp-toggle-selected, #dcdcdc) 20%, white)
+        clamp(0, (0.62 - l) * 1000, 1) 0 0
+    );
+  }
+  /* Selected: Selected Button Text Color still wins; else contrast the solid fill. */
+  .wcdp-toggle__input:checked + .wcdp-toggle__option {
+    color: var(
+      --wcdp-toggle-text,
+      oklch(from var(--wcdp-toggle-selected, #dcdcdc) clamp(0, (0.62 - l) * 1000, 1) 0 0)
+    );
+  }
+}
+
+/* Checkmark to the LEFT of the selected option's label, vertically centered across both
+   lines: it spans both grid rows in column 1 (see the grid on .wcdp-toggle__option). Space
+   is reserved on BOTH options — the mark is transparent when unselected — so the label
+   does not shift when toggling. It inherits the selected text color, so it matches. */
+.wcdp-toggle__option::before {
+  content: "\2713"; /* ✓ */
+  grid-column: 1;
+  grid-row: 1 / span 2;
+  align-self: center;
+  font-size: 1.35em;
+  line-height: 1;
+  opacity: 0;
+  transition: opacity 0.28s ease;
+}
+.wcdp-toggle__input:checked + .wcdp-toggle__option::before {
+  opacity: 1;
 }
 
 /* currentColor, not --wcdp-toggle-selected: the selected fill is a faint overlay by

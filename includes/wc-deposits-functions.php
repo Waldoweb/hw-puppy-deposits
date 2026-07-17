@@ -5,7 +5,6 @@ License URI: http://www.gnu.org/licenses/gpl-3.0.html
 */
 
 
-use Automattic\WooCommerce\Internal\DataStores\Orders\CustomOrdersTableController;
 use DepositWP\WC_Deposits_Admin_Order;
 
 if (!defined('ABSPATH')) {
@@ -518,7 +517,8 @@ function wc_deposits_delete_current_schedule($order)
 
     $payments = wcdp_get_order_partial_payments($order->get_id());
 
-    $hpos_enabled = wc_get_container()->get(CustomOrdersTableController::class)->custom_orders_table_usage_is_enabled();
+    // Public API — Automattic\WooCommerce\Internal\* is explicitly not a stable contract.
+    $hpos_enabled = \Automattic\WooCommerce\Utilities\OrderUtil::custom_orders_table_usage_is_enabled();
     if ($hpos_enabled) {
         foreach($payments as $payment){
             $payment->delete();
@@ -649,6 +649,40 @@ function wcdp_get_order_partial_payments($order_id, $args = array(), $object = t
     return $orders;
 }
 
+/**
+ * Order ID currently being edited in wp-admin, for either storage mode.
+ *
+ * HPOS uses admin.php?page=wc-orders&action=edit&id=123; the legacy post table
+ * uses post.php?post=123&action=edit. Reading only `post` silently yielded no
+ * order on HPOS screens.
+ *
+ * @return int Order ID, or 0 when not on an order edit screen.
+ */
+function wcdp_get_admin_screen_order_id()
+{
+    if (isset($_GET['id']) && absint($_GET['id'])) {
+        return absint($_GET['id']);
+    }
+    if (isset($_GET['post']) && absint($_GET['post'])) {
+        return absint($_GET['post']);
+    }
+    return 0;
+}
+
+/**
+ * Count orders of a type by status, correct under both HPOS and the post table.
+ *
+ * @param string $type Order type.
+ * @return array status => count
+ */
+function wcdp_get_order_counts_for_type($type)
+{
+    if (is_callable(array('\Automattic\WooCommerce\Utilities\OrderUtil', 'get_count_for_type'))) {
+        return (array) \Automattic\WooCommerce\Utilities\OrderUtil::get_count_for_type($type);
+    }
+    return (array) wp_count_posts($type);
+}
+
 add_action('woocommerce_after_dashboard_status_widget', 'wcdp_status_widget_partially_paid');
 function wcdp_status_widget_partially_paid()
 {
@@ -657,16 +691,22 @@ function wcdp_status_widget_partially_paid()
     }
     $partially_paid_count = 0;
     foreach (wc_get_order_types('order-count') as $type) {
-        $counts = (array)wp_count_posts($type);
+        // wp_count_posts() reads the post table, which is not authoritative under
+        // HPOS — it under-reports (or reports 0) once orders stop being synced.
+        $counts = wcdp_get_order_counts_for_type($type);
         $partially_paid_count += isset($counts['wc-partially-paid']) ? $counts['wc-partially-paid'] : 0;
     }
+
+    $list_url = \Automattic\WooCommerce\Utilities\OrderUtil::custom_orders_table_usage_is_enabled()
+        ? admin_url('admin.php?page=wc-orders&status=wc-partially-paid')
+        : admin_url('edit.php?post_status=wc-partially-paid&post_type=shop_order');
     ?>
     <li class="partially-paid-orders">
-        <a href="<?php echo admin_url('edit.php?post_status=wc-partially-paid&post_type=shop_order'); ?>">
+        <a href="<?php echo esc_url($list_url); ?>">
             <?php
             printf(
                 _n('<strong>%s order</strong> partially paid', '<strong>%s orders</strong> partially paid', $partially_paid_count, 'woocommerce-deposits'),
-                $partially_paid_count
+                esc_html($partially_paid_count)
             );
             ?>
         </a>
@@ -675,6 +715,7 @@ function wcdp_status_widget_partially_paid()
         #woocommerce_dashboard_status .wc_status_list li.partially-paid-orders a::before {
             content: '\e011';
             color: #ffba00;
+        }
     </style>
     <?php
 }
@@ -758,7 +799,8 @@ function wcdp_is_wcdp_payment_screen()
     $screen = get_current_screen();
     if(!$screen) return false;
 
-    $hpos_enabled = wc_get_container()->get(CustomOrdersTableController::class)->custom_orders_table_usage_is_enabled();
+    // Public API — Automattic\WooCommerce\Internal\* is explicitly not a stable contract.
+    $hpos_enabled = \Automattic\WooCommerce\Utilities\OrderUtil::custom_orders_table_usage_is_enabled();
     $screen_name = $hpos_enabled && function_exists('wc_get_page_screen_id') ? wc_get_page_screen_id('wcdp_payment') : 'wcdp_payment';
     return $screen->id == $screen_name;
 
@@ -773,7 +815,8 @@ function wcdp_is_shop_order_screen()
     $screen = get_current_screen();
     if(!$screen) return false;
 
-    $hpos_enabled = wc_get_container()->get(CustomOrdersTableController::class)->custom_orders_table_usage_is_enabled();
+    // Public API — Automattic\WooCommerce\Internal\* is explicitly not a stable contract.
+    $hpos_enabled = \Automattic\WooCommerce\Utilities\OrderUtil::custom_orders_table_usage_is_enabled();
     $screen_name = $hpos_enabled && function_exists('wc_get_page_screen_id') ? wc_get_page_screen_id('shop-order') : 'shop_order';
     
     
@@ -839,71 +882,78 @@ function wcdp_get_deposit_slider_custom_styles(){
     if ('' !== ($v = $opt('wc_deposits_style_heading_bg')))         { $card_vars[] = "--wcdp-heading-bg:{$v}"; }
     if ('' !== ($v = $opt('wc_deposits_style_heading_color')))      { $card_vars[] = "--wcdp-heading-color:{$v}"; }
     if ('' !== ($v = $opt('wc_deposits_style_option_divider')))     { $card_vars[] = "--wcdp-option-divider:{$v}"; }
-    if ('' !== ($v = $opt('wc_deposits_style_option_selected_bg'))) { $card_vars[] = "--wcdp-option-selected-bg:{$v}"; }
-    if ('' !== ($v = $opt('wc_deposits_style_option_hover_bg')))    { $card_vars[] = "--wcdp-option-hover-bg:{$v}"; }
     if ('' !== ($v = $opt('wc_deposits_style_heading_size')))       { $card_vars[] = "--wcdp-heading-size:" . $wcdp_len($v); }
     if ('' !== ($v = $opt('wc_deposits_style_heading_weight')))     { $card_vars[] = "--wcdp-heading-weight:{$v}"; }
-    if ('' !== ($v = $opt('wc_deposits_style_radio_accent')))       { $card_vars[] = "--wcdp-radio-accent:{$v}"; }
-    if ('' !== ($v = $opt('wc_deposits_style_option_text_color')))  { $card_vars[] = "--wcdp-option-text:{$v}"; }
-    if ('' !== ($v = $opt('wc_deposits_style_subline_color'))) {
-        // A configured subline color should be shown as chosen, not faded to 70% of itself.
-        $card_vars[] = "--wcdp-subline-color:{$v}";
+
+    // Option typography (both styles): the toggle's buttons and the radio rows are the same
+    // choice presented differently. Kept under the --wcdp-toggle-* names their option ids
+    // use; style.css reads them from both the toggle and the radio selectors.
+    if ('' !== ($v = $opt('wc_deposits_style_toggle_label_size'))) { $card_vars[] = "--wcdp-toggle-label-size:{$v}"; }
+    if ('' !== ($v = $opt('wc_deposits_style_toggle_price_size'))) { $card_vars[] = "--wcdp-toggle-price-size:{$v}"; }
+    if ('' !== ($v = $opt('wc_deposits_style_toggle_weight')))     { $card_vars[] = "--wcdp-toggle-weight:{$v}"; }
+
+    // Header/message alignment applies to both styles (heading in either, message in toggle).
+    $t_align = trim((string) get_option('wc_deposits_style_toggle_align', 'left'));
+    if ('center' === $t_align || 'right' === $t_align) {
+        $card_vars[] = "--wcdp-card-align:{$t_align}";
+    }
+
+    // ── Options Style — ONE set of settings drives BOTH the toggle buttons and the radio
+    // rows. Each value is published under both the toggle's and the radio's variable names
+    // so the existing selectors in style.css pick it up. The pre-merge per-mode options (the
+    // deposit_buttons_colors composite from the old Toggle section, and the separate toggle
+    // message color) are read as a fallback, so a store that set them before the merge keeps
+    // its look until it re-saves the Styling tab. ──
+    $selected_bg   = $opt('wc_deposits_style_option_selected_bg');
+    if ('' === $selected_bg)   { $selected_bg = $sel_bg; }     // legacy toggle "primary"
+    $selected_text = $opt('wc_deposits_style_selected_text');
+    if ('' === $selected_text) { $selected_text = $sel_text; } // legacy toggle "secondary"
+    $hover_bg      = $opt('wc_deposits_style_option_hover_bg');
+    $opt_padding   = $opt('wc_deposits_style_toggle_padding');
+    $opt_radius    = $opt('wc_deposits_style_toggle_radius');
+    $sec_size      = $opt('wc_deposits_style_toggle_message_size');
+    $sec_color     = $opt('wc_deposits_style_subline_color');
+    if ('' === $sec_color)     { $sec_color = $opt('wc_deposits_style_toggle_message_color'); } // legacy
+
+    if ('' !== $selected_bg) {
+        $card_vars[] = "--wcdp-option-selected-bg:{$selected_bg}";
+        $card_vars[] = "--wcdp-toggle-selected:{$selected_bg}";
+    }
+    if ('' !== $selected_text) {
+        $card_vars[] = "--wcdp-option-selected-text:{$selected_text}";
+        $card_vars[] = "--wcdp-toggle-text:{$selected_text}";
+    }
+    if ('' !== ($v = $opt('wc_deposits_style_option_text_color'))) {
+        // Base text color for all options in both styles; the selected option overrides it
+        // with Selected Option Text Color (see style.css).
+        $card_vars[] = "--wcdp-option-text:{$v}";
+    }
+    if ('' !== $hover_bg) {
+        $card_vars[] = "--wcdp-option-hover-bg:{$hover_bg}";
+        $card_vars[] = "--wcdp-toggle-hover-bg:{$hover_bg}";
+    }
+    if ('' !== $opt_padding) {
+        $card_vars[] = "--wcdp-option-padding:{$opt_padding}";
+        $card_vars[] = "--wcdp-toggle-padding:{$opt_padding}";
+    }
+    if ('' !== $opt_radius) {
+        $card_vars[] = "--wcdp-toggle-radius:{$opt_radius}";
+    }
+    if ('' !== $sec_size) {
+        $card_vars[] = "--wcdp-message-size:{$sec_size}";
+    }
+    if ('' !== $sec_color) {
+        // A configured secondary color is shown as chosen, not faded to 70% of itself.
+        $card_vars[] = "--wcdp-message-color:{$sec_color}";
+        $card_vars[] = "--wcdp-subline-color:{$sec_color}";
         $card_vars[] = "--wcdp-subline-opacity:1";
     }
 
-    // Toggle settings (only meaningful in toggle mode). A blank value means "keep the
-    // default", which is expressed as the fallback in .wcdp-toggle's custom properties in
-    // style.css — so a blank option simply emits nothing here.
-    $t_label_size   = trim((string) get_option('wc_deposits_style_toggle_label_size', ''));
-    $t_price_size   = trim((string) get_option('wc_deposits_style_toggle_price_size', ''));
-    $t_weight       = trim((string) get_option('wc_deposits_style_toggle_weight', ''));
-    $t_padding      = trim((string) get_option('wc_deposits_style_toggle_padding', ''));
-    $t_radius       = trim((string) get_option('wc_deposits_style_toggle_radius', ''));
-    $t_message_size  = trim((string) get_option('wc_deposits_style_toggle_message_size', ''));
-    $t_message_color = trim((string) get_option('wc_deposits_style_toggle_message_color', ''));
-    $t_align         = trim((string) get_option('wc_deposits_style_toggle_align', 'left'));
-
-    // The toggle's presentation now lives in assets/css/style.css (.wcdp-toggle). PHP's only
-    // job is to publish the merchant's settings as custom properties, which that CSS consumes
-    // with the original defaults as fallbacks — so a blank setting emits no rule at all, and
-    // nothing here needs !important. Until 5.1.0 this block generated ~15 override rules to
-    // fight the vendored candy switch's fixed height, floats, text-shadow and bevel. The
-    // switch is gone; so are they.
-    $toggle_vars = array();
-    if ('' !== $sel_bg)       { $toggle_vars[] = "--wcdp-toggle-selected:{$sel_bg}"; }
-    if ('' !== $sel_text)     { $toggle_vars[] = "--wcdp-toggle-text:{$sel_text}"; }
-    if ('' !== $t_label_size) { $toggle_vars[] = "--wcdp-toggle-label-size:{$t_label_size}"; }
-    if ('' !== $t_price_size) { $toggle_vars[] = "--wcdp-toggle-price-size:{$t_price_size}"; }
-    if ('' !== $t_weight)     { $toggle_vars[] = "--wcdp-toggle-weight:{$t_weight}"; }
-    if ('' !== $t_padding)    { $toggle_vars[] = "--wcdp-toggle-padding:{$t_padding}"; }
-    if ('' !== $t_radius)     { $toggle_vars[] = "--wcdp-toggle-radius:{$t_radius}"; }
-
-    // Card settings that belong to TOGGLE MODE ONLY. They describe the card, but they are
-    // configured in the Styling tab's "Toggle Switch Style" section (note the option names:
-    // wc_deposits_style_toggle_*), and radio mode has never honoured them. Keep them gated:
-    // leaking the toggle's centre alignment into radio mode centers the whole option list,
-    // which reads wrong next to left-aligned radios and has no setting to turn it off.
-    if (!$basic_buttons) {
-        if ('' !== $t_message_size)  { $card_vars[] = "--wcdp-message-size:{$t_message_size}"; }
-        if ('' !== $t_message_color) { $card_vars[] = "--wcdp-message-color:{$t_message_color}"; }
-        if ('center' === $t_align || 'right' === $t_align) {
-            // text-align inherits, so this reaches the heading and message. The toggle labels
-            // are centered by their own rule and the full-width toggle itself is unaffected.
-            $card_vars[] = "--wcdp-card-align:{$t_align}";
-        }
-    }
-
-    // One variable block per element that needs one. The card is the ancestor of the toggle,
-    // so its properties cascade down; the toggle is listed separately as well because the
-    // checkout-mode slider renders a .wcdp-toggle that is NOT inside a card.
+    // One block. The card wraps both the radio options and the toggle in every PHP template
+    // (product page and checkout-mode slider), so its custom properties cascade to both.
     $styles = '';
     if (!empty($card_vars)) {
         $styles .= ".wc-deposits-reserve-card{" . implode(';', $card_vars) . ";}\n";
-    }
-    // Can legitimately be empty now that every toggle property is emitted only when set —
-    // an unconfigured store renders the stylesheet's defaults and needs no block at all.
-    if (!$basic_buttons && !empty($toggle_vars)) {
-        $styles .= ".wc-deposits-reserve-card,.wcdp-toggle{" . implode(';', $toggle_vars) . ";}\n";
     }
 
     return apply_filters('wc_deposits_deposit_slider_custom_styles', $styles);

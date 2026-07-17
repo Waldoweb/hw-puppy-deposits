@@ -934,8 +934,11 @@ class WC_Deposits_Cart
 
 
             $shipping_methods = array();
-            // Get chosen methods for each package to get our totals.
-            foreach (WC()->shipping()->calculate_shipping($cart->get_shipping_packages()) as $key => $package) {
+            // Get chosen methods for each package to get our totals. Read the packages
+            // WC already calculated during this totals run (this hook fires on
+            // woocommerce_after_calculate_totals) instead of re-running rate
+            // calculation — with live-rate methods that was a remote API call per pass.
+            foreach (WC()->shipping()->get_packages() as $key => $package) {
                 $chosen_method = wc_get_chosen_shipping_method_for_package($key, $package);
                 if ($chosen_method) {
                     $shipping_methods[$key] = $package['rates'][$chosen_method];
@@ -1436,6 +1439,10 @@ class WC_Deposits_Cart
         if (!$this->recalculated && !did_action('woocommerce_subscription_cart_before_grouping')) {
             $this->recalculated = true;
             WC()->cart->calculate_totals();
+            // The nested calculate_totals() re-entered this hook with the flag set and
+            // computed deposit_info from the FINAL totals. Re-running the body below
+            // against the same state would just duplicate all the breakdown work.
+            return;
         }
         //each item already assigned , now we can get item deposit and tax deposit from values
         $items_deposit_total = 0.0;

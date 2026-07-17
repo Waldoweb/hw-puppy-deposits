@@ -88,11 +88,14 @@ class WC_Deposits_Emails
     {
 
         if(!is_object($order)) return $enabled;
-        $order = wc_get_order($order->get_id()); // fix for when an order is constructed using new Wc_Order instead of wc_get_order() , in this case the returned order type is 'shop_order'
-
+        // fix for when an order is constructed using new Wc_Order instead of wc_get_order() , in this case the returned order type is 'shop_order'
+        $fetched = wc_get_order($order->get_id());
+        if ($fetched) {
+            $order = $fetched;
+        }
 
         //double check in case a new WC_order constructor is used by another plugin
-       if ($order && $order->get_type() === 'wcdp_payment' || $order->meta_exists('_wc_deposits_payment_type')){ 
+        if ($order->get_type() === 'wcdp_payment' || $order->meta_exists('_wc_deposits_payment_type')){
             $enabled = false;
         }
 
@@ -105,6 +108,7 @@ class WC_Deposits_Emails
 
         if ($order->get_type() !== 'wcdp_payment') return;
         $parent = wc_get_order($order->get_parent_id());
+        if (!$parent) return; // orphaned payment order — nothing to summarise
 
         ?> <p> <?php echo esc_html__('Below is a summary of original order', 'woocommerce-deposits') ?>
         <strong><?php echo $parent->get_order_number(); ?> </strong></p> <?php

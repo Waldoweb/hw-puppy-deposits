@@ -6,7 +6,6 @@ License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
 namespace DepositWP;
 
-use Automattic\WooCommerce\Internal\DataStores\Orders\CustomOrdersTableController;
 
 
 if (!defined('ABSPATH')) {
@@ -30,7 +29,8 @@ class WC_Deposits_Admin_Order
         }
 
         // Hook the order admin page
-        $hpos_enabled = wc_get_container()->get(CustomOrdersTableController::class)->custom_orders_table_usage_is_enabled();
+        // Public API — Automattic\WooCommerce\Internal\* is explicitly not a stable contract.
+        $hpos_enabled = \Automattic\WooCommerce\Utilities\OrderUtil::custom_orders_table_usage_is_enabled();
         if ($hpos_enabled) {
             add_action('admin_print_scripts-woocommerce_page_wc-orders', array($this, 'enqueue_scripts'));
 
@@ -1867,7 +1867,7 @@ class WC_Deposits_Admin_Order
 
         if ($is_order_editor) {
 
-            $order_id = isset($_GET['post']) && !empty($_GET['post']) ? $_GET['post'] : false;
+            $order_id = wcdp_get_admin_screen_order_id();
             $order = $order_id ? wc_get_order($order_id) : false;
             $original_total = $order ? wc_format_localized_price($order->get_meta('_wc_deposits_original_total', true)) : null;
 
@@ -1898,8 +1898,9 @@ class WC_Deposits_Admin_Order
         //identify single order page
         if (isset($_GET['action']) && $_GET['action'] === 'edit') {
 
-
-            $order_id = isset($_GET['post']) && !empty($_GET['post']) ? $_GET['post'] : false;
+            // HPOS edit screens carry the order in `id`, not `post` — reading only
+            // `post` left $order false and localized a null original_total.
+            $order_id = wcdp_get_admin_screen_order_id();
             $order = $order_id ? wc_get_order($order_id) : false;
             $original_total = $order ? wc_format_localized_price($order->get_meta('_wc_deposits_original_total', true)) : null;
 
@@ -1926,17 +1927,20 @@ class WC_Deposits_Admin_Order
      * @return void
      */
     public
-    function admin_order_item_headers()
+    function admin_order_item_headers($order = null)
     {
-
-        if (wp_doing_ajax()) {
-            $order_id = isset($_POST['order_id']) ? $_POST['order_id'] : false;
-        } else {
-            global $post;
-            $order_id = $post ? $post->ID : false;
+        // WooCommerce passes the order to this hook — prefer it. The old `global $post`
+        // fallback resolves to nothing on HPOS screens (orders are not posts), so the
+        // headers silently vanished while admin_order_item_values() still emitted its
+        // two <td>s per row, misaligning the whole order items table.
+        if (!$order instanceof \WC_Order) {
+            if (wp_doing_ajax()) {
+                $order_id = isset($_POST['order_id']) ? absint($_POST['order_id']) : 0;
+            } else {
+                $order_id = wcdp_get_admin_screen_order_id();
+            }
+            $order = $order_id ? wc_get_order($order_id) : false;
         }
-        if (!$order_id) return;
-        $order = wc_get_order($order_id);
         if (!$order || $order->get_type() === 'wcdp_payment') return;
 
 
@@ -2107,7 +2111,7 @@ class WC_Deposits_Admin_Order
         if (!is_a($order, 'WC_Order')) return;
         if ($order) {
             if ($order->get_type() === 'wcdp_payment') {
-                $screen = wc_get_container()->get(CustomOrdersTableController::class)->custom_orders_table_usage_is_enabled()
+                $screen = \Automattic\WooCommerce\Utilities\OrderUtil::custom_orders_table_usage_is_enabled()
                     ? wc_get_page_screen_id('wcdp_payment')
                     : 'wcdp_payment';
 
@@ -2122,7 +2126,7 @@ class WC_Deposits_Admin_Order
 
             } elseif ($order->get_type() === 'shop_order') {
 
-                $screen = wc_get_container()->get(CustomOrdersTableController::class)->custom_orders_table_usage_is_enabled()
+                $screen = \Automattic\WooCommerce\Utilities\OrderUtil::custom_orders_table_usage_is_enabled()
                     ? wc_get_page_screen_id('shop-order')
                     : 'shop_order';
 

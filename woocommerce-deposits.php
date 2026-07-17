@@ -4,7 +4,7 @@
 /**
  * Plugin Name: Puppy Deposits
  * Description: Deposits & partial payments for WooCommerce, tailored for puppy reservations.
- * Version: 5.2.0
+ * Version: 5.3.0
  * Author: Hostetler Web Design
  * Text Domain: woocommerce-deposits
  * Domain Path: /locale
@@ -151,7 +151,8 @@ if (wc_deposits_woocommerce_is_active()):
             // means browsers keep serving stale JS/CSS after an update. It had been stuck at
             // the upstream 4.6.10 since the fork. (DB migrations use the separate
             // wc_deposits_db_version option, so bumping this triggers nothing.)
-            define('WC_DEPOSITS_VERSION', '5.2.0');
+            define('WC_DEPOSITS_VERSION', '5.3.0');
+            define('WC_DEPOSITS_DB_VERSION', '4.0.0'); // bump when a new update_database() migration is added
             define('WC_DEPOSITS_TEMPLATE_PATH', untrailingslashit(plugin_dir_path(__FILE__)) . '/templates/');
             define('WC_DEPOSITS_PLUGIN_PATH', plugin_dir_path(__FILE__));
             define('WC_DEPOSITS_PLUGIN_URL', untrailingslashit(plugins_url(basename(plugin_dir_path(__FILE__)), basename(__FILE__))));
@@ -693,6 +694,13 @@ if (wc_deposits_woocommerce_is_active()):
             if (!is_admin())
                 return;
 
+            // Once the DB is current there is nothing to migrate. Bail before doing any
+            // work — the tail of this method otherwise ran WC()->queue()->cancel_all()
+            // (an Action Scheduler DB query) on EVERY admin page load, forever.
+            if (version_compare(get_option('wc_deposits_db_version', '2.3.9'), WC_DEPOSITS_DB_VERSION, '>=')) {
+                return;
+            }
+
 
             if (version_compare(get_option('wc_deposits_db_version', '2.3.9'), '2.4.0', '<')) {
 
@@ -920,13 +928,23 @@ if (wc_deposits_woocommerce_is_active()):
          */
         public static function plugin_activated()
         {
-            if (function_exists('WC')) {
-                $next = WC()->queue()->get_next('wc_deposits_job_scheduler');
-                if (!$next) {
-                    $timestamp = time() + DAY_IN_SECONDS;
-                    WC()->queue()->cancel_all('wc_deposits_job_scheduler');
-                    WC()->queue()->schedule_recurring($timestamp, DAY_IN_SECONDS, 'wc_deposits_job_scheduler', array(), 'WCDP');
-                }
+            if (!function_exists('WC')) {
+                return;
+            }
+
+            // Hooked to admin `init`, so this fires on every wp-admin request. Throttle
+            // the Action Scheduler lookup to once per day (it still self-heals if the
+            // recurring job ever disappears) instead of querying on every page load.
+            if (get_transient('wc_deposits_job_scheduler_checked')) {
+                return;
+            }
+            set_transient('wc_deposits_job_scheduler_checked', 1, DAY_IN_SECONDS);
+
+            $next = WC()->queue()->get_next('wc_deposits_job_scheduler');
+            if (!$next) {
+                $timestamp = time() + DAY_IN_SECONDS;
+                WC()->queue()->cancel_all('wc_deposits_job_scheduler');
+                WC()->queue()->schedule_recurring($timestamp, DAY_IN_SECONDS, 'wc_deposits_job_scheduler', array(), 'WCDP');
             }
 
         }

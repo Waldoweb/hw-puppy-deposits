@@ -66,17 +66,8 @@ class WC_Deposits_Admin_Settings
 
                 ));
 
-                // Styling tab: show only the option group (radio vs toggle) that matches
-                // the selected presentation style.
                 $inline_js = <<<'JS'
 ( function ( $ ) {
-    function wcdpSyncStyleMode() {
-        var $sel = $( '#wc_deposits_use_basic_radio_buttons' );
-        if ( ! $sel.length ) { return; }
-        var isRadio = 'yes' === $sel.val();
-        $( '#wcdp-style-radio' ).toggle( isRadio );
-        $( '#wcdp-style-toggle' ).toggle( ! isRadio );
-    }
     // Only show the "Pay in Full" Unavailable Message when Force deposit by default = Yes.
     // Cross-tab: the select is on General Settings, the message field on Labels & Text.
     // This works because every tab renders its fields into the DOM and inactive tabs are
@@ -120,11 +111,9 @@ class WC_Deposits_Admin_Settings
         $( '#wcdp-mode-product' ).toggle( ! isCheckout );
     }
     $( function () {
-        wcdpSyncStyleMode();
         wcdpSyncForceMessage();
         wcdpSyncDepositsEnabled();
         wcdpSyncDepositMode();
-        $( document ).on( 'change', '#wc_deposits_use_basic_radio_buttons', wcdpSyncStyleMode );
         $( document ).on( 'change', '#wc_deposits_storewide_deposit_force_deposit', wcdpSyncForceMessage );
         $( document ).on( 'change', '#wc_deposits_site_wide_disable', wcdpSyncDepositsEnabled );
         $( document ).on( 'change', '#wc_deposits_checkout_mode_enabled', wcdpSyncDepositMode );
@@ -425,7 +414,7 @@ JS;
                     'name' => __('Default Selection', 'woocommerce-deposits'),
                     'type' => 'select',
                     'desc_tip' =>true,
-                    'desc' => __('Select the default deposit option.', 'woocommerce-deposits'),
+                    'desc' => __('Choose option selected by default when product first loads', 'woocommerce-deposits'),
                     'id' => 'wc_deposits_default_option',
                     'options' => array(
                         'deposit' => __('Pay Deposit', 'woocommerce-deposits'),
@@ -801,7 +790,7 @@ JS;
         // Section 1 — Card style (the reserve card + heading; applies to both modes).
         $card_settings = array(
             'style_title' => array(
-                'name' => __('Card Style', 'woocommerce-deposits'),
+                'name' => __('Card Styles', 'woocommerce-deposits'),
                 'type' => 'title',
                 'desc' => __('The look of the deposit selector card and its heading on product pages. Leave any field blank to use the theme / the default.', 'woocommerce-deposits'),
                 'id' => 'wc_deposits_style_title',
@@ -811,30 +800,45 @@ JS;
                 'type' => 'text',
                 'class' => 'wcdp-style-color',
                 'placeholder' => 'e.g. #711919 or var(--action)',
-                'id' => 'wc_deposits_style_card_bg',            ),
+                'id' => 'wc_deposits_style_card_bg',
+                'desc' => __('Background fill of the whole deposit card. Blank uses a faint tint of whatever is behind it. Accepts a hex, rgb()/rgba(), or a theme var().', 'woocommerce-deposits'),
+                'desc_tip' => true,
+            ),
             'card_border_color' => array(
                 'name' => __('Card Border Color', 'woocommerce-deposits'),
                 'type' => 'text',
                 'class' => 'wcdp-style-color',
                 'placeholder' => 'e.g. #711919 or var(--action)',
-                'id' => 'wc_deposits_style_card_border_color',            ),
+                'id' => 'wc_deposits_style_card_border_color',
+                'desc' => __('Color of the card\'s outer border. Blank uses a faint gray.', 'woocommerce-deposits'),
+                'desc_tip' => true,
+            ),
             'card_border_width' => array(
                 'name' => __('Card Border Width', 'woocommerce-deposits'),
                 'type' => 'text',
                 'class' => 'wcdp-style-size',
-                'id' => 'wc_deposits_style_card_border_width',                'placeholder' => 'e.g. 1, 2px, var(--…)',
+                'id' => 'wc_deposits_style_card_border_width',
+                'placeholder' => 'e.g. 1, 2px, var(--…)',
+                'desc' => __('Thickness of the card\'s outer border. A bare number is treated as pixels; or give a unit like 2px, or a var(). Blank uses 1px.', 'woocommerce-deposits'),
+                'desc_tip' => true,
             ),
             'card_radius' => array(
                 'name' => __('Card Corner Radius', 'woocommerce-deposits'),
                 'type' => 'text',
                 'class' => 'wcdp-style-size',
-                'id' => 'wc_deposits_style_card_radius',                'placeholder' => 'e.g. 8, 8px, var(--radius)',
+                'id' => 'wc_deposits_style_card_radius',
+                'placeholder' => 'e.g. 8, 8px, var(--radius)',
+                'desc' => __('Corner rounding of the card (and the top corners of the heading band). A bare number is pixels; or a unit (8px), % or a var(). Blank uses 8px.', 'woocommerce-deposits'),
+                'desc_tip' => true,
             ),
             'card_padding' => array(
                 'name' => __('Card Padding', 'woocommerce-deposits'),
                 'type' => 'text',
                 'class' => 'wcdp-style-size',
-                'id' => 'wc_deposits_style_card_padding',                'placeholder' => 'e.g. 16px, 16px 20px, var(--…)',
+                'id' => 'wc_deposits_style_card_padding',
+                'placeholder' => 'e.g. 16px, 16px 20px, var(--…)',
+                'desc' => __('Inner padding of the card body in the Toggle Switch style (the radio rows carry their own spacing). One value = all sides; two values = top/bottom then left/right. Blank uses 1em 1.25em.', 'woocommerce-deposits'),
+                'desc_tip' => true,
             ),
             'heading_bg' => array(
                 'name' => __('Heading Background', 'woocommerce-deposits'),
@@ -842,7 +846,7 @@ JS;
                 'class' => 'wcdp-style-color',
                 'placeholder' => 'e.g. #711919, rgba(0,0,0,.05) or var(--token)',
                 'id' => 'wc_deposits_style_heading_bg',
-                'desc' => __('Fill behind the Card Heading, which renders as a band across the top of the card. Blank uses a faint tint of whatever is behind it. For a strong band, set this to a solid color and set Heading Color to a light one. Radio Buttons style only.', 'woocommerce-deposits'),
+                'desc' => __('Fill behind the Card Heading, which renders as a band across the top of the card. Blank uses a faint tint of whatever is behind it. For a strong band, set this to a solid color and set Heading Color to a light one.', 'woocommerce-deposits'),
                 'desc_tip' => true,
             ),
             'heading_color' => array(
@@ -850,12 +854,18 @@ JS;
                 'type' => 'text',
                 'class' => 'wcdp-style-color',
                 'placeholder' => 'e.g. #711919 or var(--action)',
-                'id' => 'wc_deposits_style_heading_color',            ),
+                'id' => 'wc_deposits_style_heading_color',
+                'desc' => __('Text color of the Card Heading. Blank inherits the surrounding text color.', 'woocommerce-deposits'),
+                'desc_tip' => true,
+            ),
             'heading_size' => array(
                 'name' => __('Heading Font Size', 'woocommerce-deposits'),
                 'type' => 'text',
                 'class' => 'wcdp-style-size',
-                'id' => 'wc_deposits_style_heading_size',                'placeholder' => 'e.g. 17, 1.05em, var(--…)',
+                'id' => 'wc_deposits_style_heading_size',
+                'placeholder' => 'e.g. 17, 1.05em, var(--…)',
+                'desc' => __('Font size of the Card Heading. A bare number is pixels; or a unit (1.05em), or a var(). Blank uses 1.05em.', 'woocommerce-deposits'),
+                'desc_tip' => true,
             ),
             'heading_weight' => array(
                 'name' => __('Heading Font Weight', 'woocommerce-deposits'),
@@ -865,31 +875,64 @@ JS;
                 'desc' => __('Injected as a CSS rule rather than an inline style, so it survives themes and page builders that strip inline font-weight from paragraphs. Default 700 (bold).', 'woocommerce-deposits'),
                 'desc_tip' => true,
             ),
+            // Option typography — applies to BOTH presentation styles (the toggle's two
+            // buttons and the radio rows are the same thing wearing different clothes),
+            // with the same defaults, so the two read alike out of the box.
+            // Option ids keep their wc_deposits_style_toggle_* names: these started in the
+            // Toggle Switch Style section, and renaming ids would orphan stored values.
+            'toggle_label_size' => array(
+                'name' => __('Option Label Text Size', 'woocommerce-deposits'),
+                'type' => 'text',
+                'class' => 'wcdp-style-size',
+                'id' => 'wc_deposits_style_toggle_label_size',
+                'placeholder' => 'e.g. 16px, 1rem, var(--…)',
+                'desc' => __('Size of the "Pay Deposit" / "Pay in Full" label text, in both styles. Blank inherits the surrounding text size.', 'woocommerce-deposits'),
+                'desc_tip' => true,
+            ),
+            'toggle_price_size' => array(
+                'name' => __('Price Text Size', 'woocommerce-deposits'),
+                'type' => 'text',
+                'class' => 'wcdp-style-size',
+                'id' => 'wc_deposits_style_toggle_price_size',
+                'placeholder' => 'e.g. .85em, 1.5rem, 14px, var(--…)',
+                'desc' => __('Size of the amount, e.g. ($200.00), shown in each option. Accepts em, rem, px, % or a var(). Relative units scale with the option label, so <code>.85em</code> keeps the price proportional if the label size changes. Blank keeps each style\'s default.', 'woocommerce-deposits'),
+                'desc_tip' => true,
+            ),
+            'toggle_weight' => array(
+                'name' => __('Option Font Weight', 'woocommerce-deposits'),
+                'type' => 'text',
+                'class' => 'wcdp-style-size',
+                'id' => 'wc_deposits_style_toggle_weight',
+                'placeholder' => 'e.g. 600, bold, var(--…)',
+                'desc' => __('Weight of the option label text, in both styles. Blank uses bold (700).', 'woocommerce-deposits'),
+                'desc_tip' => true,
+            ),
+            // Belongs to the card, not to either mode: --wcdp-option-divider draws the
+            // heading band's bottom border (rendered in BOTH modes) as well as the rule
+            // between radio option rows.
             'option_divider' => array(
                 'name' => __('Divider Color', 'woocommerce-deposits'),
                 'type' => 'text',
                 'class' => 'wcdp-style-color',
                 'placeholder' => 'e.g. rgba(0,0,0,.1), #ddd or var(--token)',
                 'id' => 'wc_deposits_style_option_divider',
-                'desc' => __('The rule under the heading band and between the payment options. Radio Buttons style only.', 'woocommerce-deposits'),
+                'desc' => __('The rule under the heading band, in both styles, and between the payment options in the Radio Buttons style.', 'woocommerce-deposits'),
                 'desc_tip' => true,
             ),
-            'option_selected_bg' => array(
-                'name' => __('Selected Option Background', 'woocommerce-deposits'),
-                'type' => 'text',
-                'class' => 'wcdp-style-color',
-                'placeholder' => 'e.g. rgba(0,0,0,.05), #f7f7f7 or var(--token)',
-                'id' => 'wc_deposits_style_option_selected_bg',
-                'desc' => __('Fill behind the option the customer has selected. Blank uses a faint tint. Radio Buttons style only.', 'woocommerce-deposits'),
-                'desc_tip' => true,
-            ),
-            'option_hover_bg' => array(
-                'name' => __('Option Hover Background', 'woocommerce-deposits'),
-                'type' => 'text',
-                'class' => 'wcdp-style-color',
-                'placeholder' => 'e.g. rgba(0,0,0,.03)',
-                'id' => 'wc_deposits_style_option_hover_bg',
-                'desc' => __('Fill shown while hovering an option. Keep it lighter than the selected background so the selection stays the more prominent of the two. Radio Buttons style only.', 'woocommerce-deposits'),
+            // Option id kept as wc_deposits_style_toggle_align for back-compat: this setting
+            // started life in the Toggle Switch Style section, and renaming the id would
+            // orphan every stored value.
+            'toggle_align' => array(
+                'name' => __('Header/Message Text Alignment', 'woocommerce-deposits'),
+                'type' => 'select',
+                'id' => 'wc_deposits_style_toggle_align',
+                'default' => 'left',
+                'options' => array(
+                    'left' => __('Left', 'woocommerce-deposits'),
+                    'center' => __('Center', 'woocommerce-deposits'),
+                    'right' => __('Right', 'woocommerce-deposits'),
+                ),
+                'desc' => __('Alignment of the card heading, and of the message shown under the toggle. Option rows keep their own alignment.', 'woocommerce-deposits'),
                 'desc_tip' => true,
             ),
             'style_end' => array(
@@ -898,13 +941,16 @@ JS;
             ),
         );
 
-        // Section 2 — Selection style (the presentation dropdown + its mode-specific fields).
-        $selection_settings = array(
-            'style_selection_title' => array(
-                'name' => __('Selection Style', 'woocommerce-deposits'),
+        // Section 2 — Options Style. ONE section for both presentations: the dropdown picks
+        // Radio Buttons or Toggle Switch, and every setting below applies to whichever is
+        // chosen. The old separate "Radio Button Style" and "Toggle Switch Style" sections
+        // (and the two-field Selected Button color composite) were merged here.
+        $options_settings = array(
+            'style_options_title' => array(
+                'name' => __('Options Styles', 'woocommerce-deposits'),
                 'type' => 'title',
-                'desc' => __('How the Pay Deposit / Pay in Full choice is presented.', 'woocommerce-deposits'),
-                'id' => 'wc_deposits_style_selection_title',
+                'desc' => __('How the Pay Deposit / Pay in Full options look. These apply to whichever presentation you pick. Leave any field blank to use the default.', 'woocommerce-deposits'),
+                'id' => 'wc_deposits_style_options_title',
             ),
             'presentation' => array(
                 'name' => __('Deposit Option Style', 'woocommerce-deposits'),
@@ -915,27 +961,25 @@ JS;
                     'yes' => __('Radio Buttons', 'woocommerce-deposits'),
                     'no' => __('Toggle Switch', 'woocommerce-deposits'),
                 ),
+                'desc' => __('How the choice is presented: a two-option Toggle Switch, or a stacked list of Radio Buttons. Every setting below applies to both.', 'woocommerce-deposits'),
+                'desc_tip' => true,
             ),
-            'style_selection_end' => array(
-                'type' => 'sectionend',
-                'id' => 'wc_deposits_style_selection_end',
-            ),
-        );
-
-        // Radio-mode only.
-        $radio_settings = array(
-            'style_radio_title' => array(
-                'name' => __('Radio Button Style', 'woocommerce-deposits'),
-                'type' => 'title',
-                'desc' => __('Shown when Deposit Option Style is set to Radio Buttons.', 'woocommerce-deposits'),
-                'id' => 'wc_deposits_style_radio_title',
-            ),
-            'radio_accent' => array(
-                'name' => __('Radio Accent Color', 'woocommerce-deposits'),
+            'selected_bg' => array(
+                'name' => __('Selected Option Background', 'woocommerce-deposits'),
                 'type' => 'text',
                 'class' => 'wcdp-style-color',
-                'placeholder' => 'e.g. #711919 or var(--action)',
-                'id' => 'wc_deposits_style_radio_accent',                'desc' => __('Color of the selected radio dot.', 'woocommerce-deposits'),
+                'placeholder' => 'e.g. #711919, rgba(0,0,0,.05) or var(--token)',
+                'id' => 'wc_deposits_style_option_selected_bg',
+                'desc' => __('Fill behind the SELECTED option (the toggle button, or the radio row). If you set a dark color, set a light Selected Option Text Color too. Blank uses a faint tint. In toggle mode the unselected button is drawn automatically as an 18% tint of this.', 'woocommerce-deposits'),
+                'desc_tip' => true,
+            ),
+            'selected_text' => array(
+                'name' => __('Selected Option Text Color', 'woocommerce-deposits'),
+                'type' => 'text',
+                'class' => 'wcdp-style-color',
+                'placeholder' => 'e.g. #ffffff or var(--token)',
+                'id' => 'wc_deposits_style_selected_text',
+                'desc' => __('Text and checkmark color on the SELECTED option, which has the fill above to contrast against. Blank inherits the surrounding text color. Unselected options use the Option Text Color below.', 'woocommerce-deposits'),
                 'desc_tip' => true,
             ),
             'option_text_color' => array(
@@ -943,123 +987,67 @@ JS;
                 'type' => 'text',
                 'class' => 'wcdp-style-color',
                 'placeholder' => 'e.g. #711919 or var(--action)',
-                'id' => 'wc_deposits_style_option_text_color',            ),
-            'subline_color' => array(
-                'name' => __('Balance Subline Color', 'woocommerce-deposits'),
+                'id' => 'wc_deposits_style_option_text_color',
+                'desc' => __('Base text color for the options, both styles. The selected option overrides this with the Selected Option Text Color above. Blank inherits the theme\'s text color. Tip: for a dark Selected Option Background, set the Selected Option Text Color light and leave this at your normal (dark) text.', 'woocommerce-deposits'),
+                'desc_tip' => true,
+            ),
+            'option_hover_bg' => array(
+                'name' => __('Option Hover Background', 'woocommerce-deposits'),
                 'type' => 'text',
                 'class' => 'wcdp-style-color',
-                'placeholder' => 'e.g. #711919 or var(--action)',
-                'id' => 'wc_deposits_style_subline_color',                'desc' => __('Color of the "balance of $X due…" line under the deposit option.', 'woocommerce-deposits'),
+                'placeholder' => 'e.g. rgba(0,0,0,.03)',
+                'id' => 'wc_deposits_style_option_hover_bg',
+                'desc' => __('Fill shown while hovering an unselected option. Keep it lighter than the selected background. Blank uses each style\'s default (the toggle derives a 22% tint of the selected color).', 'woocommerce-deposits'),
                 'desc_tip' => true,
             ),
-            'style_radio_end' => array(
-                'type' => 'sectionend',
-                'id' => 'wc_deposits_style_radio_end',
-            ),
-        );
-
-        // Toggle-mode only (reuses the existing custom color field).
-        $toggle_settings = array(
-            'style_toggle_title' => array(
-                'name' => __('Toggle Switch Style', 'woocommerce-deposits'),
-                'type' => 'title',
-                'desc' => __('Shown when Deposit Option Style is set to Toggle Switch.', 'woocommerce-deposits'),
-                'id' => 'wc_deposits_style_toggle_title',
-            ),
-            'buttons_color' => array(
-                'type' => 'deposit_buttons_color',
-                'class' => 'deposit_buttons_color_html',
-            ),
-            'toggle_label_size' => array(
-                'name' => __('Button Label Text Size', 'woocommerce-deposits'),
-                'type' => 'text',
-                'class' => 'wcdp-style-size',
-                'id' => 'wc_deposits_style_toggle_label_size',                'placeholder' => 'e.g. 16px, 1rem, var(--…)',
-            ),
-            'toggle_price_size' => array(
-                'name' => __('Price Text Size', 'woocommerce-deposits'),
-                'type' => 'text',
-                'class' => 'wcdp-style-size',
-                'id' => 'wc_deposits_style_toggle_price_size',                'placeholder' => 'e.g. .85em, 1.5rem, 14px, var(--…)',
-                'desc' => __('Size of the amount, e.g. ($200.00), shown in each button. Accepts em, rem, px, % or a var(). Relative units scale with the button label, so <code>.85em</code> keeps the price proportional if the label size changes. Blank uses <code>.85em</code>.', 'woocommerce-deposits'),
-                'desc_tip' => true,
-            ),
-            'toggle_weight' => array(
-                'name' => __('Button Font Weight', 'woocommerce-deposits'),
-                'type' => 'text',
-                'class' => 'wcdp-style-size',
-                'id' => 'wc_deposits_style_toggle_weight',                'placeholder' => 'e.g. 600, bold, var(--…)',
-            ),
-            'toggle_padding' => array(
-                'name' => __('Button Padding', 'woocommerce-deposits'),
-                'type' => 'text',
-                'class' => 'wcdp-style-size',
-                'id' => 'wc_deposits_style_toggle_padding',                'placeholder' => 'e.g. 12px 24px',
-                'desc' => __('One value = all sides; two values = top/bottom then left/right. This sets the button\'s height, so leaving it blank uses the <code>12px 24px</code> default rather than no padding.', 'woocommerce-deposits'),
-                'desc_tip' => true,
-            ),
-            'toggle_radius' => array(
-                'name' => __('Button Corner Radius', 'woocommerce-deposits'),
+            'option_radius' => array(
+                'name' => __('Option Corner Radius', 'woocommerce-deposits'),
                 'type' => 'text',
                 'class' => 'wcdp-style-size',
                 'id' => 'wc_deposits_style_toggle_radius',
                 'placeholder' => 'e.g. 8px, var(--radius)',
+                'desc' => __('Corner rounding of the options — the toggle buttons, and the radio selected-row highlight. A bare number is pixels; or a unit (8px), % or a var(). Blank keeps each default (toggle 3px, radio square).', 'woocommerce-deposits'),
+                'desc_tip' => true,
             ),
-            'toggle_message_size' => array(
-                'name' => __('Message Text Size', 'woocommerce-deposits'),
+            'option_padding' => array(
+                'name' => __('Option Padding', 'woocommerce-deposits'),
+                'type' => 'text',
+                'class' => 'wcdp-style-size',
+                'id' => 'wc_deposits_style_toggle_padding',
+                'placeholder' => 'e.g. 12px 24px',
+                'desc' => __('Inner padding of each option (toggle button / radio row). One value = all sides; two = top/bottom then left/right. Blank keeps each style\'s default.', 'woocommerce-deposits'),
+                'desc_tip' => true,
+            ),
+            'secondary_size' => array(
+                'name' => __('Secondary Text Size', 'woocommerce-deposits'),
                 'type' => 'text',
                 'class' => 'wcdp-style-size',
                 'id' => 'wc_deposits_style_toggle_message_size',
                 'placeholder' => 'e.g. 14px, var(--…)',
-                'desc' => __('Font size of the message shown below the toggle (e.g. "You\'ll only pay $200 today…").', 'woocommerce-deposits'),
+                'desc' => __('Font size of the secondary line — the "balance of $X due…" line under a radio option, and the message under the toggle. Blank uses the default.', 'woocommerce-deposits'),
                 'desc_tip' => true,
             ),
-            'toggle_message_color' => array(
-                'name' => __('Message Text Color', 'woocommerce-deposits'),
+            'secondary_color' => array(
+                'name' => __('Secondary Text Color', 'woocommerce-deposits'),
                 'type' => 'text',
                 'class' => 'wcdp-style-color',
-                'id' => 'wc_deposits_style_toggle_message_color',
                 'placeholder' => 'e.g. #711919 or var(--base)',
-                'desc' => __('Color of the message shown below the toggle.', 'woocommerce-deposits'),
+                'id' => 'wc_deposits_style_subline_color',
+                'desc' => __('Color of the secondary line — the balance line under a radio option, and the message under the toggle. Blank inherits (slightly faded).', 'woocommerce-deposits'),
                 'desc_tip' => true,
             ),
-            'toggle_align' => array(
-                'name' => __('Message Text Alignment', 'woocommerce-deposits'),
-                'type' => 'select',
-                'id' => 'wc_deposits_style_toggle_align',
-                'default' => 'left',
-                'options' => array(
-                    'left' => __('Left', 'woocommerce-deposits'),
-                    'center' => __('Center', 'woocommerce-deposits'),
-                    'right' => __('Right', 'woocommerce-deposits'),
-                ),
-                'desc' => __('Alignment of the heading and the message shown around the toggle.', 'woocommerce-deposits'),
-                'desc_tip' => true,
-            ),
-            'style_toggle_end' => array(
+            'style_options_end' => array(
                 'type' => 'sectionend',
-                'id' => 'wc_deposits_style_toggle_end',
+                'id' => 'wc_deposits_style_options_end',
             ),
         );
         ?>
         <div id="styling" class="wcdp-tab-content wrap <?php echo $class; ?>">
-            <?php // Selection Style leads: it holds the presentation dropdown, which decides
-                  // which of the two mode groups below it is shown. Card Style comes last —
-                  // it is the frame around the control rather than the control itself.
-                  // Only the render order changes here; #wcdp-style-radio / #wcdp-style-toggle
-                  // are still the ids wcdpSyncStyleMode() shows and hides. ?>
-            <div id="wcdp-style-selection">
-                <?php woocommerce_admin_fields($selection_settings); ?>
-            </div>
-            <div id="wcdp-style-radio" class="wcdp-style-mode-group">
-                <?php woocommerce_admin_fields($radio_settings); ?>
-            </div>
-            <div id="wcdp-style-toggle" class="wcdp-style-mode-group">
-                <?php woocommerce_admin_fields($toggle_settings); ?>
-            </div>
-            <div id="wcdp-style-card">
-                <?php woocommerce_admin_fields($card_settings); ?>
-            </div>
+            <?php // Options Style leads (presentation dropdown + how the options look); Card
+                  // Style — the frame around them — comes second. Every setting applies to
+                  // both presentations, so there is no per-mode show/hide any more. ?>
+            <?php woocommerce_admin_fields($options_settings); ?>
+            <?php woocommerce_admin_fields($card_settings); ?>
             <?php do_action('wc_deposits_settings_tabs_styling_tab'); ?>
         </div>
         <?php
@@ -1270,7 +1258,7 @@ JS;
                     dateFormat: "dd-mm-yy",
                     minDate: new Date()
 
-                }).datepicker("setDate", "<?php echo $reminder_date; ?>");
+                }).datepicker("setDate", "<?php echo esc_js($reminder_date); ?>");
             });
         </script>
         <p>
@@ -1305,7 +1293,7 @@ JS;
         </tr>
         <tr class="">
             <th scope="row"
-                class="titledesc"><label for="wc_deposits_deposit_buttons_colors_secondary"><?php echo __('Selected Button Text Color', 'woocommerce-deposits'); echo wc_help_tip( __('Text color of the SELECTED option only, including its amount — that is the one with a fill behind it to contrast against. The unselected option inherits your theme\'s normal text color, because a 20% tint is light and a light label would be unreadable on it.', 'woocommerce-deposits') ); ?></label></th>
+                class="titledesc"><label for="wc_deposits_deposit_buttons_colors_secondary"><?php echo __('Selected Button Text Color', 'woocommerce-deposits'); echo wc_help_tip( __('Text color of the selected option, including its amount. Leave blank to pick black or white automatically for contrast against the selected background — this works even when the background is a theme color token. The unselected option always auto-contrasts against its lighter tint.', 'woocommerce-deposits') ); ?></label></th>
             <td class="forminp forminp-checkbox">
                 <fieldset>
                     <input type="text" id="wc_deposits_deposit_buttons_colors_secondary" name="wc_deposits_deposit_buttons_colors_secondary" class="wcdp-style-color"
@@ -1521,13 +1509,17 @@ JS;
         $settings['wc_deposits_style_toggle_padding']    = $this->wcdp_sanitize_style_size('wc_deposits_style_toggle_padding');
         $settings['wc_deposits_style_toggle_radius']     = $this->wcdp_sanitize_style_size('wc_deposits_style_toggle_radius');
         $settings['wc_deposits_style_toggle_message_size'] = $this->wcdp_sanitize_style_size('wc_deposits_style_toggle_message_size');
-        $settings['wc_deposits_style_toggle_message_color'] = $this->wcdp_sanitize_style_color('wc_deposits_style_toggle_message_color');
         $align = isset($_POST['wc_deposits_style_toggle_align']) ? $_POST['wc_deposits_style_toggle_align'] : 'left';
         $settings['wc_deposits_style_toggle_align'] = in_array($align, array('left', 'center', 'right'), true) ? $align : 'left';
         $settings['wc_deposits_full_unavailable_text']   = isset($_POST['wc_deposits_full_unavailable_text'])
             ? sanitize_text_field(stripslashes($_POST['wc_deposits_full_unavailable_text']))
             : '';
-        $settings['wc_deposits_style_radio_accent']      = $this->wcdp_sanitize_style_color('wc_deposits_style_radio_accent');
+        // Options Style (unified). selected_text is new; option_selected_bg/hover, subline
+        // and option_text are shared. The old wc_deposits_deposit_buttons_colors composite,
+        // wc_deposits_style_toggle_message_color and wc_deposits_style_radio_accent are no
+        // longer saved (their fields were removed) — left in the DB untouched as emitter
+        // fallbacks so a pre-merge store keeps its look until it re-saves with new values.
+        $settings['wc_deposits_style_selected_text']     = $this->wcdp_sanitize_style_color('wc_deposits_style_selected_text');
         $settings['wc_deposits_style_option_text_color'] = $this->wcdp_sanitize_style_color('wc_deposits_style_option_text_color');
         $settings['wc_deposits_style_subline_color']     = $this->wcdp_sanitize_style_color('wc_deposits_style_subline_color');
 
@@ -1558,10 +1550,9 @@ JS;
             ? stripslashes($_POST['wc_deposits_payment_link_text']) 
             : 'Payment Link';
     
-        $settings['wc_deposits_deposit_buttons_colors'] = array(
-            'primary' => $this->wcdp_sanitize_style_color('wc_deposits_deposit_buttons_colors_primary'),
-            'secondary' => $this->wcdp_sanitize_style_color('wc_deposits_deposit_buttons_colors_secondary'),
-        );
+        // (wc_deposits_deposit_buttons_colors is no longer saved — its two fields were merged
+        // into Selected Option Background + Selected Option Text Color. The stored value is
+        // left untouched so the emitter can still fall back to it for a pre-merge store.)
 
         // Deposit Mode. Still the same yes/no option the old "Enable checkout mode" select
         // wrote, so wcdp_checkout_mode() and every stored value carry over untouched.
@@ -1615,8 +1606,13 @@ JS;
         $settings ['wc_deposits_disallowed_gateways_for_second_payment'] = isset($_POST['wc_deposits_disallowed_gateways_for_second_payment']) ? $_POST['wc_deposits_disallowed_gateways_for_second_payment'] : array();
 
 
-        //custom reminder date
-        $settings['wc_deposits_reminder_datepicker'] = isset($_POST['wc_deposits_reminder_datepicker']) ? $_POST['wc_deposits_reminder_datepicker'] : '';
+        //custom reminder date — strict dd-mm-yy(yy) format only; this value is
+        //re-emitted inside admin inline JS, so nothing else may be stored.
+        $reminder_datepicker = isset($_POST['wc_deposits_reminder_datepicker']) ? sanitize_text_field(wp_unslash($_POST['wc_deposits_reminder_datepicker'])) : '';
+        if (!preg_match('/^\d{1,2}-\d{1,2}-\d{2,4}$/', $reminder_datepicker)) {
+            $reminder_datepicker = '';
+        }
+        $settings['wc_deposits_reminder_datepicker'] = $reminder_datepicker;
 
 
         //storewide deposit settings

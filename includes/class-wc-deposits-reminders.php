@@ -167,10 +167,21 @@ class WC_Deposits_Reminders
             // Using wc_get_orders to query orders
             $partially_paid_orders = wc_get_orders($args);
 
+            $reminder_day = date('Y-m-d', strtotime($reminder_date));
+
             foreach ($partially_paid_orders as $order) {
                 $order_id = $order->get_id();
 
+                // Guard against a duplicate/retried cron run re-emailing every
+                // partially-paid order: send once per configured reminder date.
+                if ($order->get_meta('_wc_deposits_datepicker_reminder_sent') === $reminder_day) {
+                    continue;
+                }
+
                 do_action('woocommerce_deposits_second_payment_reminder_email', $order_id);
+
+                $order->update_meta_data('_wc_deposits_datepicker_reminder_sent', $reminder_day);
+                $order->save();
             }
 
         }
@@ -186,12 +197,12 @@ class WC_Deposits_Reminders
 
 
         $reminder_duration_option = get_option('wc_deposits_second_payment_reminder_duration');
-        $reminder_duration = intval($reminder_duration_option);
-        $reminder_duration = $reminder_duration * 24 * 60 * 60;
-        $reminder_duration = current_time('timestamp') + $reminder_duration;
 
-        
-     
+        // Not configured — never send.
+        if ('' === trim((string) $reminder_duration_option)) {
+            return;
+        }
+
         // Define your meta query arguments
         $args = array(
             'status' => 'partially-paid', // Order status
@@ -233,7 +244,11 @@ class WC_Deposits_Reminders
                 $duration_since_deposit_paid = round($duration_since_deposit_paid / (60 * 60 * 24));
       
 
-                if (intval($duration_since_deposit_paid) <= intval($reminder_duration_option)) {
+                // Send once the configured number of days has ELAPSED since the deposit
+                // was paid. (This was previously `<=`, which sent the reminder on the
+                // first cron run after payment and never for orders already older than
+                // the window.) The `_email_sent` marker above ensures it fires once.
+                if (intval($duration_since_deposit_paid) >= intval($reminder_duration_option)) {
 
                     do_action('woocommerce_deposits_second_payment_reminder_email', $order_id);
                     $order->update_meta_data('_wc_deposits_second_payment_reminder_email_sent', 'yes');

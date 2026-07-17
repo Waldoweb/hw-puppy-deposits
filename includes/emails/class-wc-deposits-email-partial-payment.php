@@ -53,14 +53,19 @@ if (!class_exists('WC_Deposits_Email_Partial_Payment')):
 
             if(!$order_id) return;
             $order = wc_get_order($order_id);
-        
-        
-            $order = wc_get_order($order_id);
             if ($order && $order->get_type() === 'wcdp_payment') {
                 $parent = wc_get_order($order->get_parent_id());
+                if(!$parent) return; // orphaned payment order
+
                 // Skip when the order is now fully settled (processing/completed, or the
-                // custom fully-paid status) — the full-payment email covers that case.
-                if($parent->get_status() !== 'processing' && $parent->get_status() !== 'completed' && $parent->get_status() !== 'fully-paid'){
+                // CONFIGURED fully-paid target status) — the full-payment email covers
+                // that case.
+                $settled_statuses = array('processing', 'completed', 'fully-paid');
+                $configured_fully_paid = get_option('wc_deposits_order_fully_paid_status', 'fully-paid');
+                if ($configured_fully_paid) {
+                    $settled_statuses[] = preg_replace('/^wc-/', '', $configured_fully_paid);
+                }
+                if(!in_array($parent->get_status(), $settled_statuses, true)){
                     $this->partial_payment = $order;
                     $this->trigger($parent->get_id());
                 }

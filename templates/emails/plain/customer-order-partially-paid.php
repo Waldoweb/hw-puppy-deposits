@@ -6,8 +6,15 @@ if (!defined('ABSPATH')) {
 
 echo $email_heading . "\n\n";
 
-echo $payment_message;
+// Mirror the HTML template: the classes pass $email_text and $payment_text
+// (this template previously echoed an undefined $payment_message).
+echo wp_strip_all_tags(wptexturize($email_text)) . "\n\n";
 
+if ($order->needs_payment() && get_option('wc_deposits_remaining_payable', 'yes') === 'yes' && !empty($payment_text)) {
+    // Convert the {wcdp_payment_link} anchor to "text: url" so the link survives plain text.
+    $plain_payment_text = preg_replace('/<a\s[^>]*href=(["\'])(.*?)\1[^>]*>(.*?)<\/a>/i', '$3: $2', $payment_text);
+    echo wp_strip_all_tags(wptexturize($plain_payment_text)) . "\n\n";
+}
 
 echo "****************************************************\n\n";
 

@@ -18,6 +18,11 @@
 defined( 'ABSPATH' ) || exit;
 $partial_payment = $order;
 $order = wc_get_order( $partial_payment->get_parent_id() );
+if ( ! $order ) {
+    // Orphaned payment order (parent deleted) — nothing meaningful to render.
+    wc_print_notice( esc_html__( 'This payment is no longer available. Please contact us for assistance.', 'woocommerce-deposits' ), 'error' );
+    return;
+}
 $totals = $order->get_order_item_totals(); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 ?>
 

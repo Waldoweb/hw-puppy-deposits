@@ -100,10 +100,12 @@ if (!class_exists('WC_Deposits_Email_Customer_Remaining_Reminder')) :
 
             if ($order_id) {
                 $this->object = wc_get_order($order_id);
+                if (!$this->object) return; // stale/deleted order id from the reminder cron
 
                 $this->recipient = $this->object->get_billing_email();
 
-                if (is_a('WCDP_Payment', $partial_payment)) {
+                // (arguments were previously reversed, so the passed payment was never used)
+                if (is_a($partial_payment, 'WCDP_Payment')) {
                     $this->partial_payment = $partial_payment;
                 }
                 $this->placeholders['{order_date}'] = wc_format_datetime($this->object->get_date_created());
@@ -160,7 +162,7 @@ if (!class_exists('WC_Deposits_Email_Customer_Remaining_Reminder')) :
         function get_content_plain()
         {
 
-            return wc_get_template_html($this->template_html, array(
+            return wc_get_template_html($this->template_plain, array(
                 'order' => $this->object,
                 'email_heading' => $this->get_heading(),
                 'email_text' => $this->get_email_text(),

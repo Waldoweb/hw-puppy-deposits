@@ -284,8 +284,7 @@ class WC_Deposits_Admin_Product
                 <?php
                 if(!empty($reminder_date)){
                 ?>
-                var reminder_date = "<?php  echo $reminder_date ?>";
-                console.log(reminder_date);
+                var reminder_date = "<?php echo esc_js($reminder_date); ?>";
                 var parts = reminder_date.split("-");
 
 
@@ -308,13 +307,25 @@ class WC_Deposits_Admin_Product
         echo ob_get_clean();
     }
 
+    /**
+     * Sanitize the product reminder date — strict dd-mm-yy(yy) only. The stored
+     * value is re-emitted inside admin inline JS, so nothing else may be saved.
+     *
+     * @return string Sanitized date, or '' when invalid/absent.
+     */
+    protected function sanitize_reminder_datepicker()
+    {
+        $date = isset($_POST['wc_deposits_reminder_datepicker']) ? sanitize_text_field(wp_unslash($_POST['wc_deposits_reminder_datepicker'])) : '';
+        return preg_match('/^\d{1,2}-\d{1,2}-\d{2,4}$/', $date) ? $date : '';
+    }
+
     function process_reminder_datepicker_values($post_id)
     {
 
         $product = wc_get_product($post_id);
 
         //custom reminder date
-        $datepicker_reminder = isset($_POST['wc_deposits_reminder_datepicker']) ? $_POST['wc_deposits_reminder_datepicker'] : '';
+        $datepicker_reminder = $this->sanitize_reminder_datepicker();
 
         if (!empty($datepicker_reminder)) {
             $product->update_meta_data('_wc_deposits_pbr_reminder_date', $datepicker_reminder);
@@ -343,7 +354,7 @@ class WC_Deposits_Admin_Product
         $amount_type = isset($_POST['_wc_deposits_amount_type']) ? $_POST['_wc_deposits_amount_type'] : 'fixed';
         $amount = isset($_POST['_wc_deposits_deposit_amount']) &&
         is_numeric($_POST['_wc_deposits_deposit_amount']) ? floatval($_POST['_wc_deposits_deposit_amount']) : 0.0;
-        $datepicker_reminder = isset($_POST['wc_deposits_reminder_datepicker']) ? $_POST['wc_deposits_reminder_datepicker'] : '';
+        $datepicker_reminder = $this->sanitize_reminder_datepicker();
         $payment_plans = isset($_POST['_wc_deposits_payment_plans']) ? $_POST['_wc_deposits_payment_plans'] : array();
 
 

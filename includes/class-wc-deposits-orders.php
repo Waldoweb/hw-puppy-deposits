@@ -6,7 +6,7 @@ License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
 namespace DepositWP;
 
-use Automattic\WooCommerce\Internal\DataStores\Orders\CustomOrdersTableController;
+use Automattic\WooCommerce\Utilities\OrderUtil;
 use WC_Order, WC_Order_Item_Fee, WC_Geolocation, WP_Error, WCDP_Payment;
 
 if (!defined('ABSPATH')) {
@@ -80,9 +80,20 @@ class WC_Deposits_Orders
         add_action('woocommerce_thankyou', array($this, 'disable_order_again_for_partial_payments'), 0);
         add_action('woocommerce_order_details_after_order_table', array($this, 'output_myaccount_partial_payments_summary'));
 
+        // Legacy (post-table) order lifecycle. Under HPOS orders are not posts, so
+        // these never fire for order operations — the woocommerce_* hooks below cover
+        // that case. They are registered only when HPOS is enabled to avoid running
+        // the child cleanup twice while posts and orders are kept in sync.
         add_action('delete_post', array($this, 'delete_partial_payments'), 9);
         add_action('wp_trash_post', array($this, 'trash_partial_payments'));
         add_action('untrashed_post', array($this, 'untrash_partial_payments'));
+
+        if (\Automattic\WooCommerce\Utilities\OrderUtil::custom_orders_table_usage_is_enabled()) {
+            add_action('woocommerce_before_delete_order', array($this, 'delete_partial_payments'), 9);
+            add_action('woocommerce_before_trash_order', array($this, 'trash_partial_payments'));
+            add_action('woocommerce_untrash_order', array($this, 'untrash_partial_payments'));
+        }
+
         add_filter('woocommerce_cancel_unpaid_order', array($this, 'cancel_partial_payments'), 10, 2);
 
         add_filter('pre_trash_post', array($this, 'prevent_user_trash_partial_payments'), 10, 2);
@@ -488,6 +499,68 @@ class WC_Deposits_Orders
         return $trash;
     }
 
+    /**
+     * Whether order storage is HPOS (custom order tables). Child wcdp_payment orders
+     * are not posts under HPOS, so wp_trash_post()/wp_delete_post()/wp_untrash_post()
+     * do not operate on them — the CRUD path must be used instead.
+     *
+     * @return bool
+     */
+    protected function orders_are_hpos()
+    {
+        return \Automattic\WooCommerce\Utilities\OrderUtil::custom_orders_table_usage_is_enabled();
+    }
+
+    /**
+     * Trash / delete / untrash a child payment order by id, using the storage-correct
+     * mechanism. $op is 'trash', 'delete' or 'untrash'.
+     *
+     * @param int    $payment_id
+     * @param string $op
+     */
+    protected function apply_child_payment_op($payment_id, $op)
+    {
+        $payment_id = absint($payment_id);
+        if (!$payment_id) {
+            return;
+        }
+
+        if ($this->orders_are_hpos()) {
+            $child = wc_get_order($payment_id);
+            if (!$child) {
+                return;
+            }
+            switch ($op) {
+                case 'delete':
+                    $child->delete(true); // force delete
+                    break;
+                case 'trash':
+                    $child->delete(false); // HPOS: moves the order to trash
+                    break;
+                case 'untrash':
+                    $data_store = $child->get_data_store();
+                    if (method_exists($data_store, 'untrash_order')) {
+                        $data_store->untrash_order($child);
+                    }
+                    break;
+            }
+            return;
+        }
+
+        // Legacy post storage.
+        switch ($op) {
+            case 'delete':
+                wp_delete_post($payment_id, true);
+                break;
+            case 'trash':
+                wp_trash_post($payment_id);
+                break;
+            case 'untrash':
+                wp_untrash_post($payment_id);
+                break;
+        }
+    }
+
     function untrash_partial_payments($id)
     {
 
@@ -510,7 +583,7 @@ class WC_Deposits_Orders
 
                     if (isset($payment['id']) && is_numeric($payment['id'])) {
 
-                        wp_untrash_post($payment['id']);
+                        $this->apply_child_payment_op($payment['id'], 'untrash');
                     }
                 }
             }
@@ -541,7 +614,7 @@ class WC_Deposits_Orders
 
                     if (isset($payment['id']) && is_numeric($payment['id'])) {
 
-                        wp_trash_post(absint($payment['id']));
+                        $this->apply_child_payment_op($payment['id'], 'trash');
                     }
                 }
                 add_filter('pre_trash_post', array(WCDP()->orders, 'prevent_user_trash_partial_payments'), 10, 2);
@@ -572,7 +645,7 @@ class WC_Deposits_Orders
 
                     if (isset($payment['id']) && is_numeric($payment['id'])) {
 
-                        wp_delete_post(absint($payment['id']), true);
+                        $this->apply_child_payment_op($payment['id'], 'delete');
                     }
                 }
             }
@@ -994,6 +1067,10 @@ class WC_Deposits_Orders
     {
         $order = wc_get_order($order_id);
 
+        // Bail without touching $reduce if the order can't be loaded — dereferencing
+        // false here would fatal and abort the gateway's payment-complete flow.
+        if (!$order) return $reduce;
+
         if ($order->get_type() === 'wcdp_payment') return false;
 
 
@@ -1325,10 +1402,12 @@ class WC_Deposits_Orders
                 $partial_payment_id = absint(get_query_var($pay_slug));
                 $partial_payment = wc_get_order($partial_payment_id);
 
-                $total_rows['paid_today'] = array(
-                    'label' => $to_pay_text,
-                    'value' => wc_price($partial_payment->get_total(), array('currency' => $order->get_currency()))
-                );
+                if ($partial_payment) {
+                    $total_rows['paid_today'] = array(
+                        'label' => $to_pay_text,
+                        'value' => wc_price($partial_payment->get_total(), array('currency' => $order->get_currency()))
+                    );
+                }
             }
 
             // Restate "Total" the way the cart and checkout do — what was paid now,
@@ -1467,6 +1546,23 @@ class WC_Deposits_Orders
 
                 // Remove all items - we will re-add them later.
                 $order->remove_order_items();
+
+                // Also remove the partial-payment child orders created on the previous
+                // attempt — create_order_partial_payments_from_cart() builds a fresh set
+                // below, and the old ones would otherwise be orphaned (no longer in the
+                // schedule meta) and double-count in balance reporting. Paid children are
+                // kept out of caution, though none should exist on a pending/failed parent.
+                $stale_children = wc_get_orders(array(
+                    'type'   => 'wcdp_payment',
+                    'parent' => $order->get_id(),
+                    'limit'  => -1,
+                ));
+                foreach ($stale_children as $stale_child) {
+                    if ($stale_child->is_paid() || $stale_child->get_meta('_wcdp_payment_complete') === 'yes') {
+                        continue;
+                    }
+                    $stale_child->delete(true);
+                }
             } else {
                 $order = new WC_Order();
             }

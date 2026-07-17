@@ -35,18 +35,48 @@ if (!class_exists('WC_Deposits_Email_Customer_Fully_Paid')) :
             $this->template_html = 'emails/customer-order-fully-paid.php';
             $this->template_plain = 'emails/plain/customer-order-fully-paid.php';
 
-            $partial_payment_status = wcdp_partial_payment_complete_order_status();
-
-            // Triggers for this email — fires on the parent's transition into the
-            // fully-paid target status (see class docblock).
-            add_action('woocommerce_order_status_' . $partial_payment_status . '_to_fully-paid_notification', array($this, 'trigger'));
-            add_action('woocommerce_order_status_' . $partial_payment_status . '_to_processing_notification', array($this, 'trigger'));
-            add_action('woocommerce_order_status_' . $partial_payment_status . '_to_completed_notification', array($this, 'trigger'));
+            // Fire when the FINAL payment order is actually PAID, not when the parent's
+            // status is changed. A parent can be moved to the fully-paid status manually
+            // in wp-admin with no payment taken; keying off a child payment order's
+            // completion means the email only sends when a real payment settles the
+            // order. This also covers the in-person case: when staff record the balance
+            // later by marking the payment order paid/completed in the backend, that
+            // completion is what triggers the email.
+            add_action('woocommerce_order_status_processing_notification', array($this, 'maybe_trigger'));
+            add_action('woocommerce_order_status_completed_notification', array($this, 'maybe_trigger'));
 
             // Call parent constructor
             parent::__construct();
 
             $this->template_base = WC_DEPOSITS_TEMPLATE_PATH;
+        }
+
+        /**
+         * Fire only when a child payment order's completion settles the whole order.
+         *
+         * The parent reaches its configured fully-paid status only once every
+         * installment is paid, so testing the parent status here is true only on the
+         * final payment — and never for a manual parent status change, which produces
+         * no child payment transition to hook.
+         *
+         * @param int $child_id The wcdp_payment order ID whose status just changed.
+         */
+        public function maybe_trigger($child_id)
+        {
+            if (!$child_id) return;
+
+            $child = wc_get_order($child_id);
+            if (!$child || $child->get_type() !== 'wcdp_payment') return;
+
+            $parent = wc_get_order($child->get_parent_id());
+            if (!$parent) return;
+
+            $fully_paid_status = get_option('wc_deposits_order_fully_paid_status', 'fully-paid');
+            $fully_paid_status = $fully_paid_status ? preg_replace('/^wc-/', '', $fully_paid_status) : 'fully-paid';
+
+            if ($parent->get_status() !== $fully_paid_status) return;
+
+            $this->trigger($parent->get_id());
         }
 
         /**
@@ -56,8 +86,6 @@ if (!class_exists('WC_Deposits_Email_Customer_Fully_Paid')) :
          */
         public function trigger($order_id)
         {
-            if (did_action('woocommerce_process_shop_order_meta')) return; // don't fire when admin saves the order in the backend
-
             if (!$order_id) return;
 
             $order = wc_get_order($order_id);
@@ -65,6 +93,13 @@ if (!class_exists('WC_Deposits_Email_Customer_Fully_Paid')) :
 
             // The transition is on the parent shop_order; never fire for a child payment order.
             if ($order->get_type() === 'wcdp_payment') return;
+
+            // Send once per order. A meta marker (rather than the old admin-save
+            // did_action guard) still fires when staff record the final balance by
+            // completing the child payment order in wp-admin — the business's normal
+            // pay-at-pickup flow — while preventing duplicates if the parent is ever
+            // bounced back and re-transitioned.
+            if ($order->get_meta('_wc_deposits_customer_fully_paid_email_sent') === 'yes') return;
 
             $this->object = $order;
 
@@ -77,6 +112,9 @@ if (!class_exists('WC_Deposits_Email_Customer_Fully_Paid')) :
             }
 
             $this->send($this->get_recipient(), $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments());
+
+            $order->update_meta_data('_wc_deposits_customer_fully_paid_email_sent', 'yes');
+            $order->save();
         }
 
         /**

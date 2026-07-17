@@ -144,7 +144,7 @@ class WC_Deposits_Coupons
 
     function coupon_is_valid($valid, $coupon)
     {
-        if ((is_cart() || is_checkout()) || (wp_doing_ajax() && isset($_REQUEST['wc-ajax']) && $_REQUEST['wc-ajax'] === 'apply_coupon')) {
+        if ((is_cart() || is_checkout()) || $this->is_store_api_request() || (wp_doing_ajax() && isset($_REQUEST['wc-ajax']) && $_REQUEST['wc-ajax'] === 'apply_coupon')) {
 
             $deposit_in_cart = WCDP()->cart::is_deposit_in_cart();
             if($deposit_in_cart){
@@ -153,6 +153,27 @@ class WC_Deposits_Coupons
         }
 
         return $valid;
+    }
+
+    /**
+     * Whether the current request is a WooCommerce Store API (block cart/checkout)
+     * request. Block checkout applies coupons over REST, where is_cart()/is_checkout()
+     * are false — without this the "disable for deposits" restriction was skipped there.
+     *
+     * @return bool
+     */
+    protected function is_store_api_request()
+    {
+        if (function_exists('WC') && is_callable(array(WC(), 'is_store_api_request'))) {
+            return WC()->is_store_api_request();
+        }
+
+        // Fallback for older WooCommerce: match the Store API route prefix.
+        if (empty($_SERVER['REQUEST_URI'])) {
+            return false;
+        }
+        $rest_prefix = trailingslashit(rest_get_url_prefix());
+        return false !== strpos(esc_url_raw(wp_unslash($_SERVER['REQUEST_URI'])), $rest_prefix . 'wc/store');
     }
 
 

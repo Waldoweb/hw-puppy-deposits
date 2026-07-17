@@ -28,25 +28,49 @@ if( ! class_exists( 'WC_Deposits_Email_Full_Payment' ) ):
 			
 			$this->template_html = 'emails/admin-order-fully-paid.php';
 			$this->template_plain = 'emails/plain/admin-order-fully-paid.php';
-            $partial_payment_status = wcdp_partial_payment_complete_order_status();
-			// Triggers for this email. The default fully-paid target is now the custom
-			// "fully-paid" status; the processing/completed triggers are kept in case a
-			// merchant overrides the fully-paid target to a native status.
-			add_action( 'woocommerce_order_status_'.$partial_payment_status.'_to_fully-paid_notification' , array( $this , 'trigger' ) );
-			add_action( 'woocommerce_order_status_'.$partial_payment_status.'_to_processing_notification' , array( $this , 'trigger' ) );
-			add_action( 'woocommerce_order_status_'.$partial_payment_status.'_to_completed_notification' , array( $this , 'trigger' ) );
+			// Fire when the FINAL payment order is actually PAID, not when the parent's
+			// status is changed. A parent can be moved to the fully-paid status manually
+			// in wp-admin with no payment taken; keying off a child payment order's
+			// completion means the notice only sends when a real payment settles the
+			// order — including an in-person balance recorded later by marking the
+			// payment order paid/completed in the backend.
+			add_action( 'woocommerce_order_status_processing_notification', array( $this, 'maybe_trigger' ) );
+			add_action( 'woocommerce_order_status_completed_notification', array( $this, 'maybe_trigger' ) );
 
 			// Call parent constructor
 			parent::__construct();
-			
+
 			$this->template_base = WC_DEPOSITS_TEMPLATE_PATH;
-			
+
 			// Other settings
 			$this->recipient = $this->get_option( 'recipient', get_option( 'admin_email' ) );
-			
+
 
 		}
-		
+
+		/**
+		 * Fire only when a child payment order's completion settles the whole order.
+		 * See the customer fully-paid email for the rationale; this is the admin twin.
+		 *
+		 * @param int $child_id The wcdp_payment order ID whose status just changed.
+		 */
+		public function maybe_trigger( $child_id ){
+			if ( ! $child_id ) return;
+
+			$child = wc_get_order( $child_id );
+			if ( ! $child || $child->get_type() !== 'wcdp_payment' ) return;
+
+			$parent = wc_get_order( $child->get_parent_id() );
+			if ( ! $parent ) return;
+
+			$fully_paid_status = get_option( 'wc_deposits_order_fully_paid_status', 'fully-paid' );
+			$fully_paid_status = $fully_paid_status ? preg_replace( '/^wc-/', '', $fully_paid_status ) : 'fully-paid';
+
+			if ( $parent->get_status() !== $fully_paid_status ) return;
+
+			$this->trigger( $parent->get_id() );
+		}
+
 		/**
 		 * trigger function.
 		 *
@@ -55,22 +79,32 @@ if( ! class_exists( 'WC_Deposits_Email_Full_Payment' ) ):
 		 * @return void
 		 */
 		function trigger( $order_id ){
-			
+
 			if( $order_id ){
 				$this->object = wc_get_order( $order_id );
+				if( ! $this->object ) return;
+
+				// The transition is on the parent shop_order; never fire for a child.
+				if( $this->object->get_type() === 'wcdp_payment' ) return;
+
+				// Send once per order (guards against processing+completed both firing).
+				if( $this->object->get_meta( '_wc_deposits_full_payment_email_sent' ) === 'yes' ) return;
 
                 $this->placeholders['{order_date}']   = wc_format_datetime( $this->object->get_date_created() );
                 $this->placeholders['{order_number}'] = $this->object->get_order_number();
 
 			}
-			
+
 			if( ! $this->is_enabled() || ! $this->get_recipient() ){
 				return;
 			}
-			
+
 			$this->send( $this->get_recipient() , $this->get_subject() , $this->get_content() , $this->get_headers() , $this->get_attachments() );
+
+			$this->object->update_meta_data( '_wc_deposits_full_payment_email_sent', 'yes' );
+			$this->object->save();
 		}
-		
+
 		/**
 		 * get_content_html function.
 		 *
@@ -99,7 +133,7 @@ if( ! class_exists( 'WC_Deposits_Email_Full_Payment' ) ):
 				'order' => $this->object ,
 				'email_heading' => $this->get_heading() ,
                 'additional_content' => version_compare( WOOCOMMERCE_VERSION, '3.7.0' ,'<') ?'' : $this->get_additional_content() ,                'sent_to_admin' => true ,
-				'plain_text' => false ,
+				'plain_text' => true ,
 				'email' => $this
 			) , '' , $this->template_base );
 		}

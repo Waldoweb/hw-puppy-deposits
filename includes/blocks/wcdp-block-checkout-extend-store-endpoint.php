@@ -82,14 +82,24 @@ class WCDP_Extend_Store_endpoint {
 
 	public static function rest_recalculate_deposit($args){
 
+		// This is an unauthenticated Store API callback — validate before writing to
+		// the session. The radio is a strict enum; the plan ID must be one the merchant
+		// actually enabled for checkout (mirrors the classic guard in
+		// WC_Deposits_Checkout, which in_array()-checks against the available plans).
+		if ( isset( $args['deposit-radio'] ) ) {
+			$radio = sanitize_text_field( $args['deposit-radio'] );
+			if ( in_array( $radio, array( 'deposit', 'full' ), true ) ) {
+				WC()->session->set( 'deposit-radio', $radio );
+			}
+		}
 
-		
-        WC()->session->set( 'deposit-radio', $args['deposit-radio'] );
-		
-		
-		if(isset($args['wcdp-selected-plan'])){
-			WC()->session->set( 'wcdp-selected-plan', $args['wcdp-selected-plan'] );
-		} 
+		if ( isset( $args['wcdp-selected-plan'] ) ) {
+			$selected_plan   = absint( $args['wcdp-selected-plan'] );
+			$available_plans = \DepositWP\WC_Deposits_Cart::get_checkout_mode_available_payment_plans();
+			if ( $selected_plan && is_array( $available_plans ) && in_array( $selected_plan, array_map( 'absint', $available_plans ), true ) ) {
+				WC()->session->set( 'wcdp-selected-plan', $selected_plan );
+			}
+		}
 	}
 
 
