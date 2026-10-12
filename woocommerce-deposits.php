@@ -2,10 +2,13 @@
 
 
 /**
- * Plugin Name: Puppy Deposits
+ * Plugin Name: HW Puppy Deposits
+ * Plugin URI: https://github.com/Waldoweb/puppy-deposits
  * Description: Deposits & partial payments for WooCommerce, tailored for puppy reservations.
- * Version: 5.3.2
- * Author: Hostetler Web Design
+ * Version: 5.4.0
+ * Author: Hostetler Web
+ * Author URI: https://hostetlerweb.com
+ * Update URI: https://github.com/Waldoweb/puppy-deposits
  * Text Domain: woocommerce-deposits
  * Domain Path: /locale
  * Requires at least: 6.0
@@ -25,6 +28,27 @@ use stdClass;
 
 if (!defined('ABSPATH')) {
     exit;
+}
+
+/**
+ * Updates come from GitHub releases through Plugin Update Checker. Pushing a vX.Y.Z tag
+ * builds the release zip (.github/workflows/release.yml); sites check every 6 hours and
+ * install it automatically. Registered before the WooCommerce check so a site can still
+ * update with WooCommerce off. The Update URI header keeps WordPress.org from offering
+ * its same-named woocommerce-deposits plugin as an update.
+ */
+if (is_readable(__DIR__ . '/vendor/plugin-update-checker/plugin-update-checker.php')) {
+    require_once __DIR__ . '/vendor/plugin-update-checker/plugin-update-checker.php';
+    \YahnisElsts\PluginUpdateChecker\v5\PucFactory::buildUpdateChecker(
+        'https://github.com/Waldoweb/puppy-deposits/',
+        __FILE__,
+        'puppy-deposits',
+        6
+    )->getVcsApi()->enableReleaseAssets('/\.zip($|[?&#])/i');
+
+    add_filter('auto_update_plugin', function ($update, $item) {
+        return (isset($item->plugin) && plugin_basename(__FILE__) === $item->plugin) ? true : $update;
+    }, 10, 2);
 }
 
 
@@ -151,7 +175,7 @@ if (wc_deposits_woocommerce_is_active()):
             // means browsers keep serving stale JS/CSS after an update. It had been stuck at
             // the upstream 4.6.10 since the fork. (DB migrations use the separate
             // wc_deposits_db_version option, so bumping this triggers nothing.)
-            define('WC_DEPOSITS_VERSION', '5.3.2');
+            define('WC_DEPOSITS_VERSION', '5.4.0');
             define('WC_DEPOSITS_DB_VERSION', '5.3.1'); // bump when a new update_database() migration is added
             define('WC_DEPOSITS_TEMPLATE_PATH', untrailingslashit(plugin_dir_path(__FILE__)) . '/templates/');
             define('WC_DEPOSITS_PLUGIN_PATH', plugin_dir_path(__FILE__));
