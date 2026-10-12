@@ -4,7 +4,7 @@
 /**
  * Plugin Name: Puppy Deposits
  * Description: Deposits & partial payments for WooCommerce, tailored for puppy reservations.
- * Version: 5.3.0
+ * Version: 5.3.2
  * Author: Hostetler Web Design
  * Text Domain: woocommerce-deposits
  * Domain Path: /locale
@@ -151,8 +151,8 @@ if (wc_deposits_woocommerce_is_active()):
             // means browsers keep serving stale JS/CSS after an update. It had been stuck at
             // the upstream 4.6.10 since the fork. (DB migrations use the separate
             // wc_deposits_db_version option, so bumping this triggers nothing.)
-            define('WC_DEPOSITS_VERSION', '5.3.0');
-            define('WC_DEPOSITS_DB_VERSION', '4.0.0'); // bump when a new update_database() migration is added
+            define('WC_DEPOSITS_VERSION', '5.3.2');
+            define('WC_DEPOSITS_DB_VERSION', '5.3.1'); // bump when a new update_database() migration is added
             define('WC_DEPOSITS_TEMPLATE_PATH', untrailingslashit(plugin_dir_path(__FILE__)) . '/templates/');
             define('WC_DEPOSITS_PLUGIN_PATH', plugin_dir_path(__FILE__));
             define('WC_DEPOSITS_PLUGIN_URL', untrailingslashit(plugins_url(basename(plugin_dir_path(__FILE__)), basename(__FILE__))));
@@ -556,6 +556,14 @@ if (wc_deposits_woocommerce_is_active()):
              */
             $this->compatibility->ppcp_deposit_amount = require_once('includes/compatibility/class-ppcp-deposit-amount.php');
 
+            /**
+             * Payment Plugins for PayPal has the same cart-priced PayPal order problem
+             * as official PPCP (shopper approves the full total, the pre-capture amount
+             * patch is then rejected). Reprices the purchase unit to the deposit through
+             * that gateway's own from_cart filter. No-ops when the gateway is absent.
+             */
+            $this->compatibility->pymntpl_paypal_deposit_amount = require_once('includes/compatibility/class-pymntpl-paypal-deposit-amount.php');
+
         }
 
 
@@ -876,6 +884,38 @@ if (wc_deposits_woocommerce_is_active()):
                 }
             } else {
                 WC()->queue()->cancel_all('wc_deposits_database_update');
+            }
+
+            // 5.3.1 — Styling-merge follow-up. The pre-merge color options were left in
+            // the DB as invisible emitter fallbacks, so a store fresh off an update could
+            // show a color on the front end while every Styling field sat blank — and
+            // saving the blank field could not clear it, because blank re-arms the
+            // fallback. Copy each still-active legacy value into the option id its field
+            // actually edits (visible, editable, clearable), then delete the legacy rows
+            // so a blank field genuinely means "use the default". Own flag rather than
+            // wc_deposits_db_version, which the background 4.0.0 product update owns.
+            if ('yes' !== get_option('wc_deposits_style_options_migrated')) {
+                $legacy_toggle = (array) get_option('wc_deposits_deposit_buttons_colors', array());
+                $legacy_values = array(
+                    'wc_deposits_style_option_selected_bg' => isset($legacy_toggle['primary']) ? trim((string) $legacy_toggle['primary']) : '',
+                    'wc_deposits_style_selected_text'      => isset($legacy_toggle['secondary']) ? trim((string) $legacy_toggle['secondary']) : '',
+                    'wc_deposits_style_subline_color'      => trim((string) get_option('wc_deposits_style_toggle_message_color', '')),
+                );
+                foreach ($legacy_values as $option_id => $legacy_value) {
+                    if ('' !== $legacy_value && '' === trim((string) get_option($option_id, ''))) {
+                        update_option($option_id, $legacy_value);
+                    }
+                }
+                delete_option('wc_deposits_deposit_buttons_colors');
+                delete_option('wc_deposits_style_toggle_message_color');
+                delete_option('wc_deposits_style_radio_accent');
+                update_option('wc_deposits_style_options_migrated', 'yes');
+            }
+
+            // The 4.0.0 product update above completes in the background and owns the
+            // advance to '4.0.0'; only move the version past it once it has finished.
+            if (version_compare(get_option('wc_deposits_db_version', '2.3.9'), '4.0.0', '>=')) {
+                update_option('wc_deposits_db_version', '5.3.1');
             }
 
         }

@@ -104,34 +104,7 @@ class PPCP_Deposit_Amount {
 	 * @return float|null
 	 */
 	protected function deposit_amount_for_cart() {
-		if ( ! class_exists( __NAMESPACE__ . '\\WC_Deposits_Cart' ) || ! WC()->cart ) {
-			return null;
-		}
-
-		if ( ! WC_Deposits_Cart::is_deposit_in_cart() ) {
-			return null;
-		}
-
-		$info = WC()->cart->deposit_info;
-
-		// PPCP builds its PayPal order inside its own wc-ajax request, where
-		// woocommerce_after_calculate_totals has not fired — so deposit_info is still
-		// empty even though the cart plainly holds a deposit. Populate it on demand with
-		// the plugin's own calculator rather than depending on hook order. Cheap and
-		// idempotent: it only reads the cart and fills deposit_info.
-		if ( ! is_array( $info ) || ! isset( $info['deposit_amount'] ) ) {
-			$wcdp = function_exists( '\\WCDP' ) ? \WCDP() : null;
-			if ( $wcdp && isset( $wcdp->cart ) && method_exists( $wcdp->cart, 'calculate_deposit_totals' ) ) {
-				$wcdp->cart->calculate_deposit_totals( WC()->cart );
-				$info = WC()->cart->deposit_info;
-			}
-		}
-
-		if ( ! is_array( $info ) || ! isset( $info['deposit_amount'] ) ) {
-			return null;
-		}
-
-		return (float) $info['deposit_amount'];
+		return \wcdp_cart_deposit_amount();
 	}
 }
 

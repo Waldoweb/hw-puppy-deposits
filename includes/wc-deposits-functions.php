@@ -902,8 +902,12 @@ function wcdp_get_deposit_slider_custom_styles(){
     // rows. Each value is published under both the toggle's and the radio's variable names
     // so the existing selectors in style.css pick it up. The pre-merge per-mode options (the
     // deposit_buttons_colors composite from the old Toggle section, and the separate toggle
-    // message color) are read as a fallback, so a store that set them before the merge keeps
-    // its look until it re-saves the Styling tab. ──
+    // message color) are read as a fallback ONLY for the window between the plugin files
+    // updating and the 5.3.1 migration in update_database() running (first wp-admin load):
+    // the migration copies those values into the new option ids — where the Styling tab can
+    // show and clear them — and deletes the legacy rows, after which these reads find
+    // nothing. Without the migration, a legacy color was invisible in the settings UI and
+    // a blank save could never clear it. ──
     $selected_bg   = $opt('wc_deposits_style_option_selected_bg');
     if ('' === $selected_bg)   { $selected_bg = $sel_bg; }     // legacy toggle "primary"
     $selected_text = $opt('wc_deposits_style_selected_text');
@@ -956,4 +960,42 @@ function wcdp_get_deposit_slider_custom_styles(){
 
     return apply_filters('wc_deposits_deposit_slider_custom_styles', $styles);
 
+}
+/**
+ * The deposit due NOW for the current cart, or null when the cart holds no deposit.
+ *
+ * Shared by the gateway compatibility shims (official PPCP, Payment Plugins PayPal):
+ * both need the same answer while pricing a PayPal order from the CART, inside the
+ * gateway's own wc-ajax request where woocommerce_after_calculate_totals has not
+ * fired — so deposit_info is populated on demand with the plugin's own calculator
+ * rather than depending on hook order. Cheap and idempotent: it only reads the cart
+ * and fills deposit_info.
+ *
+ * @return float|null Deposit amount, or null when this is not a deposit cart.
+ */
+function wcdp_cart_deposit_amount()
+{
+    if (!class_exists('\DepositWP\WC_Deposits_Cart') || !function_exists('WC') || !WC()->cart) {
+        return null;
+    }
+
+    if (!\DepositWP\WC_Deposits_Cart::is_deposit_in_cart()) {
+        return null;
+    }
+
+    $info = WC()->cart->deposit_info;
+
+    if (!is_array($info) || !isset($info['deposit_amount'])) {
+        $wcdp = function_exists('WCDP') ? WCDP() : null;
+        if ($wcdp && isset($wcdp->cart) && method_exists($wcdp->cart, 'calculate_deposit_totals')) {
+            $wcdp->cart->calculate_deposit_totals(WC()->cart);
+            $info = WC()->cart->deposit_info;
+        }
+    }
+
+    if (!is_array($info) || !isset($info['deposit_amount'])) {
+        return null;
+    }
+
+    return (float) $info['deposit_amount'];
 }

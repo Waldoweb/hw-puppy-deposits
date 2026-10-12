@@ -1508,8 +1508,9 @@ JS;
         // Options Style (unified). selected_text is new; option_selected_bg/hover, subline
         // and option_text are shared. The old wc_deposits_deposit_buttons_colors composite,
         // wc_deposits_style_toggle_message_color and wc_deposits_style_radio_accent are no
-        // longer saved (their fields were removed) — left in the DB untouched as emitter
-        // fallbacks so a pre-merge store keeps its look until it re-saves with new values.
+        // longer saved (their fields were removed) — the 5.3.1 migration in
+        // update_database() copies their values into these option ids and deletes the
+        // legacy rows, so by the time this tab can be saved the new options are canonical.
         $settings['wc_deposits_style_selected_text']     = $this->wcdp_sanitize_style_color('wc_deposits_style_selected_text');
         // wc_deposits_style_option_text_color (Option Text Color) retired when option labels gained auto-contrast; options
         // auto-contrast now, so a single base text color no longer keeps contrast readable.
@@ -1543,8 +1544,9 @@ JS;
             : 'Payment Link';
     
         // (wc_deposits_deposit_buttons_colors is no longer saved — its two fields were merged
-        // into Selected Option Background + Selected Option Text Color. The stored value is
-        // left untouched so the emitter can still fall back to it for a pre-merge store.)
+        // into Selected Option Background + Selected Option Text Color, and the 5.3.0
+        // migration in update_database() folds any stored value into those options and
+        // deletes the legacy row.)
 
         // Deposit Mode. Still the same yes/no option the old "Enable checkout mode" select
         // wrote, so wcdp_checkout_mode() and every stored value carry over untouched.
