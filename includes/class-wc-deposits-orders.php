@@ -1047,8 +1047,13 @@ class WC_Deposits_Orders
                         $status = 'fully-paid';
                     }
                     $new_status = apply_filters('wc_deposits_order_fully_paid_status', $status, $order_id);
-                    $order->update_meta_data('_wc_deposits_second_payment_paid', 'yes'); //BACKWARD COMPATIBILITY
-                    $order->save();
+                    //only save when the flag actually changes: WooCommerce calls this filter just to
+                    //read the paid status (maybe_set_date_paid), and an unconditional save bumps the
+                    //order's modified date, which loops the HPOS sync forever on that order.
+                    if ($order->get_meta('_wc_deposits_second_payment_paid', true) !== 'yes') {
+                        $order->update_meta_data('_wc_deposits_second_payment_paid', 'yes'); //BACKWARD COMPATIBILITY
+                        $order->save();
+                    }
                 }
             }
         }

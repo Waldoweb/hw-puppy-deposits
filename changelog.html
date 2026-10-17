@@ -51,6 +51,16 @@
   </head>
   <body>
     <div class="changelog">
+      <h4>17/10/2026 - Version 5.4.2</h4>
+      <h6>Bug Fixes &amp; Improvements:</h6>
+      <ul>
+        <li>
+          Fixed an endless WooCommerce order-sync loop (HPOS compatibility mode) on fully paid
+          deposit orders: the payment-complete status check no longer re-saves an order whose
+          "second payment paid" flag is already set.
+        </li>
+      </ul>
+
       <h4>12/10/2026 - Version 5.4.1</h4>
       <h6>Updates:</h6>
       <ul>

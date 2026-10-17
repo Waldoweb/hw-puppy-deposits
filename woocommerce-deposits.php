@@ -5,7 +5,7 @@
  * Plugin Name: HW Puppy Deposits
  * Plugin URI: https://github.com/Waldoweb/hw-puppy-deposits
  * Description: Deposits & partial payments for WooCommerce, tailored for puppy reservations.
- * Version: 5.4.1
+ * Version: 5.4.2
  * Author: Hostetler Web
  * Author URI: https://hostetlerweb.com
  * Update URI: https://github.com/Waldoweb/hw-puppy-deposits
@@ -175,7 +175,7 @@ if (wc_deposits_woocommerce_is_active()):
             // means browsers keep serving stale JS/CSS after an update. It had been stuck at
             // the upstream 4.6.10 since the fork. (DB migrations use the separate
             // wc_deposits_db_version option, so bumping this triggers nothing.)
-            define('WC_DEPOSITS_VERSION', '5.4.1');
+            define('WC_DEPOSITS_VERSION', '5.4.2');
             define('WC_DEPOSITS_DB_VERSION', '5.3.1'); // bump when a new update_database() migration is added
             define('WC_DEPOSITS_TEMPLATE_PATH', untrailingslashit(plugin_dir_path(__FILE__)) . '/templates/');
             define('WC_DEPOSITS_PLUGIN_PATH', plugin_dir_path(__FILE__));
