@@ -10,6 +10,8 @@ if (!defined('ABSPATH')) {
 if(!class_exists('WCDP_Partial_Payment_Invoice')):
 
     class WCDP_Partial_Payment_Invoice extends Order_Document_Methods {
+        // Return types match PDF Invoices 6.0's typed parents (a mismatch is a fatal on load);
+        // they're also valid against 5.x, whose parents are untyped.
         /**
          * Init/load the order object.
          *
@@ -26,7 +28,7 @@ if(!class_exists('WCDP_Partial_Payment_Invoice')):
             parent::__construct( $order );
         }
 
-        public function use_historical_settings() {
+        public function use_historical_settings(): bool {
             $document_settings = get_option( 'wpo_wcpdf_documents_settings_'.$this->get_type() );
             // this setting is inverted on the frontend so that it needs to be actively/purposely enabled to be used
             if (!empty($document_settings) && isset($document_settings['use_latest_settings'])) {
@@ -34,11 +36,11 @@ if(!class_exists('WCDP_Partial_Payment_Invoice')):
             } else {
                 $use_historical_settings = true;
             }
-            return apply_filters( 'wpo_wcpdf_document_use_historical_settings', $use_historical_settings, $this );
+            return (bool) apply_filters( 'wpo_wcpdf_document_use_historical_settings', $use_historical_settings, $this );
         }
 
 
-        public function get_invoice_date() {
+        public function get_invoice_date(): ?string {
             if ( $invoice_date = $this->get_date('partial_payment_invoice') ) {
                 return $invoice_date->date_i18n( apply_filters( 'wpo_wcpdf_date_format', wc_date_format(), $this ) );
             } else {
@@ -46,12 +48,12 @@ if(!class_exists('WCDP_Partial_Payment_Invoice')):
             }
         }
 
-        public function get_title() {
+        public function get_title(): string {
             // override/not using $this->title to allow for language switching!
-            return apply_filters( "wpo_wcpdf_{$this->slug}_title", esc_html__( 'Partial Payment Invoice', 'woocommerce-deposits' ), $this );
+            return (string) apply_filters( "wpo_wcpdf_{$this->slug}_title", esc_html__( 'Partial Payment Invoice', 'woocommerce-deposits' ), $this );
         }
 
-        public function init() {
+        public function init(): void {
             // store settings in order
             if ( !empty( $this->order ) ) {
                 $common_settings = WPO_WCPDF()->settings->get_common_document_settings();
@@ -64,17 +66,17 @@ if(!class_exists('WCDP_Partial_Payment_Invoice')):
             $this->init_number();
         }
 
-        public function exists() {
+        public function exists(): bool {
             return !empty( $this->data['number'] );
         }
 
 
-        public function get_invoice_number() {
+        public function get_invoice_number(): ?string {
             // Call the woocommerce_invoice_number filter and let third-party plugins set a number.
             // Default is null, so we can detect whether a plugin has set the invoice number
             $third_party_invoice_number = apply_filters( 'woocommerce_invoice_number', null, $this->order_id );
             if ($third_party_invoice_number !== null) {
-                return $third_party_invoice_number;
+                return (string) $third_party_invoice_number;
             }
 
             if ( $invoice_number = $this->get_number('partial_payment_invoice') ) {
@@ -125,7 +127,7 @@ if(!class_exists('WCDP_Partial_Payment_Invoice')):
             return $invoice_number;
         }
 
-        public function get_filename( $context = 'download', $args = array() ) {
+        public function get_filename( $context = 'download', $args = array() ): string {
             $order_count = isset($args['order_ids']) ? count($args['order_ids']) : 1;
 
             $name = _n( 'partial_payment_invoice', 'partial_payment_invoices', $order_count, 'woocommerce-pdf-invoices-packing-slips' );
@@ -159,7 +161,7 @@ if(!class_exists('WCDP_Partial_Payment_Invoice')):
         /**
          * Initialise settings
          */
-        public function init_settings() {
+        public function init_settings(): void {
             // Register settings.
             $page = $option_group = $option_name = 'wpo_wcpdf_documents_settings_partial_payment_invoice';
 
